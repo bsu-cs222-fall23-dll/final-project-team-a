@@ -2,4 +2,5 @@
 
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx">
+    <fx:include source="menu-bar.fxml"/>
 </VBox>
