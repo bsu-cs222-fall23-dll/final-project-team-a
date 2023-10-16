@@ -1,6 +1,5 @@
 package edu.bsu.cs222.markdownEditor;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 
@@ -14,37 +13,30 @@ public class MenuBarController {
         this.editorController = editorController;
     }
 
-    private FileChooser fileChooser = new FileChooser();
+    private final FileChooser fileChooser = new FileChooser();
 
     @FXML
-    private void newFile(ActionEvent actionEvent) {
+    private void newFile() {
     }
 
     @FXML
-    private void openFile(ActionEvent actionEvent) {
+    private void openFile() {
         File file = fileChooser.showOpenDialog(null);
-        App.fileManager.open(file);
-        String content = null;
-        try {
-            content = App.fileManager.getActiveFileContents();
-        } catch (NoFileOpenException e) {
-            throw new RuntimeException(e);
-        }
+        String content = App.fileManager.open(file);
         editorController.setContent(content);
     }
 
     @FXML
-    private void saveFile(ActionEvent actionEvent) {
+    private void saveFile() {
         try {
             App.fileManager.save(editorController.getContent());
         } catch (NoFileOpenException e) {
-            // TODO: Handle NoActiveFileException
-            throw new RuntimeException(e);
+            saveFileAs();
         }
     }
 
     @FXML
-    private void saveFileAs(ActionEvent actionEvent) {
+    private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
         App.fileManager.saveAs(editorController.getContent(), file);
     }

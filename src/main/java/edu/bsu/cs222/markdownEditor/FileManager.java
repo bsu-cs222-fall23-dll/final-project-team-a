@@ -13,17 +13,13 @@ public class FileManager {
         this.activeFilePath = activeFilePath;
     }
 
-    public String getActiveFileContents() throws NoFileOpenException {
-        if (activeFilePath == null) throw new NoFileOpenException();
+    public String open(File file) {
+        activeFilePath = file.toPath();
         try {
             return Files.readString(activeFilePath, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void open(File file) {
-        activeFilePath = file.toPath();
     }
 
     public void save(String content) throws NoFileOpenException {
