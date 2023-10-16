@@ -20,4 +20,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
+    public static FileManager fileManager = new FileManager(null);
+
 }
