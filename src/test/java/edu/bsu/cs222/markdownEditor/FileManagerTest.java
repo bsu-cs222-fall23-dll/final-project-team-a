@@ -37,19 +37,29 @@ class FileManagerTest {
     }
 
     @Test
-    void getActiveFileContents() {
-        Path path = createTestFile("getActiveFileContentsTestFile.txt", "Hello World!");
-        FileManager fileManager = new FileManager(path);
-        String expected = readTestFile(path);
-        assertEquals(expected, fileManager.getActiveFileContents());
-    }
-
-    @Test
     void openFile() {
         Path path = createTestFile("openFileTestFile.txt", "Hello World!");
         FileManager fileManager = new FileManager(null);
         fileManager.open(path.toFile());
         assertEquals(path, fileManager.activeFilePath);
+    }
+
+    @Nested
+    class getActiveFileContents {
+
+        @Test
+        void getsFileContents() throws NoFileOpenException {
+            Path path = createTestFile("getActiveFileContentsTestFile.txt", "Hello World!");
+            FileManager fileManager = new FileManager(path);
+            String expected = readTestFile(path);
+            assertEquals(expected, fileManager.getActiveFileContents());
+        }
+
+        @Test
+        void throwsNoActiveFileError() {
+            FileManager fileManager = new FileManager(null);
+            assertThrows(NoFileOpenException.class, () -> fileManager.getActiveFileContents());
+        }
     }
 
     @Nested
