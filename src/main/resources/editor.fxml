@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextArea?>
-<TextArea xmlns:fx="http://javafx.com/fxml"
-          xmlns="http://javafx.com/javafx"
-          fx:controller="edu.bsu.cs222.markdownEditor.EditorController"
-          fx:id="editor"
->
+<?import javafx.scene.layout.VBox?>
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
 
-</TextArea>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:controller="edu.bsu.cs222.markdownEditor.EditorController"
+      fx:id="editor"
+>
+    <StyleClassedTextArea/>
+</VBox>
