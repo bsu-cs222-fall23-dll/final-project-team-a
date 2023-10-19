@@ -25,4 +25,4 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'edu.bsu.cs222.markdownEditor.App'
+mainClassName = 'edu.bsu.cs222.markdownEditor.Main'
