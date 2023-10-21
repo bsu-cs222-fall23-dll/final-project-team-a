@@ -22,14 +22,14 @@ public class MenuBarController {
     @FXML
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
-        String content = App.fileManager.open(file);
+        String content = Main.fileManager.open(file);
         editorController.setContent(content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            App.fileManager.save(editorController.getContent());
+            Main.fileManager.save(editorController.getContent());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -38,6 +38,6 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        App.fileManager.saveAs(editorController.getContent(), file);
+        Main.fileManager.saveAs(editorController.getContent(), file);
     }
 }
