@@ -87,6 +87,11 @@ public class MarkdownBlock {
 
             CodeArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
             lastCodeArea.requestFocus();
+            String content = codeArea.getText();
+            if (content != null && !content.isEmpty()) {
+                lastCodeArea.insertText(lastCodeArea.getLength(), content);
+                lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
+            }
         } else codeArea.deletePreviousChar();
     }
 }
