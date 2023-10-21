@@ -37,4 +37,9 @@ public class EditorController {
         CodeArea block = MarkdownBlock.create(this);
         editor.getChildren().add(index, block);
     }
+
+    public void removeBlock(CodeArea block) {
+        editor.getChildren().remove(block);
+    }
+
 }

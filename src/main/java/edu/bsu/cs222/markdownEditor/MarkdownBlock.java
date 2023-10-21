@@ -7,6 +7,7 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.wellbehaved.event.InputMap;
 import org.fxmisc.wellbehaved.event.Nodes;
 
+import static org.fxmisc.wellbehaved.event.EventPattern.anyOf;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 
 public class MarkdownBlock {
@@ -54,10 +55,11 @@ public class MarkdownBlock {
     }
 
     private void overrideKeyPressEvent() {
-        InputMap<KeyEvent> overrides = InputMap.consume(keyPressed(KeyCode.ENTER));
+        InputMap<KeyEvent> overrides = InputMap.consume(anyOf(keyPressed(KeyCode.ENTER), keyPressed(KeyCode.BACK_SPACE)));
         Nodes.addInputMap(codeArea, overrides);
         codeArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
+            else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
         });
     }
 
@@ -68,5 +70,16 @@ public class MarkdownBlock {
         CodeArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
 
         newCodeArea.requestFocus();
+    }
+
+    private void handleBackSpaceKeyPress() {
+        int caretPosition = codeArea.getCaretPosition();
+        int currentIndex = editorController.getBlockIndex(codeArea);
+        if (caretPosition == 0 && currentIndex != 0) {
+            editorController.removeBlock(codeArea);
+
+            CodeArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
+            lastCodeArea.requestFocus();
+        } else codeArea.deletePreviousChar();
     }
 }
