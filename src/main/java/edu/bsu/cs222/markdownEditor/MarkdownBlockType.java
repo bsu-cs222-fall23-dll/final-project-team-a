@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public enum MarkdownBlockType {
     Paragraph(null, "p"),
-    Header1("#", "h1");
+    Heading1("#", "h1");
 
     public final String regexp;
     private final String markdown, className;
