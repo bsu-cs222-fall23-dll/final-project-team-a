@@ -1,0 +1,12 @@
+.h1 {
+    -fx-font-size: 40px;
+}
+
+.md {
+    -fx-fill: "#808080";
+    visibility: hidden;
+}
+
+.focused .md {
+    visibility: visible;
+}

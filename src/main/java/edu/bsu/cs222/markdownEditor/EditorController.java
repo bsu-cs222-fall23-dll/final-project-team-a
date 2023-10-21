@@ -19,4 +19,11 @@ public class EditorController {
         textArea.replaceText(content);
     }
 
+    @FXML
+    private void initialize() {
+        editor.getChildren().addAll(
+                MarkdownBlock.create(),
+                MarkdownBlock.create()
+        );
+    }
 }
