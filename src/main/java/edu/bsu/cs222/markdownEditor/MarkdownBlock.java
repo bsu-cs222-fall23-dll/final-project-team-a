@@ -71,12 +71,12 @@ public class MarkdownBlock {
         editorController.createBlock(currentIndex + 1);
         CodeArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
 
-        newCodeArea.requestFocus();
         if (!content.isEmpty()) {
             newCodeArea.insertText(0, content);
             codeArea.deleteText(start, end);
-            newCodeArea.moveTo(0);
         }
+        newCodeArea.requestFocus();
+        newCodeArea.moveTo(0);
     }
 
     private void handleBackSpaceKeyPress() {
@@ -86,8 +86,8 @@ public class MarkdownBlock {
             editorController.removeBlock(codeArea);
 
             CodeArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
-            lastCodeArea.requestFocus();
             String content = codeArea.getText();
+            lastCodeArea.requestFocus();
             if (content != null && !content.isEmpty()) {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
