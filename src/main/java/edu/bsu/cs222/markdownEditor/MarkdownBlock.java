@@ -35,23 +35,23 @@ public class MarkdownBlock {
 
     private MarkdownBlock(EditorController editorController) {
         this.editorController = editorController;
-        if (codeArea.isFocused()) {
-            codeArea.textProperty().addListener(textListener);
-            codeArea.getStyleClass().add("focused");
-        }
-        codeArea.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
-            if (isFocused) {
-                codeArea.textProperty().addListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().add("focused");
-            } else {
-                codeArea.textProperty().removeListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().remove("focused");
-            }
-        });
+        if (codeArea.isFocused()) codeArea.textProperty().addListener(textListener);
+        ChangeListener<Boolean> focusListener = (observable, oldValue, isFocused) -> handleFocusChange(isFocused);
+        codeArea.focusedProperty().addListener(focusListener);
     }
 
     public static CodeArea create(EditorController editorController) {
         return new MarkdownBlock(editorController).codeArea;
+    }
+
+    private void handleFocusChange(boolean isFocused) {
+        if (isFocused) {
+            blockType.addMarkdown(codeArea);
+            codeArea.textProperty().addListener(textListener);
+        } else {
+            codeArea.textProperty().removeListener(textListener);
+            blockType.removeMarkdown(codeArea);
+        }
     }
 
     private void overrideKeyPressEvent() {
