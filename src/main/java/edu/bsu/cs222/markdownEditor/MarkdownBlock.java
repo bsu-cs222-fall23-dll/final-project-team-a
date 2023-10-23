@@ -60,6 +60,9 @@ public class MarkdownBlock {
         codeArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
             else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
+            else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
+            else if (event.getCode().equals(KeyCode.DOWN)) handleDownArrowKeyPress();
+
         });
     }
 
@@ -93,5 +96,33 @@ public class MarkdownBlock {
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
         } else codeArea.deletePreviousChar();
+    }
+
+    private void handleUpArrowKeyPress() {
+        int currentIndex = editorController.getBlockIndex(codeArea);
+        CodeArea currentBlock = editorController.getBlockAt(currentIndex);
+
+        if (currentIndex != 0) {
+            CodeArea aboveCurrentCodeArea = editorController.getBlockAt(currentIndex - 1);
+            String previousBlockContent = currentBlock.getText();
+            if (previousBlockContent.isEmpty()) {
+                editorController.removeBlock(currentBlock);
+            }
+            aboveCurrentCodeArea.requestFocus();
+
+
+        } // else when they try to move up when at block 1
+    }
+
+    private void handleDownArrowKeyPress() {
+        int endIndex = codeArea.getLength();
+        int currentIndex = editorController.getBlockIndex(codeArea);
+
+        if (currentIndex != endIndex) {
+            CodeArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
+            belowCurrentCodeArea.requestFocus();
+
+        } // else when they try ot move down when at last block
+        // Console throws out of bounds error - program still runs
     }
 }
