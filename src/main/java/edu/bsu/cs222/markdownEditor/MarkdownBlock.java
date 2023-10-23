@@ -30,7 +30,6 @@ public class MarkdownBlock {
             blockType.removeStyle(codeArea);
             blockType = MarkdownBlockType.Paragraph;
         }
-        overrideKeyPressEvent();
     };
 
     private MarkdownBlock(EditorController editorController) {
@@ -48,6 +47,7 @@ public class MarkdownBlock {
                 if (blockType != null) codeArea.getStyleClass().remove("focused");
             }
         });
+        overrideKeyPressEvent();
     }
 
     public static CodeArea create(EditorController editorController) {
@@ -55,7 +55,12 @@ public class MarkdownBlock {
     }
 
     private void overrideKeyPressEvent() {
-        InputMap<KeyEvent> overrides = InputMap.consume(anyOf(keyPressed(KeyCode.ENTER), keyPressed(KeyCode.BACK_SPACE)));
+        InputMap<KeyEvent> overrides = InputMap.consume(anyOf(
+                keyPressed(KeyCode.ENTER),
+                keyPressed(KeyCode.BACK_SPACE),
+                keyPressed(KeyCode.UP),
+                keyPressed(KeyCode.DOWN)
+        ));
         Nodes.addInputMap(codeArea, overrides);
         codeArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
@@ -100,16 +105,10 @@ public class MarkdownBlock {
 
     private void handleUpArrowKeyPress() {
         int currentIndex = editorController.getBlockIndex(codeArea);
-        CodeArea currentBlock = editorController.getBlockAt(currentIndex);
 
         if (currentIndex != 0) {
             CodeArea aboveCurrentCodeArea = editorController.getBlockAt(currentIndex - 1);
-            String previousBlockContent = currentBlock.getText();
-            if (previousBlockContent.isEmpty()) {
-                editorController.removeBlock(currentBlock);
-            }
             aboveCurrentCodeArea.requestFocus();
-
 
         } // else when they try to move up when at block 1
     }
