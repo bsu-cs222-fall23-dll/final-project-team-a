@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 public enum MarkdownBlockType {
     Paragraph(null, "p"),
     Heading1("#", "h1"),
-    Heading2(null, null),
-    Heading3(null,null);
+    Heading2("##", "h2"),
+    Heading3("###","h3");
 
 
     public final String regexp;
