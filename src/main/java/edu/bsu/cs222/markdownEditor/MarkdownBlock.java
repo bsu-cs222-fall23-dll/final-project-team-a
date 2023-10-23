@@ -30,7 +30,6 @@ public class MarkdownBlock {
             blockType.removeStyle(codeArea);
             blockType = MarkdownBlockType.Paragraph;
         }
-        overrideKeyPressEvent();
     };
 
     private MarkdownBlock(EditorController editorController) {
@@ -48,6 +47,7 @@ public class MarkdownBlock {
                 if (blockType != null) codeArea.getStyleClass().remove("focused");
             }
         });
+        overrideKeyPressEvent();
     }
 
     public static CodeArea create(EditorController editorController) {
@@ -55,11 +55,19 @@ public class MarkdownBlock {
     }
 
     private void overrideKeyPressEvent() {
-        InputMap<KeyEvent> overrides = InputMap.consume(anyOf(keyPressed(KeyCode.ENTER), keyPressed(KeyCode.BACK_SPACE)));
+        InputMap<KeyEvent> overrides = InputMap.consume(anyOf(
+                keyPressed(KeyCode.ENTER),
+                keyPressed(KeyCode.BACK_SPACE),
+                keyPressed(KeyCode.UP),
+                keyPressed(KeyCode.DOWN)
+        ));
         Nodes.addInputMap(codeArea, overrides);
         codeArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
             else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
+            else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
+            else if (event.getCode().equals(KeyCode.DOWN)) handleDownArrowKeyPress();
+
         });
     }
 
@@ -71,12 +79,12 @@ public class MarkdownBlock {
         editorController.createBlock(currentIndex + 1);
         CodeArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
 
-        newCodeArea.requestFocus();
         if (!content.isEmpty()) {
             newCodeArea.insertText(0, content);
             codeArea.deleteText(start, end);
-            newCodeArea.moveTo(0);
         }
+        newCodeArea.requestFocus();
+        newCodeArea.moveTo(0);
     }
 
     private void handleBackSpaceKeyPress() {
@@ -86,12 +94,34 @@ public class MarkdownBlock {
             editorController.removeBlock(codeArea);
 
             CodeArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
-            lastCodeArea.requestFocus();
             String content = codeArea.getText();
+            lastCodeArea.requestFocus();
             if (content != null && !content.isEmpty()) {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
         } else codeArea.deletePreviousChar();
+    }
+
+    private void handleUpArrowKeyPress() {
+        int currentIndex = editorController.getBlockIndex(codeArea);
+
+        if (currentIndex != 0) {
+            CodeArea aboveCurrentCodeArea = editorController.getBlockAt(currentIndex - 1);
+            aboveCurrentCodeArea.requestFocus();
+
+        } // else when they try to move up when at block 1
+    }
+
+    private void handleDownArrowKeyPress() {
+        int endIndex = codeArea.getLength();
+        int currentIndex = editorController.getBlockIndex(codeArea);
+
+        if (currentIndex != endIndex) {
+            CodeArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
+            belowCurrentCodeArea.requestFocus();
+
+        } // else when they try ot move down when at last block
+        // Console throws out of bounds error - program still runs
     }
 }
