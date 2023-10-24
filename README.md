@@ -5,7 +5,7 @@
 A JavaFX program that allows the user to create a text file using markdown and save it to their computer.
 
 ## Installation
-1. Clone the GitHub repository - https://github.com/bsu-cs222-fall23-dll/final-project-team-a
+1. Clone the [GitHub repository](https://github.com/bsu-cs222-fall23-dll/final-project-team-a)
 
 2.  Install IntelliJ
 
