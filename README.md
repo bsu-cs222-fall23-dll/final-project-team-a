@@ -1,15 +1,22 @@
-# final-project-team-a
-Authors:
-Ben Keys,
-Ben Wilson,
-Evan Kiser,
-Payton Hutsell
+# MarkdownEditor
+> CS 222 Final Project Team A - MarkdownEditor
 
-Project Summary: T
-his application will allow users to edit in markdown
+## Description
+A JavaFX program that allows the user to create a text file using markdown and save it to their computer.
 
-Setup: 
-In order to setup and run this program, you will need to install GitHub Desktop and IntelliJ Community Edition.
-Then you will pull the file on GitHub Desktop and run on IntelliJ.
-Install Gradle17 SDK.
-Select Gradle > Tasks > application > run (Found in the top right) to run
+## Installation
+1. Clone the GitHub repository - https://github.com/bsu-cs222-fall23-dll/final-project-team-a
+
+2.  Install IntelliJ
+
+3.  Install required Gradle and IntelliJ dependencies.
+
+## Usage
+Select Gradle Extension -> Tasks -> Application -> Run  
+
+
+## Contributors
+- [Ben Keys](https://github.com/bkeys818)
+- [Ben Wilson](https://github.com/Ben-jaminWilson)
+- [Evan Kiser](https://github.com/evankiser01)
+- [Payton Hutsell](https://github.com/paytonh13)
