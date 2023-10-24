@@ -30,6 +30,8 @@ public class MarkdownBlock {
             blockType.removeStyle(codeArea);
             blockType = MarkdownBlockType.Paragraph;
         }
+        clearInlineMarkdownStyle();
+        styleInlineMarkdown();
     };
 
     private MarkdownBlock(EditorController editorController) {
@@ -48,6 +50,20 @@ public class MarkdownBlock {
             }
         });
         overrideKeyPressEvent();
+    }
+
+    private void styleInlineMarkdown() {
+        for (InlineMarkdownType inlineMarkdownType : InlineMarkdownType.values()) {
+            inlineMarkdownType.getOccurrences(codeArea.getText()).forEach(inlineMarkdown -> {
+                codeArea.setStyleClass(inlineMarkdown.start, inlineMarkdown.end, inlineMarkdownType.className);
+            });
+        }
+    }
+
+    private void clearInlineMarkdownStyle() {
+        int start = blockType.getMarkdownLength();
+        int end = codeArea.getLength();
+        codeArea.setStyleClass(start, end, "");
     }
 
     public static CodeArea create(EditorController editorController) {

@@ -26,4 +26,9 @@ public enum MarkdownBlockType {
     public void removeStyle(StyleClassedTextArea textArea) {
         textArea.getStyleClass().remove(className);
     }
+
+    public int getMarkdownLength() {
+        if (markdown == null) return 0;
+        return markdown.length();
+    }
 }

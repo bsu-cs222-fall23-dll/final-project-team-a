@@ -1,7 +1,12 @@
 .h1 {
     -fx-font-size: 40px;
 }
-
+.b {
+    -fx-font-weight: bold;
+}
+.i {
+    -fx-font-style: italic;
+}
 .md {
     -fx-fill: "#808080";
     visibility: hidden;
