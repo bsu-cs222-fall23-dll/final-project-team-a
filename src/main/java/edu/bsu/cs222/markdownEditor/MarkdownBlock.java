@@ -47,7 +47,11 @@ public class MarkdownBlock {
                 codeArea.textProperty().removeListener(textListener);
                 if (blockType != null) codeArea.getStyleClass().remove("focused");
             }
+
+
+
         });
+        formatCodeArea();
     }
 
     public static CodeArea create(EditorController editorController) {
@@ -71,6 +75,7 @@ public class MarkdownBlock {
         editorController.createBlock(currentIndex + 1);
         CodeArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
 
+
         newCodeArea.requestFocus();
         if (!content.isEmpty()) {
             newCodeArea.insertText(0, content);
@@ -93,5 +98,13 @@ public class MarkdownBlock {
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
         } else codeArea.deletePreviousChar();
+    }
+
+    private void formatCodeArea() {
+
+
+        double contentHeight = codeArea.getLayoutBounds().getHeight();
+        codeArea.setPrefHeight(16);
+        codeArea.setMaxHeight(80);
     }
 }

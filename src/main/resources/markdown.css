@@ -6,6 +6,11 @@
     -fx-fill: "#808080";
     visibility: hidden;
 }
+.code-area {
+    -fx-padding: 2px;
+    -fx-border-width: 0;
+}
+
 
 .focused .md {
     visibility: visible;
