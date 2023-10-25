@@ -171,14 +171,12 @@ public class MarkdownBlock {
     }
 
     private void handleDownArrowKeyPress() {
-        int endIndex = textArea.getLength();
+        int blocksLength = textArea.getLength();
         int currentIndex = editorController.getBlockIndex(textArea);
 
-        if (currentIndex != endIndex) {
+        if (currentIndex < blocksLength - 2) {
             StyleClassedTextArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
             belowCurrentCodeArea.requestFocus();
-
-        } // else when they try ot move down when at last block
-        // Console throws out of bounds error - program still runs
+        }
     }
 }
