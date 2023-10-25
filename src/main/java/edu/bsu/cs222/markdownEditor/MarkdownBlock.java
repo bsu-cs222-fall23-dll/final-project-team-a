@@ -3,7 +3,7 @@ package edu.bsu.cs222.markdownEditor;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.InputMap;
 import org.fxmisc.wellbehaved.event.Nodes;
 
@@ -14,7 +14,7 @@ public class MarkdownBlock {
 
     private final EditorController editorController;
 
-    private final CodeArea codeArea = new CodeArea();
+    private final StyleClassedTextArea textArea = new StyleClassedTextArea();
     private MarkdownBlockType blockType = MarkdownBlockType.Paragraph;
 
     private final ChangeListener<String> textListener = (observable, oldValue, newValue) -> {
@@ -22,12 +22,12 @@ public class MarkdownBlock {
             for (MarkdownBlockType blockType : MarkdownBlockType.values()) {
                 if (blockType != MarkdownBlockType.Paragraph && newValue.matches(blockType.regexp)) {
                     this.blockType = blockType;
-                    blockType.setStyle(codeArea);
+                    blockType.setStyle(textArea);
                     break;
                 }
             }
         } else if (!newValue.matches(blockType.regexp)) {
-            blockType.removeStyle(codeArea);
+            blockType.removeStyle(textArea);
             blockType = MarkdownBlockType.Paragraph;
         }
         clearInlineMarkdownStyle();
@@ -36,17 +36,17 @@ public class MarkdownBlock {
 
     private MarkdownBlock(EditorController editorController) {
         this.editorController = editorController;
-        if (codeArea.isFocused()) {
-            codeArea.textProperty().addListener(textListener);
-            codeArea.getStyleClass().add("focused");
+        if (textArea.isFocused()) {
+            textArea.textProperty().addListener(textListener);
+            textArea.getStyleClass().add("focused");
         }
-        codeArea.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
+        textArea.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (isFocused) {
-                codeArea.textProperty().addListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().add("focused");
+                textArea.textProperty().addListener(textListener);
+                if (blockType != null) textArea.getStyleClass().add("focused");
             } else {
-                codeArea.textProperty().removeListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().remove("focused");
+                textArea.textProperty().removeListener(textListener);
+                if (blockType != null) textArea.getStyleClass().remove("focused");
             }
         });
         overrideKeyPressEvent();
@@ -54,20 +54,20 @@ public class MarkdownBlock {
 
     private void styleInlineMarkdown() {
         for (InlineMarkdownType inlineMarkdownType : InlineMarkdownType.values()) {
-            inlineMarkdownType.getOccurrences(codeArea.getText()).forEach(inlineMarkdown -> {
-                codeArea.setStyleClass(inlineMarkdown.start, inlineMarkdown.end, inlineMarkdownType.className);
+            inlineMarkdownType.getOccurrences(textArea.getText()).forEach(inlineMarkdown -> {
+                textArea.setStyleClass(inlineMarkdown.start, inlineMarkdown.end, inlineMarkdownType.className);
             });
         }
     }
 
     private void clearInlineMarkdownStyle() {
         int start = blockType.getMarkdownLength();
-        int end = codeArea.getLength();
-        codeArea.setStyleClass(start, end, "");
+        int end = textArea.getLength();
+        textArea.setStyleClass(start, end, "");
     }
 
-    public static CodeArea create(EditorController editorController) {
-        return new MarkdownBlock(editorController).codeArea;
+    public static StyleClassedTextArea create(EditorController editorController) {
+        return new MarkdownBlock(editorController).textArea;
     }
 
     private void overrideKeyPressEvent() {
@@ -77,8 +77,8 @@ public class MarkdownBlock {
                 keyPressed(KeyCode.UP),
                 keyPressed(KeyCode.DOWN)
         ));
-        Nodes.addInputMap(codeArea, overrides);
-        codeArea.setOnKeyPressed(event -> {
+        Nodes.addInputMap(textArea, overrides);
+        textArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
             else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
             else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
@@ -88,53 +88,53 @@ public class MarkdownBlock {
     }
 
     private void handleEnterKeyPress() {
-        int currentIndex = editorController.getBlockIndex(codeArea);
-        int start = codeArea.getCaretPosition(), end = codeArea.getLength();
-        String content = codeArea.getText(start, end);
+        int currentIndex = editorController.getBlockIndex(textArea);
+        int start = textArea.getCaretPosition(), end = textArea.getLength();
+        String content = textArea.getText(start, end);
 
         editorController.createBlock(currentIndex + 1);
-        CodeArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
+        StyleClassedTextArea newCodeArea = editorController.getBlockAt(currentIndex + 1);
 
         if (!content.isEmpty()) {
             newCodeArea.insertText(0, content);
-            codeArea.deleteText(start, end);
+            textArea.deleteText(start, end);
         }
         newCodeArea.requestFocus();
         newCodeArea.moveTo(0);
     }
 
     private void handleBackSpaceKeyPress() {
-        int caretPosition = codeArea.getCaretPosition();
-        int currentIndex = editorController.getBlockIndex(codeArea);
+        int caretPosition = textArea.getCaretPosition();
+        int currentIndex = editorController.getBlockIndex(textArea);
         if (caretPosition == 0 && currentIndex != 0) {
-            editorController.removeBlock(codeArea);
+            editorController.removeBlock(textArea);
 
-            CodeArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
-            String content = codeArea.getText();
+            StyleClassedTextArea lastCodeArea = editorController.getBlockAt(currentIndex - 1);
+            String content = textArea.getText();
             lastCodeArea.requestFocus();
             if (content != null && !content.isEmpty()) {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
-        } else codeArea.deletePreviousChar();
+        } else textArea.deletePreviousChar();
     }
 
     private void handleUpArrowKeyPress() {
-        int currentIndex = editorController.getBlockIndex(codeArea);
+        int currentIndex = editorController.getBlockIndex(textArea);
 
         if (currentIndex != 0) {
-            CodeArea aboveCurrentCodeArea = editorController.getBlockAt(currentIndex - 1);
+            StyleClassedTextArea aboveCurrentCodeArea = editorController.getBlockAt(currentIndex - 1);
             aboveCurrentCodeArea.requestFocus();
 
         } // else when they try to move up when at block 1
     }
 
     private void handleDownArrowKeyPress() {
-        int endIndex = codeArea.getLength();
-        int currentIndex = editorController.getBlockIndex(codeArea);
+        int endIndex = textArea.getLength();
+        int currentIndex = editorController.getBlockIndex(textArea);
 
         if (currentIndex != endIndex) {
-            CodeArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
+            StyleClassedTextArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
             belowCurrentCodeArea.requestFocus();
 
         } // else when they try ot move down when at last block
