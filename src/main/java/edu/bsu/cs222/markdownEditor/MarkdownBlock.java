@@ -92,7 +92,7 @@ public class MarkdownBlock {
         Nodes.addInputMap(textArea, overrides);
         textArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
-            else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
+            else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress(event);
             else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
             else if (event.getCode().equals(KeyCode.DOWN)) handleDownArrowKeyPress();
         });
@@ -144,7 +144,7 @@ public class MarkdownBlock {
         newCodeArea.moveTo(0);
     }
 
-    private void handleBackSpaceKeyPress() {
+    private void handleBackSpaceKeyPress(KeyEvent event) {
         int caretPosition = textArea.getCaretPosition();
         int currentIndex = editorController.getBlockIndex(textArea);
         if (caretPosition == 0 && currentIndex != 0) {
@@ -157,6 +157,8 @@ public class MarkdownBlock {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
+        } else if (event.isShortcutDown()) {
+            textArea.clear();
         } else textArea.deletePreviousChar();
     }
 
