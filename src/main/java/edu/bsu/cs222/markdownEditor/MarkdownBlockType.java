@@ -7,8 +7,8 @@ public enum MarkdownBlockType {
     Heading1("#", "h1"),
     Heading2("##", "h2"),
     Heading3("###", "h3"),
-    UnorderedList(null, null),
-    OrderedList(null, null);
+    UnorderedList("-", "ul"),
+    OrderedList("1.", "ol");
 
     public final String regexp;
     private final String markdown, className;
