@@ -7,6 +7,9 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.InputMap;
 import org.fxmisc.wellbehaved.event.Nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.fxmisc.wellbehaved.event.EventPattern.anyOf;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
 
@@ -30,8 +33,6 @@ public class MarkdownBlock {
             blockType.removeStyle(textArea);
             blockType = MarkdownBlockType.Paragraph;
         }
-        clearInlineMarkdownStyle();
-        styleInlineMarkdown();
     };
 
     private MarkdownBlock(EditorController editorController) {
@@ -52,20 +53,6 @@ public class MarkdownBlock {
         overrideKeyPressEvent();
     }
 
-    private void styleInlineMarkdown() {
-        for (InlineMarkdownType inlineMarkdownType : InlineMarkdownType.values()) {
-            inlineMarkdownType.getOccurrences(textArea.getText()).forEach(inlineMarkdown -> {
-                textArea.setStyleClass(inlineMarkdown.start, inlineMarkdown.end, inlineMarkdownType.className);
-            });
-        }
-    }
-
-    private void clearInlineMarkdownStyle() {
-        int start = blockType.getMarkdownLength();
-        int end = textArea.getLength();
-        textArea.setStyleClass(start, end, "");
-    }
-
     public static StyleClassedTextArea create(EditorController editorController) {
         return new MarkdownBlock(editorController).textArea;
     }
@@ -83,8 +70,37 @@ public class MarkdownBlock {
             else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
             else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
             else if (event.getCode().equals(KeyCode.DOWN)) handleDownArrowKeyPress();
-
         });
+        textArea.addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (event.getCharacter().equals("*")) handleAsteriskTyped(event);
+        });
+    }
+
+    private void handleAsteriskTyped(KeyEvent event) {
+        int caretPosition = textArea.getCaretPosition();
+
+        List<String> classes = new ArrayList<>();
+        int offset = 0;
+        String lastTwo = textArea.getText(caretPosition - 2, caretPosition);
+        if (lastTwo.endsWith("*")) {
+            classes.add("b");
+            lastTwo = lastTwo.substring(0, lastTwo.length() - 1);
+            offset += 2;
+            if (lastTwo.equals("*")) {
+                classes.add("i");
+                offset += 1;
+            }
+        } else {
+            classes.add("i");
+            offset += 1;
+        }
+
+        textArea.insertText(caretPosition, "**");
+        int start = caretPosition - offset + 1;
+        int end = caretPosition + offset + 1;
+        textArea.setStyle(start, end, classes);
+        textArea.moveTo(caretPosition + 1);
+        event.consume();
     }
 
     private void handleEnterKeyPress() {
