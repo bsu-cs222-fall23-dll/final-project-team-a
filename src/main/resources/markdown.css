@@ -9,9 +9,4 @@
 }
 .md {
     -fx-fill: "#808080";
-    visibility: hidden;
-}
-
-.focused .md {
-    visibility: visible;
 }

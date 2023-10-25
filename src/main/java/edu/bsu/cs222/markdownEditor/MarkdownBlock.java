@@ -35,23 +35,48 @@ public class MarkdownBlock {
 
     private MarkdownBlock(EditorController editorController) {
         this.editorController = editorController;
-        if (codeArea.isFocused()) {
-            codeArea.textProperty().addListener(textListener);
-            codeArea.getStyleClass().add("focused");
-        }
+        if (codeArea.isFocused()) codeArea.textProperty().addListener(textListener);
         codeArea.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (isFocused) {
+                if (blockType != MarkdownBlockType.Paragraph) showMarkdown();
                 codeArea.textProperty().addListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().add("focused");
             } else {
                 codeArea.textProperty().removeListener(textListener);
-                if (blockType != null) codeArea.getStyleClass().remove("focused");
+                if (blockType != MarkdownBlockType.Paragraph) hideMarkdown();
             }
         });
     }
 
     public static CodeArea create(EditorController editorController) {
         return new MarkdownBlock(editorController).codeArea;
+    }
+
+    private void showMarkdown() {
+        if (blockType.renderedTextMatchesMarkdown) setMarkdownCodeStyle();
+        else {
+            String markdownCode = blockType.getMarkdownCode(codeArea.getText());
+            if (blockType.renderedText != null) codeArea.deleteText(0, blockType.renderedText.length());
+            codeArea.insertText(0, markdownCode);
+        }
+    }
+
+    private void hideMarkdown() {
+        if (blockType.renderedTextMatchesMarkdown) removeMarkdownCodeStyle();
+        else {
+            String markdownCode = blockType.getMarkdownCode(codeArea.getText());
+            codeArea.deleteText(0, markdownCode.length());
+            if (blockType.renderedText != null) codeArea.insertText(0, blockType.renderedText);
+        }
+    }
+
+    public void setMarkdownCodeStyle() {
+        String markdownCode = blockType.getMarkdownCode(codeArea.getText());
+        codeArea.setStyleClass(0, markdownCode.length(), "md");
+    }
+
+    public void removeMarkdownCodeStyle() {
+        String markdownCode = blockType.getMarkdownCode(codeArea.getText());
+        codeArea.setStyleClass(0, markdownCode.length(), "");
     }
 
     private void overrideKeyPressEvent() {
