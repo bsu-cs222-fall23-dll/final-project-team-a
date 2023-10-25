@@ -157,9 +157,9 @@ public class MarkdownBlock {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
-        } else if (event.isShortcutDown()) {
-            textArea.clear();
-        } else textArea.deletePreviousChar();
+        } else if (event.isShortcutDown()) textArea.clear();
+        else if (textArea.getSelectedText() != null) textArea.replaceSelection("");
+        else textArea.deletePreviousChar();
     }
 
     private void handleUpArrowKeyPress() {
