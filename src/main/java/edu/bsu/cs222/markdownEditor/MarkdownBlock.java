@@ -7,8 +7,10 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.InputMap;
 import org.fxmisc.wellbehaved.event.Nodes;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fxmisc.wellbehaved.event.EventPattern.anyOf;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
@@ -104,28 +106,26 @@ public class MarkdownBlock {
     private void handleAsteriskTyped(KeyEvent event) {
         int caretPosition = textArea.getCaretPosition();
 
-        List<String> classes = new ArrayList<>();
-        int offset = 0;
-        String lastTwo = textArea.getText(caretPosition - 2, caretPosition);
-        if (lastTwo.endsWith("*")) {
-            classes.add("b");
-            lastTwo = lastTwo.substring(0, lastTwo.length() - 1);
-            offset += 2;
-            if (lastTwo.equals("*")) {
-                classes.add("i");
-                offset += 1;
-            }
-        } else {
-            classes.add("i");
-            offset += 1;
-        }
+        List<String> classes;
+        int previousAsterisksLength = getPreviousAsterisks(caretPosition).length();
+        if (previousAsterisksLength == 0) classes = List.of("i");
+        else if (previousAsterisksLength == 1) classes = List.of("b");
+        else classes = Arrays.asList("b", "i");
 
         textArea.insertText(caretPosition, "**");
-        int start = caretPosition - offset + 1;
-        int end = caretPosition + offset + 1;
+        previousAsterisksLength++;
+        int start = caretPosition - previousAsterisksLength + 1;
+        int end = caretPosition + previousAsterisksLength + 1;
         textArea.setStyle(start, end, classes);
         textArea.moveTo(caretPosition + 1);
         event.consume();
+    }
+
+    private String getPreviousAsterisks(int caretPosition) {
+        String textBefore = textArea.getText(0, caretPosition);
+        Matcher matcher = Pattern.compile("\\**$").matcher(textBefore);
+        if (!matcher.find()) return "";
+        return matcher.group();
     }
 
     private void handleEnterKeyPress() {
