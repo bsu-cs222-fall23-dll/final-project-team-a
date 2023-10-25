@@ -2,7 +2,6 @@ package edu.bsu.cs222.markdownEditor;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
-import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 
 public class EditorController {
@@ -25,21 +24,21 @@ public class EditorController {
         editor.getChildren().add(MarkdownBlock.create(this));
     }
 
-    public int getBlockIndex(CodeArea block) {
-        return editor.getChildren().indexOf(block);
+    public int getBlockIndex(StyleClassedTextArea styleClassedTextArea) {
+        return editor.getChildren().indexOf(styleClassedTextArea);
     }
 
-    public CodeArea getBlockAt(int index) {
-        return (CodeArea) editor.getChildren().get(index);
+    public StyleClassedTextArea getBlockAt(int index) {
+        return (StyleClassedTextArea) editor.getChildren().get(index);
     }
 
     public void createBlock(int index) {
-        CodeArea block = MarkdownBlock.create(this);
-        editor.getChildren().add(index, block);
+        StyleClassedTextArea styleClassedTextArea = MarkdownBlock.create(this);
+        editor.getChildren().add(index, styleClassedTextArea);
     }
 
-    public void removeBlock(CodeArea block) {
-        editor.getChildren().remove(block);
+    public void removeBlock(StyleClassedTextArea styleClassedTextArea) {
+        editor.getChildren().remove(styleClassedTextArea);
     }
 
 }
