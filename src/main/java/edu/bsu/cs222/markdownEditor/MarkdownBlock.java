@@ -22,21 +22,6 @@ public class MarkdownBlock {
     private final StyleClassedTextArea textArea = new StyleClassedTextArea();
     private MarkdownBlockType blockType = MarkdownBlockType.Paragraph;
 
-    private final ChangeListener<String> textListener = (observable, oldValue, newValue) -> {
-        if (blockType == MarkdownBlockType.Paragraph) {
-            for (MarkdownBlockType blockType : MarkdownBlockType.values()) {
-                if (blockType != MarkdownBlockType.Paragraph && newValue.matches(blockType.regexp)) {
-                    this.blockType = blockType;
-                    blockType.setStyle(textArea);
-                    break;
-                }
-            }
-        } else if (!newValue.matches(blockType.regexp)) {
-            blockType.removeStyle(textArea);
-            blockType = MarkdownBlockType.Paragraph;
-        }
-    };
-
     private MarkdownBlock(EditorController editorController) {
         this.editorController = editorController;
         if (textArea.isFocused()) textArea.textProperty().addListener(textListener);
@@ -52,9 +37,33 @@ public class MarkdownBlock {
         overrideKeyPressEvent();
     }
 
+    private final ChangeListener<String> textListener = (observable, oldValue, newValue) -> {
+        if (blockType == MarkdownBlockType.Paragraph) {
+            for (MarkdownBlockType blockType : MarkdownBlockType.values()) {
+                if (blockType != MarkdownBlockType.Paragraph && newValue.matches(blockType.regexp)) {
+                    this.blockType = blockType;
+                    blockType.setStyle(textArea);
+                    textArea.textProperty().addListener(this.endMarkdownStyle);
+                    break;
+                }
+            }
+        } else if (!newValue.matches(blockType.regexp)) {
+            blockType.removeStyle(textArea);
+            blockType = MarkdownBlockType.Paragraph;
+        }
+    };
+
     public static StyleClassedTextArea create(EditorController editorController) {
         return new MarkdownBlock(editorController).textArea;
     }
+
+    private final ChangeListener<String> endMarkdownStyle = (observable, oldValue, newValue) -> {
+        int oldLength = oldValue.length(), newLength = newValue.length();
+        if (oldLength < newLength) {
+            textArea.setStyleClass(oldLength, newLength, "");
+        }
+        textArea.textProperty().removeListener(this.endMarkdownStyle);
+    };
 
     private void showMarkdown() {
         if (blockType.renderedTextMatchesMarkdown) setMarkdownCodeStyle();
@@ -181,4 +190,6 @@ public class MarkdownBlock {
             belowCurrentCodeArea.requestFocus();
         }
     }
+
+
 }
