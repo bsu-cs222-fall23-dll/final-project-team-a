@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.bsu.cs222.markdownEditor.AppController">
     <fx:include fx:id="menuBar" source="menu-bar.fxml" />
     <fx:include fx:id="editor" source="editor.fxml" VBox.vgrow="ALWAYS" />
-   <padding>
-      <Insets bottom="15.0" left="10.0" right="10.0" top="30.0" />
-   </padding>
 </VBox>
