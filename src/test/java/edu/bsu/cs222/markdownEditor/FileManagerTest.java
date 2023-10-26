@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -39,7 +40,12 @@ class FileManagerTest {
     @Nested
     class openFile {
         private final String content = "Hello World!";
-        Path path = createTestFile("openFileTestFile.txt", content);
+        Path path;
+
+        @BeforeEach
+        public void setUp() {
+            path = createTestFile("openFileTestFile.txt", content);
+        }
 
         @Test
         void setActiveFilePath() {
