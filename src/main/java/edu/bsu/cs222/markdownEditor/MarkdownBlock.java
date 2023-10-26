@@ -23,6 +23,7 @@ public class MarkdownBlock {
     private MarkdownBlockType blockType = MarkdownBlockType.Paragraph;
 
     private MarkdownBlock(EditorController editorController) {
+        formatCodeArea();
         this.editorController = editorController;
         if (textArea.isFocused()) textArea.textProperty().addListener(textListener);
         textArea.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
@@ -191,5 +192,7 @@ public class MarkdownBlock {
         }
     }
 
-
+    private void formatCodeArea() {
+        textArea.setPrefHeight(50);
+    }
 }

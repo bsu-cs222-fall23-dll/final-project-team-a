@@ -7,6 +7,9 @@
     -fx-font-family: 'Source Code Pro', monospace;
 }
 
+.paragraph-text {
+    -fx-font-size: 18px;
+}
 .h1 {
     -fx-font-size: 40px;
 }
@@ -24,4 +27,8 @@
 }
 .md {
     -fx-fill: "#808080";
+}
+.code-area {
+    -fx-padding: 2px;
+    -fx-border-width: 0;
 }
