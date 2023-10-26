@@ -7,7 +7,7 @@
     -fx-font-family: 'Source Code Pro', monospace;
 }
 
-.paragraph-text {
+.p, b, i {
     -fx-font-size: 18px;
 }
 .h1 {
