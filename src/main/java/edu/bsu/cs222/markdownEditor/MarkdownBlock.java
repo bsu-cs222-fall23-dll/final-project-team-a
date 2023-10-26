@@ -7,8 +7,10 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.wellbehaved.event.InputMap;
 import org.fxmisc.wellbehaved.event.Nodes;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.fxmisc.wellbehaved.event.EventPattern.anyOf;
 import static org.fxmisc.wellbehaved.event.EventPattern.keyPressed;
@@ -19,21 +21,6 @@ public class MarkdownBlock {
 
     private final StyleClassedTextArea textArea = new StyleClassedTextArea();
     private MarkdownBlockType blockType = MarkdownBlockType.Paragraph;
-
-    private final ChangeListener<String> textListener = (observable, oldValue, newValue) -> {
-        if (blockType == MarkdownBlockType.Paragraph) {
-            for (MarkdownBlockType blockType : MarkdownBlockType.values()) {
-                if (blockType != MarkdownBlockType.Paragraph && newValue.matches(blockType.regexp)) {
-                    this.blockType = blockType;
-                    blockType.setStyle(textArea);
-                    break;
-                }
-            }
-        } else if (!newValue.matches(blockType.regexp)) {
-            blockType.removeStyle(textArea);
-            blockType = MarkdownBlockType.Paragraph;
-        }
-    };
 
     private MarkdownBlock(EditorController editorController) {
         this.editorController = editorController;
@@ -50,9 +37,33 @@ public class MarkdownBlock {
         overrideKeyPressEvent();
     }
 
+    private final ChangeListener<String> textListener = (observable, oldValue, newValue) -> {
+        if (blockType == MarkdownBlockType.Paragraph) {
+            for (MarkdownBlockType blockType : MarkdownBlockType.values()) {
+                if (blockType != MarkdownBlockType.Paragraph && newValue.matches(blockType.regexp)) {
+                    this.blockType = blockType;
+                    blockType.setStyle(textArea);
+                    textArea.textProperty().addListener(this.endMarkdownStyle);
+                    break;
+                }
+            }
+        } else if (!newValue.matches(blockType.regexp)) {
+            blockType.removeStyle(textArea);
+            blockType = MarkdownBlockType.Paragraph;
+        }
+    };
+
     public static StyleClassedTextArea create(EditorController editorController) {
         return new MarkdownBlock(editorController).textArea;
     }
+
+    private final ChangeListener<String> endMarkdownStyle = (observable, oldValue, newValue) -> {
+        int oldLength = oldValue.length(), newLength = newValue.length();
+        if (oldLength < newLength) {
+            textArea.setStyleClass(oldLength, newLength, "");
+        }
+        textArea.textProperty().removeListener(this.endMarkdownStyle);
+    };
 
     private void showMarkdown() {
         if (blockType.renderedTextMatchesMarkdown) setMarkdownCodeStyle();
@@ -92,7 +103,7 @@ public class MarkdownBlock {
         Nodes.addInputMap(textArea, overrides);
         textArea.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) handleEnterKeyPress();
-            else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress();
+            else if (event.getCode().equals(KeyCode.BACK_SPACE)) handleBackSpaceKeyPress(event);
             else if (event.getCode().equals(KeyCode.UP)) handleUpArrowKeyPress();
             else if (event.getCode().equals(KeyCode.DOWN)) handleDownArrowKeyPress();
         });
@@ -104,28 +115,26 @@ public class MarkdownBlock {
     private void handleAsteriskTyped(KeyEvent event) {
         int caretPosition = textArea.getCaretPosition();
 
-        List<String> classes = new ArrayList<>();
-        int offset = 0;
-        String lastTwo = textArea.getText(caretPosition - 2, caretPosition);
-        if (lastTwo.endsWith("*")) {
-            classes.add("b");
-            lastTwo = lastTwo.substring(0, lastTwo.length() - 1);
-            offset += 2;
-            if (lastTwo.equals("*")) {
-                classes.add("i");
-                offset += 1;
-            }
-        } else {
-            classes.add("i");
-            offset += 1;
-        }
+        List<String> classes;
+        int previousAsterisksLength = getPreviousAsterisks(caretPosition).length();
+        if (previousAsterisksLength == 0) classes = List.of("i");
+        else if (previousAsterisksLength == 1) classes = List.of("b");
+        else classes = Arrays.asList("b", "i");
 
         textArea.insertText(caretPosition, "**");
-        int start = caretPosition - offset + 1;
-        int end = caretPosition + offset + 1;
+        previousAsterisksLength++;
+        int start = caretPosition - previousAsterisksLength + 1;
+        int end = caretPosition + previousAsterisksLength + 1;
         textArea.setStyle(start, end, classes);
         textArea.moveTo(caretPosition + 1);
         event.consume();
+    }
+
+    private String getPreviousAsterisks(int caretPosition) {
+        String textBefore = textArea.getText(0, caretPosition);
+        Matcher matcher = Pattern.compile("\\**$").matcher(textBefore);
+        if (!matcher.find()) return "";
+        return matcher.group();
     }
 
     private void handleEnterKeyPress() {
@@ -144,7 +153,7 @@ public class MarkdownBlock {
         newCodeArea.moveTo(0);
     }
 
-    private void handleBackSpaceKeyPress() {
+    private void handleBackSpaceKeyPress(KeyEvent event) {
         int caretPosition = textArea.getCaretPosition();
         int currentIndex = editorController.getBlockIndex(textArea);
         if (caretPosition == 0 && currentIndex != 0) {
@@ -157,7 +166,9 @@ public class MarkdownBlock {
                 lastCodeArea.insertText(lastCodeArea.getLength(), content);
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
-        } else textArea.deletePreviousChar();
+        } else if (event.isShortcutDown()) textArea.clear();
+        else if (textArea.getSelectedText() != null) textArea.replaceSelection("");
+        else textArea.deletePreviousChar();
     }
 
     private void handleUpArrowKeyPress() {
@@ -171,14 +182,14 @@ public class MarkdownBlock {
     }
 
     private void handleDownArrowKeyPress() {
-        int endIndex = textArea.getLength();
+        int blocksLength = textArea.getLength();
         int currentIndex = editorController.getBlockIndex(textArea);
 
-        if (currentIndex != endIndex) {
+        if (currentIndex < blocksLength - 2) {
             StyleClassedTextArea belowCurrentCodeArea = editorController.getBlockAt(currentIndex + 1);
             belowCurrentCodeArea.requestFocus();
-
-        } // else when they try ot move down when at last block
-        // Console throws out of bounds error - program still runs
+        }
     }
+
+
 }
