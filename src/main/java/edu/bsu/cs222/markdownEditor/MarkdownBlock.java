@@ -167,7 +167,7 @@ public class MarkdownBlock {
                 lastCodeArea.moveTo(lastCodeArea.getLength() - content.length());
             }
         } else if (event.isShortcutDown()) textArea.clear();
-        else if (textArea.getSelectedText() != null) textArea.replaceSelection("");
+        else if (!textArea.getSelectedText().equals("")) textArea.replaceSelection("");
         else textArea.deletePreviousChar();
     }
 
