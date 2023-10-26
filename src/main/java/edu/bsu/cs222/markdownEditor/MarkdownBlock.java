@@ -101,10 +101,6 @@ public class MarkdownBlock {
     }
 
     private void formatCodeArea() {
-
-
-        double contentHeight = codeArea.getLayoutBounds().getHeight();
-        codeArea.setPrefHeight(16);
-        codeArea.setMaxHeight(80);
+        codeArea.setPrefHeight(50);
     }
 }
