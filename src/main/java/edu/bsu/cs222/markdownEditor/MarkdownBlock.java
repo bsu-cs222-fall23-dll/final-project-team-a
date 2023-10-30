@@ -7,7 +7,6 @@ import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
 import org.fxmisc.richtext.model.TextOps;
 
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,6 @@ public class MarkdownBlock extends GenericStyledArea<Void, Markdown, Collection<
     public MarkdownBlock() {
         super(null, MarkdownBlock::applyParagraphStyle, Collections.emptyList(), MARKDOWN_OPS, Markdown::nodeFactory);
         getStyleClass().add("markdown-editor");
-        linkCss();
         new EventManager(this);
     }
 
@@ -36,11 +34,5 @@ public class MarkdownBlock extends GenericStyledArea<Void, Markdown, Collection<
 
     public void replace(int start, int end, Markdown markdown) {
         replace(start, end, ReadOnlyStyledDocument.fromSegment(markdown, null, Collections.emptyList(), MARKDOWN_OPS));
-    }
-
-    private void linkCss() {
-        URL url = MarkdownBlock.class.getResource("/markdown.css");
-        if (url == null) throw new RuntimeException("Couldn't find CSS file");
-        getStylesheets().add(url.toExternalForm());
     }
 }
