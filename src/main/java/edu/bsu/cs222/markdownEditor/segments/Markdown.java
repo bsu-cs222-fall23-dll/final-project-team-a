@@ -18,6 +18,10 @@ public class Markdown {
         this.text = text;
     }
 
+    public boolean isPlainText() {
+        return true;
+    }
+
     public static TextExt nodeFactory(StyledSegment<Markdown, Collection<String>> styledSegment) {
         Markdown markdown = styledSegment.getSegment();
         TextExt textNode = new TextExt();

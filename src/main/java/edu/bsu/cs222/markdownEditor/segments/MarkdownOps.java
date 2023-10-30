@@ -38,7 +38,11 @@ public class MarkdownOps<Style> implements TextOps<Markdown, Style> {
 
     @Override
     public Optional<Markdown> joinSeg(Markdown currentSeg, Markdown nextSeg) {
-        return Optional.empty();
+        if (currentSeg.isPlainText() && nextSeg.isPlainText()) {
+            return Optional.of(new Markdown(currentSeg.getText() + nextSeg.getText()));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
