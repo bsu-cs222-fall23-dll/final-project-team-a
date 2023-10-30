@@ -21,7 +21,7 @@ public class EditorController {
 
     @FXML
     private void initialize() {
-        editor.getChildren().add(MarkdownBlock.create(this));
+        editor.getChildren().add(new MarkdownBlock());
     }
 
     public int getBlockIndex(StyleClassedTextArea styleClassedTextArea) {
@@ -33,8 +33,8 @@ public class EditorController {
     }
 
     public void createBlock(int index) {
-        StyleClassedTextArea styleClassedTextArea = MarkdownBlock.create(this);
-        editor.getChildren().add(index, styleClassedTextArea);
+        MarkdownBlock markdownBlock = new MarkdownBlock();
+        editor.getChildren().add(index, markdownBlock);
     }
 
     public void removeBlock(StyleClassedTextArea styleClassedTextArea) {

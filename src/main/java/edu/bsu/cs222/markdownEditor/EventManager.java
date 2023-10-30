@@ -4,9 +4,9 @@ import edu.bsu.cs222.markdownEditor.segments.InlineMarkdown;
 import javafx.beans.value.ObservableValue;
 
 public class EventManager {
-    private final MarkdownEditor block;
+    private final MarkdownBlock block;
 
-    EventManager(MarkdownEditor block) {
+    EventManager(MarkdownBlock block) {
         this.block = block;
         block.textProperty().addListener(this::handleTextChange);
     }
