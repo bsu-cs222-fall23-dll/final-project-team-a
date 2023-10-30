@@ -20,6 +20,7 @@ public class MarkdownEditor extends GenericStyledArea<Void, Markdown, Collection
         super(null, MarkdownEditor::applyParagraphStyle, Collections.emptyList(), MARKDOWN_OPS, Markdown::nodeFactory);
         getStyleClass().add("markdown-editor");
         linkCss();
+        new EventManager(this);
     }
 
     private static void applyParagraphStyle(TextFlow textFlow, Void paragraphStyle) {
