@@ -3,6 +3,7 @@ package edu.bsu.cs222.markdownEditor;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getResourceUrl("/app.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1120, 680);
+        VBox vBox = fxmlLoader.load();
+        Scene scene = new Scene(vBox,1120, 680);
         scene.getStylesheets().add(getResourceUrl("/markdown.css").toExternalForm());
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);

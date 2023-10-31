@@ -2,8 +2,7 @@
 
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:id="app"
       fx:controller="edu.bsu.cs222.markdownEditor.AppController">
     <fx:include fx:id="menuBar" source="menu-bar.fxml"/>
-    <fx:include fx:id="editor" source="editor.fxml" VBox.vgrow="ALWAYS"/>
 </VBox>
