@@ -14,10 +14,10 @@ public class AppController {
 
     @FXML
     private void initialize() {
-        MarkdownBlock markdownBlock = new MarkdownBlock();
-        VirtualizedScrollPane<MarkdownBlock> vsPane = new VirtualizedScrollPane<>(markdownBlock);
+        MarkdownEditor markdownEditor = new MarkdownEditor();
+        VirtualizedScrollPane<MarkdownEditor> vsPane = new VirtualizedScrollPane<>(markdownEditor);
         VBox.setVgrow(vsPane, Priority.ALWAYS);
         appContainer.getChildren().add(vsPane);
-        menuBarController.setMarkdownBlock(markdownBlock);
+        menuBarController.setMarkdownBlock(markdownEditor);
     }
 }

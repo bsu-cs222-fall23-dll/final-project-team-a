@@ -1,6 +1,6 @@
 package edu.bsu.cs222.markdownEditor.segments;
 
-import edu.bsu.cs222.markdownEditor.MarkdownBlock;
+import edu.bsu.cs222.markdownEditor.MarkdownEditor;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,7 +17,7 @@ public class InlineMarkdown extends Markdown {
         return false;
     }
 
-    static public void findInstances(MarkdownBlock block, String text) {
+    static public void findInstances(MarkdownEditor block, String text) {
         for (Type type : Type.values()) {
             Matcher matcher = type.pattern.matcher(text);
             while (matcher.find()) {
