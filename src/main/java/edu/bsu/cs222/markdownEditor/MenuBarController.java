@@ -7,10 +7,10 @@ import java.io.File;
 
 public class MenuBarController {
 
-    private EditorController editorController;
+    private MarkdownBlock markdownBlock;
 
-    public void setEditorController(EditorController editorController) {
-        this.editorController = editorController;
+    public void setMarkdownBlock(MarkdownBlock markdownBlock) {
+        this.markdownBlock = markdownBlock;
     }
 
     private final FileChooser fileChooser = new FileChooser();
@@ -23,13 +23,13 @@ public class MenuBarController {
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
         String content = Main.fileManager.open(file);
-        editorController.setContent(content);
+        markdownBlock.insertText(0, content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            Main.fileManager.save(editorController.getContent());
+            Main.fileManager.save(markdownBlock.getText());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -38,6 +38,6 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        Main.fileManager.saveAs(editorController.getContent(), file);
+        Main.fileManager.saveAs(markdownBlock.getText(), file);
     }
 }
