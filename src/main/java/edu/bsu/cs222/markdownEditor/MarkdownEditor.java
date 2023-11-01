@@ -1,6 +1,5 @@
 package edu.bsu.cs222.markdownEditor;
 
-import edu.bsu.cs222.markdownEditor.segments.InlineMarkdown;
 import edu.bsu.cs222.markdownEditor.segments.Markdown;
 import edu.bsu.cs222.markdownEditor.segments.MarkdownOps;
 import javafx.scene.text.TextFlow;
@@ -13,12 +12,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class MarkdownBlock extends GenericStyledArea<MarkdownBlockType, Markdown, Collection<String>> {
+public class MarkdownEditor extends GenericStyledArea<MarkdownBlockType, Markdown, Collection<String>> {
 
     private static final TextOps<Markdown, Collection<String>> MARKDOWN_OPS = new MarkdownOps<>();
 
-    public MarkdownBlock() {
-        super(MarkdownBlockType.Paragraph, MarkdownBlock::applyParagraphStyle, Collections.emptyList(), MARKDOWN_OPS, Markdown::nodeFactory);
+    public MarkdownEditor() {
+        super(MarkdownBlockType.Paragraph, MarkdownEditor::applyParagraphStyle, Collections.emptyList(), MARKDOWN_OPS, Markdown::nodeFactory);
         getStyleClass().add("markdown-editor");
         new EventManager(this);
     }
