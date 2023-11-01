@@ -1,9 +1,10 @@
 package edu.bsu.cs222.markdownEditor;
 
+
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
-
 import java.io.File;
+
 
 public class MenuBarController {
 
@@ -39,5 +40,26 @@ public class MenuBarController {
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
         Main.fileManager.saveAs(markdownEditor.getText(), file);
+    }
+    @FXML
+    private void header1Button(){
+       // textNode.getStyleClass().addAll(styledSegment.getStyle());
+        int paragraphIndex = markdownEditor.getCurrentParagraph();
+        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading1);
+
+
+
+        // Paragraph<MarkdownBlockType, Markdown, Collection<String>> paragaph =getParagraph(paragraphIndex);
+        // MarkdownBlockType blockType = paragaph.getParagraphStyle();
+
+
+    }
+    @FXML
+    private void header2Button(){
+
+    }
+    @FXML
+    private void header3Button(){
+
     }
 }

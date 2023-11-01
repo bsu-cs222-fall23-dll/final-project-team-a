@@ -11,7 +11,7 @@ public class EventManager {
         block.textProperty().addListener(this::handleTextChange);
     }
 
-    private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+    private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue){
         InlineMarkdown.findInstances(block, newValue);
         block.checkParagraphType();
     }
