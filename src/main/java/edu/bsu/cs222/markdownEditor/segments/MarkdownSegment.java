@@ -34,7 +34,7 @@ public class MarkdownSegment {
         return new MarkdownSegment(text.substring(start, end));
     }
 
-    public TextExt styleNode(TextExt textNode) {
+    public TextExt configureNode(TextExt textNode) {
         textNode.setText(text);
         return textNode;
     }

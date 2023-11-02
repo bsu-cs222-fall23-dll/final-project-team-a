@@ -13,18 +13,16 @@ import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.util.Either;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
-public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Either<TextSegment, MarkdownSegment>, Collection<String>> {
+public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Either<TextSegment, MarkdownSegment>, TextStyle> {
 
-    private static final TextOps<TextSegment, Collection<String>> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
-    private static final TextOps<MarkdownSegment, Collection<String>> MARKDOWN_SEGMENT_OPS = new MarkdownSegmentOps<>();
-    private static final TextOps<Either<TextSegment, MarkdownSegment>, Collection<String>> EITHER_OPS = TEXT_SEGMENT_OPS._or(MARKDOWN_SEGMENT_OPS, (s1, s2) -> Optional.empty());
+    private static final TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
+    private static final TextOps<MarkdownSegment, TextStyle> MARKDOWN_SEGMENT_OPS = new MarkdownSegmentOps<>();
+    private static final TextOps<Either<TextSegment, MarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(MARKDOWN_SEGMENT_OPS, (s1, s2) -> Optional.empty());
 
     public MarkdownTextArea() {
-        super(MarkdownBlockType.Paragraph, MarkdownTextArea::applyParagraphStyle, Collections.emptyList(), EITHER_OPS, MarkdownTextArea::nodeFactory);
+        super(MarkdownBlockType.Paragraph, MarkdownTextArea::applyParagraphStyle, TextStyle.EMPTY, EITHER_OPS, MarkdownTextArea::nodeFactory);
         getStyleClass().add("markdown-editor");
     }
 
@@ -32,13 +30,13 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
         textFlow.getStyleClass().add(paragraphStyle.className);
     }
 
-    private static Node nodeFactory(StyledSegment<Either<TextSegment, MarkdownSegment>, Collection<String>> styledSegment) {
+    private static Node nodeFactory(StyledSegment<Either<TextSegment, MarkdownSegment>, TextStyle> styledSegment) {
         TextExt textNode = new TextExt();
         textNode.setTextOrigin(VPos.TOP);
-        textNode.getStyleClass().addAll(styledSegment.getStyle());
+        textNode.getStyleClass().addAll(styledSegment.getStyle().toList());
         styledSegment.getSegment().unify(
-                textSegment -> textSegment.styleNode(textNode),
-                markdownSegment -> markdownSegment.styleNode(textNode)
+                textSegment -> textSegment.configureNode(textNode),
+                markdownSegment -> markdownSegment.configureNode(textNode)
         );
         return textNode;
     }

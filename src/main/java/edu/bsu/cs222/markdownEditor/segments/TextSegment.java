@@ -30,8 +30,9 @@ public class TextSegment {
         return new TextSegment(text.substring(start, end));
     }
 
-    public TextExt styleNode(TextExt textNode) {
+    public TextExt configureNode(TextExt textNode) {
         textNode.setText(text);
+        textNode.getStyleClass().add("md");
         return textNode;
     }
 }
