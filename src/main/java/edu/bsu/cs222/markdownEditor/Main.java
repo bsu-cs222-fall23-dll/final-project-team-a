@@ -13,10 +13,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        MarkdownEditor markdownEditor = new MarkdownEditor();
+        MarkdownTextArea textArea = new MarkdownTextArea();
 //        VirtualizedScrollPane<MarkdownEditor> vsPane = new VirtualizedScrollPane<>(markdownEditor);
 //        Scene scene = new Scene(vsPane, 1120, 680);
-        Scene scene = new Scene(markdownEditor, 1120, 680);
+        Scene scene = new Scene(textArea, 1120, 680);
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);
         stage.show();

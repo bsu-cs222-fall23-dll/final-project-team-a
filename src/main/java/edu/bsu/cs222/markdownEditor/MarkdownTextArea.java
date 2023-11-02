@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Consumer;
 
-public class MarkdownEditor extends GenericStyledArea<Void, String, Collection<String>> {
+public class MarkdownTextArea extends GenericStyledArea<Void, String, Collection<String>> {
 
     private static final TextOps<String, Collection<String>> STYLED_TEXT_OPS = SegmentOps.styledTextOps();
 
-    public MarkdownEditor() {
-        super(null, MarkdownEditor::applyParagraphStyle, Collections.emptyList(), STYLED_TEXT_OPS, MarkdownEditor::nodeFactory);
+    public MarkdownTextArea() {
+        super(null, MarkdownTextArea::applyParagraphStyle, Collections.emptyList(), STYLED_TEXT_OPS, MarkdownTextArea::nodeFactory);
         getStyleClass().add("markdown-editor");
         linkCss();
     }
@@ -42,7 +42,7 @@ public class MarkdownEditor extends GenericStyledArea<Void, String, Collection<S
     }
 
     private void linkCss() {
-        URL url = MarkdownEditor.class.getResource("/markdown.css");
+        URL url = MarkdownTextArea.class.getResource("/markdown.css");
         if (url == null) throw new RuntimeException("Couldn't find CSS file");
         getStylesheets().add(url.toExternalForm());
     }
