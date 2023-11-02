@@ -9,6 +9,7 @@ public class Editor {
 
     public Editor() {
         textArea = new MarkdownTextArea();
+        new EventManager(textArea);
     }
 
     public Node getNode() {
