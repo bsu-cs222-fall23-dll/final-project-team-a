@@ -1,16 +1,22 @@
 package edu.bsu.cs222.markdownEditor;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 public class AppController {
+    private final Editor editor = new Editor();
+    @FXML
+    private VBox appContainer;
     @FXML
     private MenuBarController menuBarController;
 
     @FXML
-    private EditorController editorController;
-
-    @FXML
     private void initialize() {
-        menuBarController.setEditorController(editorController);
+        Node node = editor.getNode();
+        appContainer.getChildren().add(node);
+        VBox.setVgrow(node, Priority.ALWAYS);
+        menuBarController.setMarkdownEditor(editor);
     }
 }

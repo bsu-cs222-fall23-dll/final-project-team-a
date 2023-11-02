@@ -24,6 +24,7 @@ public class Main extends Application {
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);
         stage.show();
+        org.scenicview.ScenicView.show(scene); // for debugging
     }
 
     private URL getResourceUrl(String name) {
