@@ -24,6 +24,7 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
     public MarkdownTextArea() {
         super(MarkdownBlockType.Paragraph, MarkdownTextArea::applyParagraphStyle, TextStyle.EMPTY, EITHER_OPS, MarkdownTextArea::nodeFactory);
         getStyleClass().add("markdown-editor");
+        new EventManager(this).initialize();
     }
 
     private static void applyParagraphStyle(TextFlow textFlow, MarkdownBlockType paragraphStyle) {
@@ -41,11 +42,16 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
         return textNode;
     }
 
-    public String getParagraphText(int index) {
-        return getParagraph(index).getText();
+    public void checkCurrentParagraphType() {
+        checkParagraphType(getCurrentParagraph());
     }
 
-    public MarkdownBlockType getParagraphStyle(int index) {
-        return getParagraph(index).getParagraphStyle();
+    private void checkParagraphType(int index) {
+        MarkdownBlockType blockType = getParagraph(index).getParagraphStyle();
+        String text = getParagraph(index).getText();
+        if (blockType == MarkdownBlockType.Paragraph || !blockType.matches(text)) {
+            MarkdownBlockType newStyle = MarkdownBlockType.findType(text);
+            setParagraphStyle(index, newStyle);
+        }
     }
 }

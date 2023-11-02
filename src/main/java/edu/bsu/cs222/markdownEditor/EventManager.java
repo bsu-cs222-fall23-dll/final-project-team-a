@@ -4,12 +4,10 @@ import javafx.beans.value.ObservableValue;
 
 class EventManager {
 
-    private final Editor editor;
     private final MarkdownTextArea textArea;
 
-    EventManager(Editor editor) {
-        this.editor = editor;
-        this.textArea = editor.getTextArea();
+    EventManager(MarkdownTextArea textArea) {
+        this.textArea = textArea;
     }
 
     public void initialize() {
@@ -18,7 +16,6 @@ class EventManager {
 
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-        int index = textArea.getCurrentParagraph();
-        editor.checkParagraphType(index);
+        textArea.checkCurrentParagraphType();
     }
 }
