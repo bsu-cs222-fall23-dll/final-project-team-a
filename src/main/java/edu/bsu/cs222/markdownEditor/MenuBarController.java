@@ -43,23 +43,22 @@ public class MenuBarController {
     }
     @FXML
     private void header1Button(){
-       // textNode.getStyleClass().addAll(styledSegment.getStyle());
         int paragraphIndex = markdownEditor.getCurrentParagraph();
         markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading1);
-
-
-
-        // Paragraph<MarkdownBlockType, Markdown, Collection<String>> paragaph =getParagraph(paragraphIndex);
-        // MarkdownBlockType blockType = paragaph.getParagraphStyle();
-
 
     }
     @FXML
     private void header2Button(){
+        int paragraphIndex = markdownEditor.getCurrentParagraph();
+        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading2);
+
 
     }
     @FXML
     private void header3Button(){
+        int paragraphIndex = markdownEditor.getCurrentParagraph();
+        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading3);
+
 
     }
 }
