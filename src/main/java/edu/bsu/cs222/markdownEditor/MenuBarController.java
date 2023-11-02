@@ -1,17 +1,17 @@
 package edu.bsu.cs222.markdownEditor;
 
-
+import edu.bsu.cs222.markdownEditor.textarea.MarkdownBlockType;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
-import java.io.File;
 
+import java.io.File;
 
 public class MenuBarController {
 
-    private MarkdownEditor markdownEditor;
+    private Editor editor;
 
-    public void setMarkdownBlock(MarkdownEditor markdownEditor) {
-        this.markdownEditor = markdownEditor;
+    public void setMarkdownEditor(Editor editor) {
+        this.editor = editor;
     }
 
     private final FileChooser fileChooser = new FileChooser();
@@ -24,13 +24,13 @@ public class MenuBarController {
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
         String content = Main.fileManager.open(file);
-        markdownEditor.insertText(0, content);
+        editor.setContent(content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            Main.fileManager.save(markdownEditor.getText());
+            Main.fileManager.save(editor.getContent());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -39,26 +39,22 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        Main.fileManager.saveAs(markdownEditor.getText(), file);
+        Main.fileManager.saveAs(editor.getContent(), file);
     }
+
     @FXML
     private void header1Button(){
-        int paragraphIndex = markdownEditor.getCurrentParagraph();
-        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading1);
-
+        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading1);
     }
+
     @FXML
     private void header2Button(){
-        int paragraphIndex = markdownEditor.getCurrentParagraph();
-        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading2);
-
-
+        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading2);
     }
+
     @FXML
     private void header3Button(){
-        int paragraphIndex = markdownEditor.getCurrentParagraph();
-        markdownEditor.setParagraphStyle(paragraphIndex, MarkdownBlockType.Heading3);
-
-
+        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading3);
     }
+
 }
