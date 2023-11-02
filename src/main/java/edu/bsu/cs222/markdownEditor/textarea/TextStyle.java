@@ -1,4 +1,4 @@
-package edu.bsu.cs222.markdownEditor;
+package edu.bsu.cs222.markdownEditor.textarea;
 
 import java.util.ArrayList;
 import java.util.List;

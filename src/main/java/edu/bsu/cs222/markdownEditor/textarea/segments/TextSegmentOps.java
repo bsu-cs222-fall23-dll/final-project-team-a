@@ -1,4 +1,4 @@
-package edu.bsu.cs222.markdownEditor.segments;
+package edu.bsu.cs222.markdownEditor.textarea.segments;
 
 import org.fxmisc.richtext.model.TextOps;
 

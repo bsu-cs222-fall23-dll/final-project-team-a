@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import javafx.scene.Node;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 

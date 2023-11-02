@@ -1,4 +1,4 @@
-package edu.bsu.cs222.markdownEditor;
+package edu.bsu.cs222.markdownEditor.textarea;
 
 import javafx.beans.value.ObservableValue;
 

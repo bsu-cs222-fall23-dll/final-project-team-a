@@ -1,9 +1,9 @@
-package edu.bsu.cs222.markdownEditor;
+package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.segments.MarkdownSegment;
-import edu.bsu.cs222.markdownEditor.segments.MarkdownSegmentOps;
-import edu.bsu.cs222.markdownEditor.segments.TextSegment;
-import edu.bsu.cs222.markdownEditor.segments.TextSegmentOps;
+import edu.bsu.cs222.markdownEditor.textarea.segments.MarkdownSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.MarkdownSegmentOps;
+import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegmentOps;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.text.TextFlow;
