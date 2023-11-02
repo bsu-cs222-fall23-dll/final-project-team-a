@@ -2,9 +2,6 @@ package edu.bsu.cs222.markdownEditor;
 
 import javafx.scene.Node;
 import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.model.Paragraph;
-
-import java.util.Collection;
 
 public class Editor {
 
@@ -32,10 +29,10 @@ public class Editor {
     }
 
     public void checkParagraphType(int index) {
-        Paragraph<MarkdownBlockType, String, Collection<String>> paragraph = textArea.getParagraph(index);
-        MarkdownBlockType blockType = paragraph.getParagraphStyle();
-        if (blockType == MarkdownBlockType.Paragraph || !blockType.matches(paragraph.getText())) {
-            MarkdownBlockType newStyle = MarkdownBlockType.findType(paragraph.getText());
+        MarkdownBlockType blockType = textArea.getParagraphStyle(index);
+        String text = textArea.getParagraphText(index);
+        if (blockType == MarkdownBlockType.Paragraph || !blockType.matches(text)) {
+            MarkdownBlockType newStyle = MarkdownBlockType.findType(text);
             textArea.setParagraphStyle(index, newStyle);
         }
     }
