@@ -26,6 +26,6 @@ public class Editor {
     }
 
     public void setCurrentParagraphStyle(MarkdownBlockType style) {
-        textArea.setCurrentParagraphType(style);
+        textArea.setCurrentParagraphStyle(style);
     }
 }

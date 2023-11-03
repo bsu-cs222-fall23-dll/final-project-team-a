@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.text.TextFlow;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.TextExt;
+import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.util.Either;
@@ -42,8 +43,18 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
         return textNode;
     }
 
-    public void setCurrentParagraphType(MarkdownBlockType style) {
-        setParagraphStyle(getCurrentParagraph(), style);
+    @Override
+    public void setParagraphStyle(int paragraphIndex, MarkdownBlockType paragraphStyle) {
+        MarkdownBlockType currentStyle = getParagraphType(paragraphIndex);
+        if (hasSyntaxForParagraphStyle(paragraphIndex, currentStyle) && currentStyle != MarkdownBlockType.Paragraph)
+            removeSyntaxForParagraphStyle(paragraphIndex, currentStyle);
+        super.setParagraphStyle(paragraphIndex, paragraphStyle);
+        if (!hasSyntaxForParagraphStyle(paragraphIndex, paragraphStyle) && paragraphStyle != MarkdownBlockType.Paragraph)
+            addSyntaxForParagraphStyle(paragraphIndex, paragraphStyle);
+    }
+
+    public void setCurrentParagraphStyle(MarkdownBlockType style) {
+        this.setParagraphStyle(getCurrentParagraph(), style);
     }
 
     public void checkCurrentParagraphType() {
@@ -60,5 +71,33 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
             MarkdownBlockType newStyle = MarkdownBlockType.findType(text);
             setParagraphStyle(index, newStyle);
         }
+    }
+
+    private boolean hasSyntaxForParagraphStyle(int paragraphIndex, MarkdownBlockType style) {
+        String text = getParagraphText(paragraphIndex);
+        return style.matches(text);
+    }
+
+    private void removeSyntaxForParagraphStyle(int paragraphIndex, MarkdownBlockType style) {
+        String text = getParagraphText(paragraphIndex);
+        int end = style.getMarkdownSyntax(text).length();
+        deleteText(paragraphIndex, 0, paragraphIndex, end);
+    }
+
+    private void addSyntaxForParagraphStyle(int paragraphIndex, MarkdownBlockType style) {
+        MarkdownSegment segment = new MarkdownSegment(style.createMarkdownSyntax());
+        replace(paragraphIndex, 0, paragraphIndex, 0, ReadOnlyStyledDocument.fromSegment(eitherWrap(segment), style, getInitialTextStyle(), EITHER_OPS));
+    }
+
+    private MarkdownBlockType getParagraphType(int index) {
+        return getParagraph(index).getParagraphStyle();
+    }
+
+    private String getParagraphText(int index) {
+        return getParagraph(index).getText();
+    }
+
+    private Either<TextSegment, MarkdownSegment> eitherWrap(MarkdownSegment segment) {
+        return Either.right(segment);
     }
 }

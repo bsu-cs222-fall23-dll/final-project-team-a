@@ -23,6 +23,11 @@ public enum MarkdownBlockType {
             if (!matcher.find()) throw new RuntimeException("Text doesn't match MarkdownBlockType");
             return matcher.group(1);
         }
+
+        @Override
+        public String createMarkdownSyntax() {
+            return "1. ";
+        }
     };
 
     public final String className;
@@ -33,16 +38,21 @@ public enum MarkdownBlockType {
     }
 
     MarkdownBlockType(String typeSyntax, String className) {
-        this.typeSyntax = typeSyntax + " ";
+        this.typeSyntax = typeSyntax == null ? null : typeSyntax + " ";
         this.className = className;
     }
 
     public boolean matches(String text) {
+        if (typeSyntax == null) return true;
         return text.startsWith(typeSyntax);
     }
 
     public String getMarkdownSyntax(String text) {
         return typeSyntax;
+    }
+
+    public String createMarkdownSyntax() {
+        return typeSyntax == null ? "" : typeSyntax;
     }
 
     static public MarkdownBlockType findType(String text) {
