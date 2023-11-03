@@ -51,9 +51,12 @@ public class MarkdownTextArea extends GenericStyledArea<MarkdownBlockType, Eithe
     }
 
     private void checkParagraphType(int index) {
-        MarkdownBlockType blockType = getParagraph(index).getParagraphStyle();
-        String text = getParagraph(index).getText();
-        if (blockType == MarkdownBlockType.Paragraph || !blockType.matches(text)) {
+        MarkdownBlockType blockType = getParagraphType(index);
+        String text = getParagraphText(index);
+        if (blockType == MarkdownBlockType.Paragraph) {
+            MarkdownBlockType newStyle = MarkdownBlockType.findType(text);
+            if (newStyle != MarkdownBlockType.Paragraph) setParagraphStyle(index, newStyle);
+        } else if (!blockType.matches(text)) {
             MarkdownBlockType newStyle = MarkdownBlockType.findType(text);
             setParagraphStyle(index, newStyle);
         }
