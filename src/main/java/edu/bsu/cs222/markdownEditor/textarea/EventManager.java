@@ -16,6 +16,6 @@ class EventManager {
 
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
-        textArea.checkCurrentParagraphType();
+        textArea.checkCurrentParagraphStyle();
     }
 }

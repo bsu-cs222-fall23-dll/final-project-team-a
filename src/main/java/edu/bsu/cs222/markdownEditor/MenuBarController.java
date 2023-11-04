@@ -1,6 +1,6 @@
 package edu.bsu.cs222.markdownEditor;
 
-import edu.bsu.cs222.markdownEditor.textarea.MarkdownBlockType;
+import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 
@@ -44,17 +44,17 @@ public class MenuBarController {
 
     @FXML
     private void header1Button(){
-        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading1);
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading1);
     }
 
     @FXML
     private void header2Button(){
-        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading2);
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading2);
     }
 
     @FXML
     private void header3Button(){
-        editor.setCurrentParagraphStyle(MarkdownBlockType.Heading3);
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading3);
     }
 
 }

@@ -1,6 +1,6 @@
 package edu.bsu.cs222.markdownEditor;
 
-import edu.bsu.cs222.markdownEditor.textarea.MarkdownBlockType;
+import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import javafx.scene.Node;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -25,7 +25,7 @@ public class Editor {
         textArea.insertText(0, content);
     }
 
-    public void setCurrentParagraphStyle(MarkdownBlockType style) {
+    public void setCurrentParagraphStyle(ParagraphStyle style) {
         textArea.setCurrentParagraphStyle(style);
     }
 }
