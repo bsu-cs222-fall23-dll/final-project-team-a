@@ -10,6 +10,7 @@ import javafx.scene.text.TextFlow;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.TextExt;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
+import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.fxmisc.richtext.model.TextOps;
 import org.reactfx.util.Either;
@@ -43,6 +44,15 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         return textNode;
     }
 
+    public void replaceWithMarkdown(int paragraph, int from, int to) {
+        MarkdownSegment segment = new MarkdownSegment(getText(paragraph, from, paragraph, to));
+        replaceWithMarkdown(paragraph, from, to, segment);
+    }
+
+    public void replaceWithMarkdown(int paragraph, int from, int to, MarkdownSegment segment) {
+        replace(paragraph, from, paragraph, to, ReadOnlyStyledDocument.fromSegment(eitherWrap(segment), null, getInitialTextStyle(), EITHER_OPS));
+    }
+
     @Override
     public void setParagraphStyle(int paragraphIndex, ParagraphStyle paragraphStyle) {
         ParagraphStyle currentStyle = getParagraphType(paragraphIndex);
@@ -60,6 +70,12 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
     public void checkCurrentParagraphStyle() {
         checkParagraphStyle(getCurrentParagraph());
     }
+
+    public void addStyle(int paragraph, int from, int to, TextStyle style) {
+        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.updateWith(style));
+        setStyleSpans(paragraph, from, newSpans);
+    }
+
 
     private void checkParagraphStyle(int index) {
         ParagraphStyle style = getParagraphType(index);
@@ -93,7 +109,7 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         return getParagraph(index).getParagraphStyle();
     }
 
-    private String getParagraphText(int index) {
+    public String getParagraphText(int index) {
         return getParagraph(index).getText();
     }
 
