@@ -29,7 +29,7 @@ class EventManager {
             inlineStyle.forEachReference(text, matcher -> {
                 textArea.replaceWithMarkdown(currentParagraph, matcher.start("openTag"), matcher.end("openTag"));
                 textArea.replaceWithMarkdown(currentParagraph, matcher.start("closeTag"), matcher.end("closeTag"));
-                textArea.addStyle(currentParagraph, matcher.start(), matcher.end(), inlineStyle.style);
+                textArea.addStyle(currentParagraph, matcher.start(), matcher.end(), inlineStyle.styleProperty);
             });
         }
     }

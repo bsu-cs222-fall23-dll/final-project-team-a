@@ -7,18 +7,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum InlineMarkdown {
-    Italics(TextStyle.EMPTY.updateItalic(true),
+    Italics(TextStyle.Property.Italics,
             "(?<!\\\\)(?<openTag>[*])[^*]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)",
             "(?<!\\\\)(?<openTag>_)[^_]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)"),
-    Bold(TextStyle.EMPTY.updateBold(true),
+    Bold(TextStyle.Property.Bold,
             "(?<!\\\\)(?<openTag>[*]{2})\\*?[^*]+?\\*?(?<!\\\\)(?<closeTag>\\1)(?!\\1)",
             "(?<!\\\\)(?<openTag>__)[^_]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)");
 
-    public final TextStyle style;
+    public final TextStyle.Property styleProperty;
     final List<Pattern> patterns;
 
-    InlineMarkdown(TextStyle style, String... regexps) {
-        this.style = style;
+    InlineMarkdown(TextStyle.Property styleProperty, String... regexps) {
+        this.styleProperty = styleProperty;
         patterns = Arrays.stream(regexps).map(regexp -> Pattern.compile(regexp, Pattern.MULTILINE)).toList();
     }
 
