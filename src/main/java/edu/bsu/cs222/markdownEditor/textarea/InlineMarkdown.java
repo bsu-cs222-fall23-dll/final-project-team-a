@@ -15,7 +15,9 @@ public enum InlineMarkdown {
             "(?<![_\\\\])(__)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)"),
     ItalicAndBold(TextStyle.EMPTY.add(TextStyle.Property.Italics).add(TextStyle.Property.Bold),
             "(?<![*\\\\])([*]{3})(?![*\\s]).+?(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(___)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)");
+            "(?<![_\\\\])(___)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)"),
+    Code(TextStyle.EMPTY.add(TextStyle.Property.Code),
+            "(?<![`\\\\])(`)(?![`\\s]).+?(?<![`\\s\\\\])(\\1)");
 
 
     public final TextStyle style;

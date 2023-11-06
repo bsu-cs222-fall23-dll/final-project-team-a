@@ -34,7 +34,7 @@ public class TextStyle {
     }
 
     public enum Property {
-        Italics("i"), Bold("b");
+        Italics("i"), Bold("b"), Code("inline-code");
 
         private final String className;
 
