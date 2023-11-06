@@ -71,8 +71,8 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         checkParagraphStyle(getCurrentParagraph());
     }
 
-    public void addStyle(int paragraph, int from, int to, TextStyle.Property property) {
-        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.add(property));
+    public void addStyle(int paragraph, int from, int to, TextStyle style) {
+        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.concat(style));
         setStyleSpans(paragraph, from, newSpans);
     }
 

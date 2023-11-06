@@ -7,18 +7,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum InlineMarkdown {
-    Italics(TextStyle.Property.Italics,
-            "(?<!\\\\)(?<openTag>[*])[^*]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)",
-            "(?<!\\\\)(?<openTag>_)[^_]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)"),
-    Bold(TextStyle.Property.Bold,
-            "(?<!\\\\)(?<openTag>[*]{2})\\*?[^*]+?\\*?(?<!\\\\)(?<closeTag>\\1)(?!\\1)",
-            "(?<!\\\\)(?<openTag>__)[^_]+?(?<!\\\\)(?<closeTag>\\1)(?!\\1)");
+    Italics(TextStyle.EMPTY.add(TextStyle.Property.Italics),
+            "(?<![*\\\\])([*])(?![*\\s]).+?(?<![*\\s\\\\])(\\1)",
+            "(?<![_\\\\])(_)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)"),
+    Bold(TextStyle.EMPTY.add(TextStyle.Property.Bold),
+            "(?<![*\\\\])([*]{2})(?![*\\s]).+?(?<![*\\s\\\\])(\\1)",
+            "(?<![_\\\\])(__)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)"),
+    ItalicAndBold(TextStyle.EMPTY.add(TextStyle.Property.Italics).add(TextStyle.Property.Bold),
+            "(?<![*\\\\])([*]{3})(?![*\\s]).+?(?<![*\\s\\\\])(\\1)",
+            "(?<![_\\\\])(___)(?![_\\s]).+?(?<![_\\s\\\\])(\\1)");
 
-    public final TextStyle.Property styleProperty;
+
+    public final TextStyle style;
     final List<Pattern> patterns;
 
-    InlineMarkdown(TextStyle.Property styleProperty, String... regexps) {
-        this.styleProperty = styleProperty;
+    InlineMarkdown(TextStyle style, String... regexps) {
+        this.style = style;
         patterns = Arrays.stream(regexps).map(regexp -> Pattern.compile(regexp, Pattern.MULTILINE)).toList();
     }
 

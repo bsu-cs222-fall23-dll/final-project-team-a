@@ -19,9 +19,9 @@ public class TextStyle {
         return copy;
     }
 
-    public TextStyle remove(Property property) {
+    public TextStyle concat(TextStyle textStyle) {
         TextStyle copy = createCopy();
-        copy.properties.remove(property);
+        copy.properties.addAll(textStyle.properties);
         return copy;
     }
 
