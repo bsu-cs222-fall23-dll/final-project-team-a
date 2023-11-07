@@ -44,4 +44,21 @@
             </accelerator>
         </MenuItem>
     </Menu>
+<Menu mnemonicParsing="false" text="Format">
+    <MenuItem mnemonicParsing="false" onAction="#boldButton" text="Bold">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+        </accelerator>
+    </MenuItem>
+    <MenuItem mnemonicParsing="false" onAction="#italicsButton" text="Italics">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+        </accelerator>
+    </MenuItem>
+    <MenuItem mnemonicParsing="false" onAction="#inlineCode" text="Code">
+        <accelerator>
+            <KeyCodeCombination alt="UP" code="BACK_QUOTE" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+        </accelerator>
+    </MenuItem>
+</Menu>
 </MenuBar>
