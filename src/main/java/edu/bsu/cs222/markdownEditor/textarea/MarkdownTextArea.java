@@ -44,6 +44,10 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         return textNode;
     }
 
+    public void insertMarkdown(int paragraph, int pos, MarkdownSegment segment) {
+        replaceWithMarkdown(paragraph, pos, pos, segment);
+    }
+
     public void replaceWithMarkdown(int paragraph, int from, int to) {
         MarkdownSegment segment = new MarkdownSegment(getText(paragraph, from, paragraph, to));
         replaceWithMarkdown(paragraph, from, to, segment);
