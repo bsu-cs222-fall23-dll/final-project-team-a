@@ -37,12 +37,12 @@ public class Editor {
         String selectedText = textArea.getSelectedText();
 
         if (selectedText.isEmpty()) {
-            int caretPosition = textArea.getCaretPosition();
+            int caretPosition = textArea.getCaretColumn();
             MarkdownSegment segment = new MarkdownSegment(style.defaultTagSyntax + style.defaultTagSyntax);
             textArea.insertMarkdown(paragraph, caretPosition, segment);
             textArea.moveTo(caretPosition + style.defaultTagSyntax.length());
         } else {
-            IndexRange selectionRange = textArea.getSelection();
+            IndexRange selectionRange = textArea.getParagraphSelection(textArea.getCurrentParagraph());
             MarkdownSegment openTagSegment = new MarkdownSegment(style.defaultTagSyntax);
             MarkdownSegment closeTagSegment = new MarkdownSegment(style.defaultTagSyntax);
             textArea.insertMarkdown(paragraph, selectionRange.getStart(), openTagSegment);
