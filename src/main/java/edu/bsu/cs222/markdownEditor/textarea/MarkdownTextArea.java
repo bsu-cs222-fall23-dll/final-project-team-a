@@ -1,7 +1,7 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.MarkdownSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.MarkdownSegmentOps;
+import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenMarkdownSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenMarkdownSegmentOps;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegmentOps;
 import javafx.geometry.VPos;
@@ -17,11 +17,11 @@ import org.reactfx.util.Either;
 
 import java.util.Optional;
 
-public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<TextSegment, MarkdownSegment>, TextStyle> {
+public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> {
 
     private static final TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
-    private static final TextOps<MarkdownSegment, TextStyle> MARKDOWN_SEGMENT_OPS = new MarkdownSegmentOps<>();
-    private static final TextOps<Either<TextSegment, MarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(MARKDOWN_SEGMENT_OPS, (s1, s2) -> Optional.empty());
+    private static final TextOps<HiddenMarkdownSegment, TextStyle> HIDDEN_MARKDOWN_SEGMENT_OPS = new HiddenMarkdownSegmentOps<>();
+    private static final TextOps<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(HIDDEN_MARKDOWN_SEGMENT_OPS, (s1, s2) -> Optional.empty());
 
     public MarkdownTextArea() {
         super(ParagraphStyle.Paragraph, MarkdownTextArea::applyParagraphStyle, TextStyle.EMPTY, EITHER_OPS, MarkdownTextArea::nodeFactory);
@@ -33,13 +33,13 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         textFlow.getStyleClass().add(paragraphStyle.className);
     }
 
-    private static Node nodeFactory(StyledSegment<Either<TextSegment, MarkdownSegment>, TextStyle> styledSegment) {
+    private static Node nodeFactory(StyledSegment<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> styledSegment) {
         TextExt textNode = new TextExt();
         textNode.setTextOrigin(VPos.TOP);
         textNode.getStyleClass().addAll(styledSegment.getStyle().toList());
         styledSegment.getSegment().unify(
                 textSegment -> textSegment.configureNode(textNode),
-                markdownSegment -> markdownSegment.configureNode(textNode)
+                hiddenMarkdownSegment -> hiddenMarkdownSegment.configureNode(textNode)
         );
         return textNode;
     }
@@ -92,7 +92,7 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
     }
 
     private void addSyntaxForParagraphStyle(int paragraphIndex, ParagraphStyle style) {
-        MarkdownSegment segment = new MarkdownSegment(style.createMarkdownSyntax());
+        HiddenMarkdownSegment segment = new HiddenMarkdownSegment(style.createMarkdownSyntax());
         replace(paragraphIndex, 0, paragraphIndex, 0, ReadOnlyStyledDocument.fromSegment(eitherWrap(segment), style, getInitialTextStyle(), EITHER_OPS));
     }
 
@@ -104,7 +104,7 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         return getParagraph(index).getText();
     }
 
-    private Either<TextSegment, MarkdownSegment> eitherWrap(MarkdownSegment segment) {
+    private Either<TextSegment, HiddenMarkdownSegment> eitherWrap(HiddenMarkdownSegment segment) {
         return Either.right(segment);
     }
 }
