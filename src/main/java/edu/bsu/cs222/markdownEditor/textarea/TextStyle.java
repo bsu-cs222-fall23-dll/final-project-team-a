@@ -19,6 +19,10 @@ public class TextStyle {
         return copy;
     }
 
+    public boolean contains(Property property) {
+        return properties.contains(property);
+    }
+
     public TextStyle concat(TextStyle textStyle) {
         TextStyle copy = createCopy();
         copy.properties.addAll(textStyle.properties);
@@ -34,11 +38,14 @@ public class TextStyle {
     }
 
     public enum Property {
-        Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`");
+        Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`"), Markdown("md");
 
         private final String className;
         public final String defaultTagSyntax;
 
+        Property(String className) {
+            this(className, null);
+        }
 
         Property(String className, String defaultTagSyntax) {
             this.className = className;

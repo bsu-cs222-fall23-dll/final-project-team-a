@@ -1,9 +1,8 @@
 package edu.bsu.cs222.markdownEditor;
 
-import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
+import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
-import edu.bsu.cs222.markdownEditor.textarea.segments.MarkdownSegment;
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -32,24 +31,19 @@ public class Editor {
         textArea.setCurrentParagraphStyle(style);
     }
 
-    public void styleSelectedText(TextStyle.Property style){
+    public void styleSelectedText(TextStyle.Property style) {
         int paragraph = textArea.getCurrentParagraph();
         String selectedText = textArea.getSelectedText();
-
         if (selectedText.isEmpty()) {
             int caretPosition = textArea.getCaretColumn();
-            MarkdownSegment segment = new MarkdownSegment(style.defaultTagSyntax + style.defaultTagSyntax);
-            textArea.insertMarkdown(paragraph, caretPosition, segment);
+            textArea.insertText(paragraph, caretPosition, style.defaultTagSyntax + style.defaultTagSyntax);
             textArea.moveTo(caretPosition + style.defaultTagSyntax.length());
         } else {
             IndexRange selectionRange = textArea.getParagraphSelection(textArea.getCurrentParagraph());
-            MarkdownSegment openTagSegment = new MarkdownSegment(style.defaultTagSyntax);
-            MarkdownSegment closeTagSegment = new MarkdownSegment(style.defaultTagSyntax);
-            textArea.insertMarkdown(paragraph, selectionRange.getStart(), openTagSegment);
+            textArea.insertText(paragraph, selectionRange.getStart(), style.defaultTagSyntax);
             int selectionRangeEnd = selectionRange.getEnd() + style.defaultTagSyntax.length();
-            textArea.insertMarkdown(paragraph, selectionRangeEnd, closeTagSegment);
+            textArea.insertText(paragraph, selectionRangeEnd, style.defaultTagSyntax);
         }
-
 
 
     }
