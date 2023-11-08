@@ -23,8 +23,8 @@ class EventManager {
     }
 
     private void handleCurrentParagraphChange(ObservableValue<? extends Integer> observableValue, Integer oldValue, Integer newValue) {
-        textArea.hideMarkdown(oldValue);
-        textArea.showMarkdown(newValue);
+        textArea.hideParagraphMarkdown(oldValue);
+        textArea.showParagraphMarkdown(newValue);
     }
 
 
