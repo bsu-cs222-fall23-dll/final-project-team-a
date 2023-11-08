@@ -1,7 +1,7 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenMarkdownSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenMarkdownSegmentOps;
+import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegmentOps;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegmentOps;
 import javafx.geometry.VPos;
@@ -21,13 +21,13 @@ import org.reactfx.util.TriConsumer;
 import java.util.Optional;
 
 public class MarkdownTextArea
-        extends GenericStyledArea<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle>
+        extends GenericStyledArea<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle>
         implements ParagraphStyleActions {
 
     private static final TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
-    private static final TextOps<HiddenMarkdownSegment, TextStyle> HIDDEN_MARKDOWN_SEGMENT_OPS = new HiddenMarkdownSegmentOps<>();
-    private static final TextOps<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(
-            HIDDEN_MARKDOWN_SEGMENT_OPS,
+    private static final TextOps<RenderedMarkdownSegment, TextStyle> RENDERED_MARKDOWN_SEGMENT_OPS = new RenderedMarkdownSegmentOps<>();
+    private static final TextOps<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(
+            RENDERED_MARKDOWN_SEGMENT_OPS,
             (s1, s2) -> Optional.empty());
 
     public MarkdownTextArea() {
@@ -44,62 +44,64 @@ public class MarkdownTextArea
         textFlow.getStyleClass().add(paragraphStyle.className);
     }
 
-    private static Node nodeFactory(StyledSegment<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> styledSegment) {
+    private static Node nodeFactory(StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> styledSegment) {
         TextExt textNode = new TextExt();
         textNode.setTextOrigin(VPos.TOP);
         textNode.getStyleClass().addAll(styledSegment.getStyle().toList());
         styledSegment.getSegment().unify(
                 textSegment -> textSegment.configureNode(textNode),
-                hiddenMarkdownSegment -> hiddenMarkdownSegment.configureNode(textNode)
+                renderedMarkdownSegment -> renderedMarkdownSegment.configureNode(textNode)
         );
         return textNode;
     }
 
     void hideMarkdown(int paragraphIndex) {
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
         forEachMarkdownSegmentInParagraph(paragraphIndex, (segment, style, range) ->
                 segment.ifLeft(textSegment -> {
-                    HiddenMarkdownSegment hiddenSegment = new HiddenMarkdownSegment(textSegment.getText());
+                    RenderedMarkdownSegment renderedMarkdownSegment = new RenderedMarkdownSegment(textSegment.getText());
                     multiChangeBuilder.replace(
                             range.getStart(),
                             range.getEnd(),
-                            ReadOnlyStyledDocument.fromSegment(eitherWrap(hiddenSegment),
-                                    getParagraphStyleForInsertionAt(range.getStart()),
-                                    style,
-                                    EITHER_OPS)
+                            ReadOnlyStyledDocument.fromSegment(eitherWrap(renderedMarkdownSegment),
+                                                               getParagraphStyleForInsertionAt(range.getStart()),
+                                                               style,
+                                                               EITHER_OPS)
                     );
                 }));
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
     void showMarkdown(int paragraphIndex) {
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
         forEachMarkdownSegmentInParagraph(paragraphIndex, (segment, style, range) ->
-                segment.ifRight(hiddenSegment -> {
-                    TextSegment textSegment = new TextSegment(hiddenSegment.getText());
+                segment.ifRight(renderedMarkdownSegment -> {
+                    TextSegment textSegment = new TextSegment(renderedMarkdownSegment.getText());
                     multiChangeBuilder.replace(
                             range.getStart(),
                             range.getEnd(),
                             ReadOnlyStyledDocument.fromSegment(eitherWrap(textSegment),
-                                    null,
-                                    style,
-                                    EITHER_OPS)
+                                                               null,
+                                                               style,
+                                                               EITHER_OPS)
                     );
                 }));
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
-    private void forEachMarkdownSegmentInParagraph(int paragraphIndex, TriConsumer<Either<TextSegment, HiddenMarkdownSegment>, TextStyle, IndexRange> action) {
+    private void forEachMarkdownSegmentInParagraph(int paragraphIndex,
+                                                   TriConsumer<Either<TextSegment, RenderedMarkdownSegment>, TextStyle, IndexRange> action) {
         if (paragraphIndex >= getParagraphs().size()) return; // last paragraph doesn't exist when empty
         int start = 0;
         for (int i = 0; i < paragraphIndex; i++) {
             start += getParagraph(i).length();
             start++; // for line break
         }
-        for (StyledSegment<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> styledSegment : getParagraph(paragraphIndex).getStyledSegments()) {
-            Either<TextSegment, HiddenMarkdownSegment> segment = styledSegment.getSegment();
+        for (StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> styledSegment : getParagraph(
+                paragraphIndex).getStyledSegments()) {
+            Either<TextSegment, RenderedMarkdownSegment> segment = styledSegment.getSegment();
             TextStyle style = styledSegment.getStyle();
-            int end = start + segment.unify(TextSegment::length, HiddenMarkdownSegment::length);
+            int end = start + segment.unify(TextSegment::length, RenderedMarkdownSegment::length);
             if (style.contains(TextStyle.Property.Markdown) || segment.isRight()) {
                 IndexRange range = IndexRange.normalize(start, end);
                 action.accept(segment, style, range);
@@ -113,11 +115,11 @@ public class MarkdownTextArea
         setStyleSpans(paragraph, from, newSpans);
     }
 
-    private Either<TextSegment, HiddenMarkdownSegment> eitherWrap(HiddenMarkdownSegment segment) {
+    private Either<TextSegment, RenderedMarkdownSegment> eitherWrap(RenderedMarkdownSegment segment) {
         return Either.right(segment);
     }
 
-    private Either<TextSegment, HiddenMarkdownSegment> eitherWrap(TextSegment segment) {
+    private Either<TextSegment, RenderedMarkdownSegment> eitherWrap(TextSegment segment) {
         return Either.left(segment);
     }
 }

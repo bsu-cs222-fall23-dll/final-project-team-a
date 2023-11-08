@@ -1,13 +1,13 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenMarkdownSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.EditActions;
 import org.fxmisc.richtext.StyleActions;
 import org.reactfx.util.Either;
 
 public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, TextStyle>,
-        EditActions<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> {
+        EditActions<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> {
 
     default void checkParagraphStyleAgainstSyntax(int paragraphIndex) {
         ParagraphStyle currentStyle = getParagraphStyle(paragraphIndex);
