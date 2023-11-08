@@ -13,15 +13,6 @@ public class FileManager {
         this.activeFilePath = activeFilePath;
     }
 
-    public String open(File file) {
-        activeFilePath = file.toPath();
-        try {
-            return Files.readString(activeFilePath, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public void save(String content) throws NoFileOpenException {
         if (activeFilePath == null) throw new NoFileOpenException();
         try {
@@ -38,6 +29,15 @@ public class FileManager {
             throw new RuntimeException(e);
         }
         open(file);
+    }
+
+    public String open(File file) {
+        activeFilePath = file.toPath();
+        try {
+            return Files.readString(activeFilePath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

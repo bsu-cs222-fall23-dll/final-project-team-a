@@ -30,19 +30,19 @@ public class TextStyle {
         return properties.contains(property);
     }
 
-    private TextStyle createCopy() {
-        return new TextStyle(new HashSet<>(properties));
-    }
-
     public List<String> toList() {
         return properties.stream().map(property -> property.className).toList();
+    }
+
+    private TextStyle createCopy() {
+        return new TextStyle(new HashSet<>(properties));
     }
 
     public enum Property {
         Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`"), Markdown("md");
 
-        private final String className;
         public final String defaultTagSyntax;
+        private final String className;
 
         Property(String className) {
             this(className, null);

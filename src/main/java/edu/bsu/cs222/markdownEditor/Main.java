@@ -21,7 +21,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getResourceUrl("/app.fxml"));
         VBox vBox = fxmlLoader.load();
-        Scene scene = new Scene(vBox,1120, 680);
+        Scene scene = new Scene(vBox, 1120, 680);
         scene.getStylesheets().add(getResourceUrl("/markdown.css").toExternalForm());
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);

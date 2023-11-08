@@ -42,6 +42,14 @@ public enum ParagraphStyle {
         this.className = className;
     }
 
+    static public ParagraphStyle findType(String text) {
+        for (ParagraphStyle style : values()) {
+            if (style.equals(ParagraphStyle.Paragraph)) continue;
+            if (style.matches(text)) return style;
+        }
+        return Paragraph;
+    }
+
     public boolean matches(String text) {
         if (typeSyntax == null) return true;
         return text.startsWith(typeSyntax);
@@ -53,13 +61,5 @@ public enum ParagraphStyle {
 
     public String createMarkdownSyntax() {
         return typeSyntax == null ? "" : typeSyntax;
-    }
-
-    static public ParagraphStyle findType(String text) {
-        for (ParagraphStyle style : values()) {
-            if (style.equals(ParagraphStyle.Paragraph)) continue;
-            if (style.matches(text)) return style;
-        }
-        return Paragraph;
     }
 }
