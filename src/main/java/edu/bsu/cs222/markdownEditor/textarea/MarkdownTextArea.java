@@ -44,15 +44,6 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         return textNode;
     }
 
-    public void replaceWithMarkdown(int paragraph, int from, int to) {
-        MarkdownSegment segment = new MarkdownSegment(getText(paragraph, from, paragraph, to));
-        replaceWithMarkdown(paragraph, from, to, segment);
-    }
-
-    public void replaceWithMarkdown(int paragraph, int from, int to, MarkdownSegment segment) {
-        replace(paragraph, from, paragraph, to, ReadOnlyStyledDocument.fromSegment(eitherWrap(segment), null, getInitialTextStyle(), EITHER_OPS));
-    }
-
     @Override
     public void setParagraphStyle(int paragraphIndex, ParagraphStyle paragraphStyle) {
         ParagraphStyle currentStyle = getParagraphType(paragraphIndex);
