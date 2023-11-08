@@ -2,15 +2,15 @@ package edu.bsu.cs222.markdownEditor.textarea.segments;
 
 import org.fxmisc.richtext.TextExt;
 
-public class HiddenMarkdownSegment {
+public class RenderedMarkdownSegment {
 
     private final String text;
 
-    public HiddenMarkdownSegment() {
+    public RenderedMarkdownSegment() {
         this("");
     }
 
-    public HiddenMarkdownSegment(String text) {
+    public RenderedMarkdownSegment(String text) {
         this.text = text;
     }
 
@@ -30,8 +30,8 @@ public class HiddenMarkdownSegment {
         return text;
     }
 
-    public HiddenMarkdownSegment subSequence(int start, int end) {
-        return new HiddenMarkdownSegment(text.substring(start, end));
+    public RenderedMarkdownSegment subSequence(int start, int end) {
+        return new RenderedMarkdownSegment(text.substring(start, end));
     }
 
     public TextExt configureNode(TextExt textNode) {

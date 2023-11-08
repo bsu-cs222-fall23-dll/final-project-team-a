@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
@@ -9,10 +10,10 @@ import java.io.File;
 
 public class MenuBarController {
 
-    private Editor editor;
+    private MarkdownTextArea textArea;
 
-    public void setMarkdownEditor(Editor editor) {
-        this.editor = editor;
+    public void setTextArea(MarkdownTextArea texArea) {
+        this.textArea = texArea;
     }
 
     private final FileChooser fileChooser = new FileChooser();
@@ -25,13 +26,13 @@ public class MenuBarController {
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
         String content = Main.fileManager.open(file);
-        editor.setContent(content);
+        textArea.setText(content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            Main.fileManager.save(editor.getContent());
+            Main.fileManager.save(textArea.getText());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -40,37 +41,37 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        Main.fileManager.saveAs(editor.getContent(), file);
+        Main.fileManager.saveAs(textArea.getText(), file);
     }
 
     @FXML
     private void header1Button(){
-        editor.setCurrentParagraphStyle(ParagraphStyle.Heading1);
+        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading1);
     }
 
     @FXML
     private void header2Button(){
-        editor.setCurrentParagraphStyle(ParagraphStyle.Heading2);
+        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading2);
     }
 
     @FXML
     private void header3Button(){
-        editor.setCurrentParagraphStyle(ParagraphStyle.Heading3);
+        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading3);
     }
     @FXML
     public void italicsButton() {
-        editor.styleSelectedText(TextStyle.Property.Italics);
+        textArea.styleSelectedText(TextStyle.Property.Italics);
 
     }
 
     @FXML
     private void boldButton(){
-        editor.styleSelectedText(TextStyle.Property.Bold);
+        textArea.styleSelectedText(TextStyle.Property.Bold);
 
     }
     @FXML
     private void inlineCode(){
-        editor.styleSelectedText(TextStyle.Property.Code);
+        textArea.styleSelectedText(TextStyle.Property.Code);
     }
 
 

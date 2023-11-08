@@ -1,12 +1,12 @@
 package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class AppController {
-    private final Editor editor = new Editor();
+    private final MarkdownTextArea textArea = new MarkdownTextArea();
     @FXML
     private VBox appContainer;
     @FXML
@@ -14,9 +14,8 @@ public class AppController {
 
     @FXML
     private void initialize() {
-        Node node = editor.getNode();
-        appContainer.getChildren().add(node);
-        VBox.setVgrow(node, Priority.ALWAYS);
-        menuBarController.setMarkdownEditor(editor);
+        appContainer.getChildren().add(textArea);
+        VBox.setVgrow(textArea, Priority.ALWAYS);
+        menuBarController.setTextArea(textArea);
     }
 }
