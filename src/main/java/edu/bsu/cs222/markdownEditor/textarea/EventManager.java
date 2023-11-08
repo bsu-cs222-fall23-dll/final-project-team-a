@@ -12,12 +12,18 @@ class EventManager {
 
     public void initialize() {
         textArea.textProperty().addListener(this::handleTextChange);
+        textArea.currentParagraphProperty().addListener(this::handleCurrentParagraphChange);
     }
 
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         textArea.checkCurrentParagraphStyle();
         styleInlineMarkdown();
+    }
+
+    private void handleCurrentParagraphChange(ObservableValue<? extends Integer> observableValue, Integer oldValue, Integer newValue) {
+        textArea.hideMarkdown(oldValue);
+        textArea.showMarkdown(newValue);
     }
 
 

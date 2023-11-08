@@ -19,6 +19,10 @@ public class TextStyle {
         return copy;
     }
 
+    public boolean contains(Property property) {
+        return properties.contains(property);
+    }
+
     public TextStyle concat(TextStyle textStyle) {
         TextStyle copy = createCopy();
         copy.properties.addAll(textStyle.properties);
