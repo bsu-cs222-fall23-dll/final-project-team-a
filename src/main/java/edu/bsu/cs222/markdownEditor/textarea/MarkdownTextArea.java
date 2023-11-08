@@ -7,15 +7,12 @@ import javafx.scene.Node;
 import javafx.scene.text.TextFlow;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.TextExt;
-import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyledSegment;
 import org.reactfx.util.Either;
 
-import java.util.Collection;
-
 public class MarkdownTextArea
         extends GenericStyledArea<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle>
-        implements ParagraphStyleActions, MarkdownSyntaxActions {
+        implements ParagraphStyleActions, TextStyleActions, MarkdownSyntaxActions {
 
     public MarkdownTextArea() {
         super(ParagraphStyle.Paragraph,
@@ -40,15 +37,5 @@ public class MarkdownTextArea
                 renderedMarkdownSegment -> renderedMarkdownSegment.configureNode(textNode)
         );
         return textNode;
-    }
-
-    public void addStyleProperty(int paragraph, int from, int to, TextStyle.Property properties) {
-        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.add(properties));
-        setStyleSpans(paragraph, from, newSpans);
-    }
-
-    public void addStyleProperties(int paragraph, int from, int to, Collection<TextStyle.Property> properties) {
-        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.addAll(properties));
-        setStyleSpans(paragraph, from, newSpans);
     }
 }
