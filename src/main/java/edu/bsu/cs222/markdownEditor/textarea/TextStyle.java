@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,14 +20,14 @@ public class TextStyle {
         return copy;
     }
 
-    public boolean contains(Property property) {
-        return properties.contains(property);
+    public TextStyle addAll(Collection<Property> properties) {
+        TextStyle copy = createCopy();
+        copy.properties.addAll(properties);
+        return copy;
     }
 
-    public TextStyle concat(TextStyle textStyle) {
-        TextStyle copy = createCopy();
-        copy.properties.addAll(textStyle.properties);
-        return copy;
+    public boolean contains(Property property) {
+        return properties.contains(property);
     }
 
     private TextStyle createCopy() {
