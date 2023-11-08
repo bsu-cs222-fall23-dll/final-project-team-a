@@ -63,6 +63,14 @@ public class MenuBarController {
     private void header3Button() {
         textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading3);
     }
+    @FXML
+    public void numberedListButton() {
+        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.OrderedList);
+    }
+    @FXML
+    public void bulletPointsButton() {
+        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.UnorderedList);
+    }
 
     @FXML
     private void boldButton() {
@@ -74,5 +82,6 @@ public class MenuBarController {
     private void inlineCode() {
         textArea.styleSelectedText(TextStyle.Property.Code);
     }
+
 
 }
