@@ -2,28 +2,28 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
-
-<MenuBar prefHeight="28.0" prefWidth="53.0" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.bsu.cs222.markdownEditor.MenuBarController">
+<MenuBar xmlns:fx="http://javafx.com/fxml/1" prefHeight="28.0" prefWidth="53.0" useSystemMenuBar="true"
+         xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="edu.bsu.cs222.markdownEditor.MenuBarController">
     <Menu mnemonicParsing="false" text="File">
         <MenuItem mnemonicParsing="false" onAction="#newFile" text="New">
             <accelerator>
-                <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
         <MenuItem mnemonicParsing="false" onAction="#openFile" text="Open...">
             <accelerator>
-                <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
-        <SeparatorMenuItem mnemonicParsing="false" />
+        <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" onAction="#saveFile" text="Save">
             <accelerator>
-                <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
         <MenuItem mnemonicParsing="false" onAction="#saveFileAs" text="Save as...">
             <accelerator>
-                <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
     </Menu>
@@ -44,21 +44,21 @@
             </accelerator>
         </MenuItem>
     </Menu>
-<Menu mnemonicParsing="false" text="Format">
-    <MenuItem mnemonicParsing="false" onAction="#boldButton" text="Bold">
-        <accelerator>
-            <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-        </accelerator>
-    </MenuItem>
-    <MenuItem mnemonicParsing="false" onAction="#italicsButton" text="Italics">
-        <accelerator>
-            <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-        </accelerator>
-    </MenuItem>
-    <MenuItem mnemonicParsing="false" onAction="#inlineCode" text="Code">
-        <accelerator>
-            <KeyCodeCombination alt="UP" code="BACK_QUOTE" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-        </accelerator>
-    </MenuItem>
-</Menu>
+    <Menu mnemonicParsing="false" text="Format">
+        <MenuItem mnemonicParsing="false" onAction="#boldButton" text="Bold">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#italicsButton" text="Italics">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#inlineCode" text="Code">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="BACK_QUOTE" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+    </Menu>
 </MenuBar>

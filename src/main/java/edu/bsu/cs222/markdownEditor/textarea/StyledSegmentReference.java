@@ -16,11 +16,21 @@ class StyledSegmentReference {
     final int end;
 
     private StyledSegmentReference(int start,
-                                   StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> styledSegment) {
+            StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> styledSegment) {
         this.start = start;
         this.segment = styledSegment.getSegment();
         this.style = styledSegment.getStyle();
         this.end = start + segment.unify(TextSegment::length, RenderedMarkdownSegment::length);
+    }
+
+    static Stream<StyledSegmentReference> createReferences(int paragraphPosition,
+            List<StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle>> styledSegments) {
+        AtomicInteger start = new AtomicInteger(paragraphPosition);
+        return styledSegments.stream().map(styledSegment -> {
+            StyledSegmentReference reference = new StyledSegmentReference(start.get(), styledSegment);
+            start.set(reference.end);
+            return reference;
+        });
     }
 
     Either<TextSegment, RenderedMarkdownSegment> swapSegmentType() {
@@ -31,15 +41,5 @@ class StyledSegmentReference {
             String text = segment.getRight().getText();
             return Either.left(new TextSegment(text));
         }
-    }
-
-    static Stream<StyledSegmentReference> createReferences(int paragraphPosition,
-                                                           List<StyledSegment<Either<TextSegment, RenderedMarkdownSegment>, TextStyle>> styledSegments) {
-        AtomicInteger start = new AtomicInteger(paragraphPosition);
-        return styledSegments.stream().map(styledSegment -> {
-            StyledSegmentReference reference = new StyledSegmentReference(start.get(), styledSegment);
-            start.set(reference.end);
-            return reference;
-        });
     }
 }

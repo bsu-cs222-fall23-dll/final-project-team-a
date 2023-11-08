@@ -39,8 +39,8 @@ class FileManagerTest {
 
     @Nested
     class openFile {
-        private final String content = "Hello World!";
         Path path;
+        private final String content = "Hello World!";
 
         @BeforeEach
         public void setUp() {
@@ -79,7 +79,6 @@ class FileManagerTest {
             assertThrows(NoFileOpenException.class, () -> fileManager.save(""));
         }
     }
-
 
     @Nested
     class saveFileAs {

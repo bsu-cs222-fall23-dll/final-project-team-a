@@ -38,7 +38,7 @@ public class RenderedMarkdownSegmentOps<Style> implements TextOps<RenderedMarkdo
 
     @Override
     public Optional<RenderedMarkdownSegment> joinSeg(RenderedMarkdownSegment currentSeg,
-                                                     RenderedMarkdownSegment nextSeg) {
+            RenderedMarkdownSegment nextSeg) {
         if (currentSeg.isPlainText() && nextSeg.isPlainText()) {
             return Optional.of(new RenderedMarkdownSegment(currentSeg.getText() + nextSeg.getText()));
         } else {

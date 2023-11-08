@@ -17,6 +17,14 @@ public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, Text
             setParagraphStyle(paragraphIndex, styleAccordingToSyntax);
     }
 
+    default ParagraphStyle getParagraphStyle(int index) {
+        return getParagraph(index).getParagraphStyle();
+    }
+
+    default String getParagraphText(int index) {
+        return getParagraph(index).getText();
+    }
+
     default void setCurrentParagraphStyleWithSyntax(ParagraphStyle style) {
         int paragraphIndex = getCurrentParagraph();
         setParagraphStyleWithSyntax(paragraphIndex, style);
@@ -27,14 +35,6 @@ public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, Text
         removeParagraphStyleSyntax(paragraphIndex, currentStyle);
         setParagraphStyle(paragraphIndex, paragraphStyle);
         addParagraphStyleSyntax(paragraphIndex, paragraphStyle);
-    }
-
-    default ParagraphStyle getParagraphStyle(int index) {
-        return getParagraph(index).getParagraphStyle();
-    }
-
-    default String getParagraphText(int index) {
-        return getParagraph(index).getText();
     }
 
     private void removeParagraphStyleSyntax(int paragraphIndex, ParagraphStyle style) {

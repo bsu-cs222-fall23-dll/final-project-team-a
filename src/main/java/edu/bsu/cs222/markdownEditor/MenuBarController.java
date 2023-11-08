@@ -10,13 +10,18 @@ import java.io.File;
 
 public class MenuBarController {
 
+    private final FileChooser fileChooser = new FileChooser();
     private MarkdownTextArea textArea;
 
     public void setTextArea(MarkdownTextArea texArea) {
         this.textArea = texArea;
     }
 
-    private final FileChooser fileChooser = new FileChooser();
+    @FXML
+    public void italicsButton() {
+        textArea.styleSelectedText(TextStyle.Property.Italics);
+
+    }
 
     @FXML
     private void newFile() {
@@ -45,34 +50,29 @@ public class MenuBarController {
     }
 
     @FXML
-    private void header1Button(){
+    private void header1Button() {
         textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading1);
     }
 
     @FXML
-    private void header2Button(){
+    private void header2Button() {
         textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading2);
     }
 
     @FXML
-    private void header3Button(){
+    private void header3Button() {
         textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading3);
     }
-    @FXML
-    public void italicsButton() {
-        textArea.styleSelectedText(TextStyle.Property.Italics);
-
-    }
 
     @FXML
-    private void boldButton(){
+    private void boldButton() {
         textArea.styleSelectedText(TextStyle.Property.Bold);
 
     }
+
     @FXML
-    private void inlineCode(){
+    private void inlineCode() {
         textArea.styleSelectedText(TextStyle.Property.Code);
     }
-
 
 }
