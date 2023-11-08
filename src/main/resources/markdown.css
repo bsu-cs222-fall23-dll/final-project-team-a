@@ -25,6 +25,11 @@
 .i {
     -fx-font-style: italic;
 }
+.inline-code {
+    -rtfx-border-stroke-width: 1px;
+    -rtfx-border-stroke-color: darkgray;
+    -rtfx-background-color: whitesmoke;
+}
 .md {
     -fx-fill: "#808080";
 }

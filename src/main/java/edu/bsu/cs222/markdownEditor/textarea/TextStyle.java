@@ -1,50 +1,48 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TextStyle {
-    public static final TextStyle EMPTY = new TextStyle();
+    public static final TextStyle EMPTY = new TextStyle(new HashSet<>());
 
-    private final Boolean italic, bold, code;
+    private final Set<Property> properties;
 
-    private TextStyle() {
-        this(false, false, false);
+    private TextStyle(Set<Property> properties) {
+        this.properties = properties;
     }
 
-    private TextStyle(Boolean italic,
-                      Boolean bold,
-                      Boolean code) {
-        this.italic = italic;
-        this.bold = bold;
-        this.code = code;
+    public TextStyle add(Property property) {
+        TextStyle copy = createCopy();
+        copy.properties.add(property);
+        return copy;
     }
 
-    public TextStyle updateWith(TextStyle mixin) {
-        return new TextStyle(
-                mixin.bold || bold,
-                mixin.italic || italic,
-                mixin.code || code
-        );
+    public TextStyle concat(TextStyle textStyle) {
+        TextStyle copy = createCopy();
+        copy.properties.addAll(textStyle.properties);
+        return copy;
     }
 
-    public TextStyle updateBold(boolean bold) {
-        return new TextStyle(bold, italic, code);
-    }
-
-    public TextStyle updateItalic(boolean italic) {
-        return new TextStyle(bold, italic, code);
-    }
-
-    public TextStyle updateCode(boolean code) {
-        return new TextStyle(bold, italic, code);
+    private TextStyle createCopy() {
+        return new TextStyle(new HashSet<>(properties));
     }
 
     public List<String> toList() {
-        List<String> classes = new ArrayList<>();
-        if (bold) classes.add("b");
-        if (italic) classes.add("i");
-        if (code) classes.add("inline-code");
-        return classes;
+        return properties.stream().map(property -> property.className).toList();
+    }
+
+    public enum Property {
+        Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`");
+
+        private final String className;
+        public final String defaultTagSyntax;
+
+
+        Property(String className, String defaultTagSyntax) {
+            this.className = className;
+            this.defaultTagSyntax = defaultTagSyntax;
+        }
     }
 }

@@ -1,5 +1,7 @@
 package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
+import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 
@@ -40,4 +42,36 @@ public class MenuBarController {
         File file = fileChooser.showSaveDialog(null);
         Main.fileManager.saveAs(editor.getContent(), file);
     }
+
+    @FXML
+    private void header1Button(){
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading1);
+    }
+
+    @FXML
+    private void header2Button(){
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading2);
+    }
+
+    @FXML
+    private void header3Button(){
+        editor.setCurrentParagraphStyle(ParagraphStyle.Heading3);
+    }
+    @FXML
+    public void italicsButton() {
+        editor.styleSelectedText(TextStyle.Property.Italics);
+
+    }
+
+    @FXML
+    private void boldButton(){
+        editor.styleSelectedText(TextStyle.Property.Bold);
+
+    }
+    @FXML
+    private void inlineCode(){
+        editor.styleSelectedText(TextStyle.Property.Code);
+    }
+
+
 }
