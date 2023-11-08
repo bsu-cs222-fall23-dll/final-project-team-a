@@ -38,4 +38,9 @@ public class MarkdownTextArea
         );
         return textNode;
     }
+
+    public void setText(String content) {
+        deleteText(0, getLength());
+        insertText(0, content);
+    }
 }

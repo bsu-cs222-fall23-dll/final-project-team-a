@@ -17,6 +17,11 @@ public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, Text
             setParagraphStyle(paragraphIndex, styleAccordingToSyntax);
     }
 
+    default void setCurrentParagraphStyleWithSyntax(ParagraphStyle style) {
+        int paragraphIndex = getCurrentParagraph();
+        setParagraphStyleWithSyntax(paragraphIndex, style);
+    }
+
     default void setParagraphStyleWithSyntax(int paragraphIndex, ParagraphStyle paragraphStyle) {
         ParagraphStyle currentStyle = getParagraphStyle(paragraphIndex);
         removeParagraphStyleSyntax(paragraphIndex, currentStyle);
