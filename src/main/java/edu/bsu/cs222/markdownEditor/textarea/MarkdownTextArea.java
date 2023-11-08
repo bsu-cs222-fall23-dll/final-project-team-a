@@ -20,14 +20,22 @@ import org.reactfx.util.TriConsumer;
 
 import java.util.Optional;
 
-public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> {
+public class MarkdownTextArea
+        extends GenericStyledArea<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle>
+        implements ParagraphStyleActions {
 
     private static final TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
     private static final TextOps<HiddenMarkdownSegment, TextStyle> HIDDEN_MARKDOWN_SEGMENT_OPS = new HiddenMarkdownSegmentOps<>();
-    private static final TextOps<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(HIDDEN_MARKDOWN_SEGMENT_OPS, (s1, s2) -> Optional.empty());
+    private static final TextOps<Either<TextSegment, HiddenMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(
+            HIDDEN_MARKDOWN_SEGMENT_OPS,
+            (s1, s2) -> Optional.empty());
 
     public MarkdownTextArea() {
-        super(ParagraphStyle.Paragraph, MarkdownTextArea::applyParagraphStyle, TextStyle.EMPTY, EITHER_OPS, MarkdownTextArea::nodeFactory);
+        super(ParagraphStyle.Paragraph,
+              MarkdownTextArea::applyParagraphStyle,
+              TextStyle.EMPTY,
+              EITHER_OPS,
+              MarkdownTextArea::nodeFactory);
         getStyleClass().add("markdown-editor");
         new EventManager(this).initialize();
     }
@@ -46,17 +54,6 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         );
         return textNode;
     }
-
-    @Override
-    public void setParagraphStyle(int paragraphIndex, ParagraphStyle paragraphStyle) {
-        ParagraphStyle currentStyle = getParagraphType(paragraphIndex);
-        if (hasSyntaxForParagraphStyle(paragraphIndex, currentStyle) && currentStyle != ParagraphStyle.Paragraph)
-            removeSyntaxForParagraphStyle(paragraphIndex, currentStyle);
-        super.setParagraphStyle(paragraphIndex, paragraphStyle);
-        if (!hasSyntaxForParagraphStyle(paragraphIndex, paragraphStyle) && paragraphStyle != ParagraphStyle.Paragraph)
-            addSyntaxForParagraphStyle(paragraphIndex, paragraphStyle);
-    }
-
 
     void hideMarkdown(int paragraphIndex) {
         MultiChangeBuilder<ParagraphStyle, Either<TextSegment, HiddenMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
@@ -111,54 +108,9 @@ public class MarkdownTextArea extends GenericStyledArea<ParagraphStyle, Either<T
         }
     }
 
-    public void setCurrentParagraphStyle(ParagraphStyle style) {
-        this.setParagraphStyle(getCurrentParagraph(), style);
-    }
-
-    public void checkCurrentParagraphStyle() {
-        checkParagraphStyle(getCurrentParagraph());
-    }
-
     public void addStyle(int paragraph, int from, int to, TextStyle style) {
         StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.concat(style));
         setStyleSpans(paragraph, from, newSpans);
-    }
-
-
-    private void checkParagraphStyle(int index) {
-        ParagraphStyle style = getParagraphType(index);
-        String text = getParagraphText(index);
-        if (style == ParagraphStyle.Paragraph) {
-            ParagraphStyle newStyle = ParagraphStyle.findType(text);
-            if (newStyle != ParagraphStyle.Paragraph) setParagraphStyle(index, newStyle);
-        } else if (!style.matches(text)) {
-            ParagraphStyle newStyle = ParagraphStyle.findType(text);
-            setParagraphStyle(index, newStyle);
-        }
-    }
-
-    private boolean hasSyntaxForParagraphStyle(int paragraphIndex, ParagraphStyle style) {
-        String text = getParagraphText(paragraphIndex);
-        return style.matches(text);
-    }
-
-    private void removeSyntaxForParagraphStyle(int paragraphIndex, ParagraphStyle style) {
-        String text = getParagraphText(paragraphIndex);
-        int end = style.getMarkdownSyntax(text).length();
-        deleteText(paragraphIndex, 0, paragraphIndex, end);
-    }
-
-    private void addSyntaxForParagraphStyle(int paragraphIndex, ParagraphStyle style) {
-        HiddenMarkdownSegment segment = new HiddenMarkdownSegment(style.createMarkdownSyntax());
-        replace(paragraphIndex, 0, paragraphIndex, 0, ReadOnlyStyledDocument.fromSegment(eitherWrap(segment), style, getInitialTextStyle(), EITHER_OPS));
-    }
-
-    private ParagraphStyle getParagraphType(int index) {
-        return getParagraph(index).getParagraphStyle();
-    }
-
-    public String getParagraphText(int index) {
-        return getParagraph(index).getText();
     }
 
     private Either<TextSegment, HiddenMarkdownSegment> eitherWrap(HiddenMarkdownSegment segment) {

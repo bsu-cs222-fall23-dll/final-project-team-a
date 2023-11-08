@@ -28,7 +28,8 @@ public class Editor {
     }
 
     public void setCurrentParagraphStyle(ParagraphStyle style) {
-        textArea.setCurrentParagraphStyle(style);
+        int paragraphIndex = textArea.getCurrentParagraph();
+        textArea.setParagraphStyleWithSyntax(paragraphIndex, style);
     }
 
     public void styleSelectedText(TextStyle.Property style) {
