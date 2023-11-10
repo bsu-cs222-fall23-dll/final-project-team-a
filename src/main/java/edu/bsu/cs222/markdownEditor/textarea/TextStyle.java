@@ -34,6 +34,12 @@ public class TextStyle {
         return new TextStyle(new HashSet<>(properties));
     }
 
+    @Override
+    public String toString() {
+        String propsString = String.join(", ", properties.stream().map(property -> property.className).toList());
+        return String.format("%s[properties = %s]", this.getClass().getName(), propsString);
+    }
+
     public enum Property {
         Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`"), Markdown("md");
 
