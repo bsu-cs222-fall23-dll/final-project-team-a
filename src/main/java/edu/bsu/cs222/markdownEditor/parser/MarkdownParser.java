@@ -18,6 +18,7 @@ public class MarkdownParser {
         references.addAll(BoldSyntaxReference.findReferences(text));
         references.addAll(ItalicAndBoldSyntaxReference.findReferences(text));
         references.addAll(CodeSyntaxReference.findReferences(text));
+        references.addAll(LinkSyntaxReference.findReferences(text));
         return references;
     }
 }
