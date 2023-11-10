@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class TextStyle {
     public static final TextStyle EMPTY = new TextStyle(new HashSet<>());
+    public static final TextStyle MARKDOWN = EMPTY.add(Property.Markdown);
 
     private final Set<Property> properties;
 
