@@ -2,6 +2,8 @@ package edu.bsu.cs222.markdownEditor.parser.syntax;
 
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.scene.control.IndexRange;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.regex.Matcher;
 
@@ -16,11 +18,11 @@ abstract public class TagWrappedSyntaxReference extends SyntaxReference {
 
     public abstract TextStyle getTextStyle();
 
-    public int getTagLength() {
-        return tag.length();
-    }
-
-    public int getContentLength() {
-        return content.length();
+    public StyleSpans<TextStyle> getStyleSpans() {
+        StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
+        styleSpansBuilder.add(getTextStyle().add(TextStyle.Property.Markdown), tag.length());
+        styleSpansBuilder.add(getTextStyle(), content.length());
+        styleSpansBuilder.add(getTextStyle().add(TextStyle.Property.Markdown), tag.length());
+        return styleSpansBuilder.create();
     }
 }
