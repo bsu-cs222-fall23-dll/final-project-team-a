@@ -1,6 +1,5 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
 import javafx.beans.value.ObservableValue;
 
 class EventManager {
@@ -18,7 +17,7 @@ class EventManager {
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int currentParagraph = textArea.getCurrentParagraph();
-        styleMarkdownSyntaxInParagraph(currentParagraph);
+        textArea.styleParagraphMarkdown(currentParagraph);
         textArea.checkParagraphStyleAgainstSyntax(currentParagraph);
     }
 
@@ -27,16 +26,5 @@ class EventManager {
             Integer newValue) {
         textArea.hideParagraphMarkdown(oldValue);
         textArea.showParagraphMarkdown(newValue);
-    }
-
-    private void styleMarkdownSyntaxInParagraph(int currentParagraph) {
-        textArea.clearStyle(currentParagraph);
-        String text = textArea.getParagraphText(currentParagraph);
-        MarkdownParser parser = new MarkdownParser(text);
-        parser.getMarkdownSyntax().forEach(syntaxReference ->
-                textArea.setStyleSpans(currentParagraph,
-                        syntaxReference.range.getStart(),
-                        syntaxReference.getStyleSpans())
-        );
     }
 }

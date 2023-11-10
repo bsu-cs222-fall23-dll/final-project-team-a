@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
+import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
@@ -13,6 +14,21 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         TextEditingArea<ParagraphStyle, Segment, TextStyle> {
 
     TextOps<Segment, TextStyle> SEGMENT_OPS = new SegmentOps<>();
+
+    default void styleParagraphMarkdown(int currentParagraph) {
+        String text = getText(currentParagraph);
+        MarkdownParser parser = new MarkdownParser(text);
+        styleParagraphMarkdown(currentParagraph, parser);
+    }
+
+    private void styleParagraphMarkdown(int currentParagraph, MarkdownParser parser) {
+        clearStyle(currentParagraph);
+        parser.getMarkdownSyntax().forEach(syntaxReference ->
+                setStyleSpans(currentParagraph,
+                        syntaxReference.range.getStart(),
+                        syntaxReference.getStyleSpans())
+        );
+    }
 
     default void hideParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
