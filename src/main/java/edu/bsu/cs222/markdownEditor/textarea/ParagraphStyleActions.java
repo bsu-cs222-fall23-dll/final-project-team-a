@@ -1,13 +1,12 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.EditActions;
 import org.fxmisc.richtext.StyleActions;
-import org.reactfx.util.Either;
 
 public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, TextStyle>,
-        EditActions<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> {
+        EditActions<ParagraphStyle, Segment, TextStyle> {
 
     default void checkParagraphStyleAgainstSyntax(int paragraphIndex) {
         ParagraphStyle currentStyle = getParagraphStyle(paragraphIndex);
@@ -50,7 +49,7 @@ public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, Text
         if (style == ParagraphStyle.Paragraph) return;
         TextSegment segment = new TextSegment(style.createMarkdownSyntax());
         TextStyle markdownStyle = TextStyle.EMPTY.add(TextStyle.Property.Markdown);
-        replace(paragraphIndex, 0, paragraphIndex, 0, Either.left(segment), markdownStyle);
+        replace(paragraphIndex, 0, paragraphIndex, 0, segment, markdownStyle);
     }
 
 }

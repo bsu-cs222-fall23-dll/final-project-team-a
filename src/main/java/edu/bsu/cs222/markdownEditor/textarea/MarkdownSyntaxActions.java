@@ -1,30 +1,22 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegmentOps;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegmentOps;
+import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
 import org.fxmisc.richtext.MultiChangeBuilder;
 import org.fxmisc.richtext.StyleActions;
 import org.fxmisc.richtext.TextEditingArea;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
 import org.fxmisc.richtext.model.TextOps;
-import org.reactfx.util.Either;
-
-import java.util.Optional;
 
 public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, TextStyle>,
-        TextEditingArea<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> {
+        TextEditingArea<ParagraphStyle, Segment, TextStyle> {
 
-    TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
-    TextOps<RenderedMarkdownSegment, TextStyle> RENDERED_MARKDOWN_SEGMENT_OPS = new RenderedMarkdownSegmentOps<>();
-    TextOps<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(
-            RENDERED_MARKDOWN_SEGMENT_OPS,
-            (s1, s2) -> Optional.empty());
+    TextOps<Segment, TextStyle> SEGMENT_OPS = new SegmentOps<>();
 
     default void hideParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
                 .filter(reference -> reference.style.contains(TextStyle.Property.Markdown))
@@ -35,17 +27,20 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
                             ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
                                     paragraphStyle,
                                     reference.style,
-                                    EITHER_OPS));
+                                    SEGMENT_OPS));
                 });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
     default void showParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
-                .filter(reference -> reference.segment.isRight())
+                .filter(reference -> {
+                    System.out.println(reference.segment);
+                    return reference.segment instanceof HiddenSyntaxSegment;
+                })
                 .forEach(reference -> {
                     ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(reference.start);
                     multiChangeBuilder.replace(reference.start,
@@ -53,7 +48,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
                             ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
                                     paragraphStyle,
                                     reference.style,
-                                    EITHER_OPS));
+                                    SEGMENT_OPS));
                 });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
