@@ -24,7 +24,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         clearStyle(currentParagraph);
         parser.getMarkdownSyntax().forEach(syntaxReference ->
                 setStyleSpans(currentParagraph,
-                        syntaxReference.range.getStart(),
+                        syntaxReference.start,
                         syntaxReference.getStyleSpans())
         );
     }
@@ -35,7 +35,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         String text = getText(paragraphIndex);
         new MarkdownParser(text).getMarkdownSyntax().forEach(syntaxReference -> {
-            int start = paragraphPosition + syntaxReference.range.getStart();
+            int start = paragraphPosition + syntaxReference.start;
             ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
             for (Segment renderedSegment : syntaxReference.getRenderedSegments()) {
                 int end = start + renderedSegment.length();
@@ -59,7 +59,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         String text = getText(paragraphIndex);
         MarkdownParser parser = new MarkdownParser(text);
         parser.getMarkdownSyntax().forEach(syntaxReference -> {
-            int start = paragraphPosition + syntaxReference.range.getStart();
+            int start = paragraphPosition + syntaxReference.start;
             ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
             for (Segment renderedSegment : syntaxReference.getMarkdownSegments()) {
                 int end = start + renderedSegment.length();

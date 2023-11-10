@@ -5,7 +5,6 @@ import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HyperlinkSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
-import javafx.scene.control.IndexRange;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
@@ -22,7 +21,7 @@ public class LinkSyntaxReference extends SyntaxReference {
     public final String urlString;
 
     LinkSyntaxReference(Matcher matcher) {
-        super(new IndexRange(matcher.start(), matcher.end()));
+        super(matcher);
         this.text = matcher.group(1);
         this.urlString = matcher.group(2);
     }
