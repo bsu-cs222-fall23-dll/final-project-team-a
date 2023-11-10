@@ -1,7 +1,6 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
 import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
-import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
 import org.fxmisc.richtext.MultiChangeBuilder;
@@ -34,17 +33,22 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         if (lastParagraphEmpty(paragraphIndex)) return;
         MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
-        StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
-                .filter(reference -> reference.style.contains(TextStyle.Property.Markdown))
-                .forEach(reference -> {
-                    ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(reference.start);
-                    multiChangeBuilder.replace(reference.start,
-                            reference.end,
-                            ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
-                                    paragraphStyle,
-                                    reference.style,
-                                    SEGMENT_OPS));
-                });
+        String text = getText(paragraphIndex);
+        new MarkdownParser(text).getMarkdownSyntax().forEach(syntaxReference -> {
+            int start = paragraphPosition + syntaxReference.range.getStart();
+            ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
+            for (Segment renderedSegment : syntaxReference.getRenderedSegments()) {
+                int end = start + renderedSegment.length();
+                System.out.println(getStyleOfChar(start));
+                multiChangeBuilder.replace(start,
+                        end,
+                        ReadOnlyStyledDocument.fromSegment(renderedSegment,
+                                paragraphStyle,
+                                getStyleOfChar(start),
+                                SEGMENT_OPS));
+                start = end;
+            }
+        });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
@@ -52,21 +56,24 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         if (lastParagraphEmpty(paragraphIndex)) return;
         MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
-        StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
-                .filter(reference -> {
-                    System.out.println(reference.segment);
-                    return reference.segment instanceof HiddenSyntaxSegment;
-                })
-                .forEach(reference -> {
-                    ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(reference.start);
-                    multiChangeBuilder.replace(reference.start,
-                            reference.end,
-                            ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
-                                    paragraphStyle,
-                                    reference.style,
-                                    SEGMENT_OPS));
-                });
+        String text = getText(paragraphIndex);
+        MarkdownParser parser = new MarkdownParser(text);
+        parser.getMarkdownSyntax().forEach(syntaxReference -> {
+            int start = paragraphPosition + syntaxReference.range.getStart();
+            ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
+            for (Segment renderedSegment : syntaxReference.getMarkdownSegments()) {
+                int end = start + renderedSegment.length();
+                multiChangeBuilder.replace(start,
+                        end,
+                        ReadOnlyStyledDocument.fromSegment(renderedSegment,
+                                paragraphStyle,
+                                TextStyle.EMPTY,
+                                SEGMENT_OPS));
+                start = end;
+            }
+        });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
+        styleParagraphMarkdown(paragraphIndex, parser);
     }
 
     /**

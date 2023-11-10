@@ -26,14 +26,6 @@ public class TextStyle {
         return copy;
     }
 
-    public boolean contains(Property property) {
-        return properties.contains(property);
-    }
-
-    public Set<Property> getProperties() {
-        return properties;
-    }
-
     public List<String> toList() {
         return properties.stream().map(property -> property.className).toList();
     }
