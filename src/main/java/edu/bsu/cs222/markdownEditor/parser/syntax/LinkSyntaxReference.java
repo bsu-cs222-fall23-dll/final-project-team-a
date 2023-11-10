@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class LinkSyntaxReference extends SyntaxReference {
     // language=RegExp
-    private static final String regexp = "(?<!\\\\)\\[(.+)(?<!\\\\)\\]\\((.+)(?<!\\\\)\\)";
+    private static final String regexp = "(?<!\\\\)\\[(.+)(?<!\\\\)]\\((.+)(?<!\\\\)\\)";
 
     public final String text;
     public final String urlString;
