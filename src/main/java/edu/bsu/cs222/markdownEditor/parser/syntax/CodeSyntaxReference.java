@@ -1,9 +1,9 @@
 package edu.bsu.cs222.markdownEditor.parser.syntax;
 
+import edu.bsu.cs222.markdownEditor.parser.DynamicMatcher;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,11 +16,10 @@ public class CodeSyntaxReference extends TagWrappedSyntaxReference {
         super(matcher);
     }
 
-    static public List<CodeSyntaxReference> findReferences(String text) {
-        List<CodeSyntaxReference> references = new ArrayList<>();
-        Matcher matcher = Pattern.compile(regexp, Pattern.MULTILINE).matcher(text);
-        while (matcher.find()) references.add(new CodeSyntaxReference(matcher));
-        return references;
+    static public void forEachReference(StringBuilder stringBuilder, Consumer<CodeSyntaxReference> action) {
+        Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
+        DynamicMatcher matcher = new DynamicMatcher(pattern, stringBuilder);
+        matcher.forEachMatch(match -> action.accept(new CodeSyntaxReference(match)));
     }
 
     @Override

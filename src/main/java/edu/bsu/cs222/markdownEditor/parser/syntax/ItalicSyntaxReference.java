@@ -1,9 +1,10 @@
 package edu.bsu.cs222.markdownEditor.parser.syntax;
 
+import edu.bsu.cs222.markdownEditor.parser.DynamicMatcher;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,13 +20,12 @@ public class ItalicSyntaxReference extends TagWrappedSyntaxReference {
         super(matcher);
     }
 
-    static public List<ItalicSyntaxReference> findReferences(String text) {
-        List<ItalicSyntaxReference> references = new ArrayList<>();
+    static public void forEachReference(StringBuilder stringBuilder, Consumer<ItalicSyntaxReference> action) {
         regexps.forEach(regexp -> {
-            Matcher matcher = Pattern.compile(regexp, Pattern.MULTILINE).matcher(text);
-            while (matcher.find()) references.add(new ItalicSyntaxReference(matcher));
+            Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
+            DynamicMatcher matcher = new DynamicMatcher(pattern, stringBuilder);
+            matcher.forEachMatch(match -> action.accept(new ItalicSyntaxReference(match)));
         });
-        return references;
     }
 
     @Override

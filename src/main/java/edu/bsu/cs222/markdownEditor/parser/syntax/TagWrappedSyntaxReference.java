@@ -43,4 +43,12 @@ abstract public class TagWrappedSyntaxReference extends SyntaxReference {
         styleSpansBuilder.add(getTextStyle().add(TextStyle.Property.Markdown), tag.length());
         return styleSpansBuilder.create();
     }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getTextStartIndex() {
+        return start + tag.length();
+    }
 }

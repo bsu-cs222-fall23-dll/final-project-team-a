@@ -7,7 +7,7 @@ import org.fxmisc.richtext.model.StyleSpans;
 import java.util.regex.Matcher;
 
 public abstract class SyntaxReference {
-    public final int start;
+    public int start;
     public final String fullText;
 
     SyntaxReference(Matcher matcher) {
@@ -22,4 +22,10 @@ public abstract class SyntaxReference {
     public abstract SegmentList getRenderedSegments();
 
     public abstract StyleSpans<TextStyle> getStyleSpans();
+
+    public abstract int getTextStartIndex();
+
+    public void offsetStart(int length) {
+        start += length;
+    }
 }
