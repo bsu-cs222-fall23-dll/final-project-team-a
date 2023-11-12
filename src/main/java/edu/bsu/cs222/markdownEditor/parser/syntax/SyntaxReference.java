@@ -1,10 +1,9 @@
 package edu.bsu.cs222.markdownEditor.parser.syntax;
 
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
-import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
 import org.fxmisc.richtext.model.StyleSpans;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 public abstract class SyntaxReference {
@@ -18,9 +17,9 @@ public abstract class SyntaxReference {
 
     public abstract TextStyle getTextStyle();
 
-    public abstract List<Segment> getMarkdownSegments();
+    public abstract SegmentList getMarkdownSegments();
 
-    public abstract List<Segment> getRenderedSegments();
+    public abstract SegmentList getRenderedSegments();
 
     public abstract StyleSpans<TextStyle> getStyleSpans();
 }

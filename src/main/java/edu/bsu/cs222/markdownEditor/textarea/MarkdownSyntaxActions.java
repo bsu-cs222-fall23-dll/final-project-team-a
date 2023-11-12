@@ -2,6 +2,7 @@ package edu.bsu.cs222.markdownEditor.textarea;
 
 import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
 import org.fxmisc.richtext.MultiChangeBuilder;
 import org.fxmisc.richtext.StyleActions;
@@ -37,20 +38,19 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         String text = getText(paragraphIndex);
+        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
         new MarkdownParser(text).getMarkdownSyntax().forEach(syntaxReference -> {
-            int start = paragraphPosition + syntaxReference.start;
-            ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
-            for (Segment renderedSegment : syntaxReference.getRenderedSegments()) {
-                int end = start + renderedSegment.length();
-                System.out.println(getStyleOfChar(start));
+            SegmentList segmentList = syntaxReference.getRenderedSegments();
+            segmentList.forEach((start, segment) -> {
+                start += paragraphPosition;
+                int end = start + segment.length();
                 multiChangeBuilder.replace(start,
                         end,
-                        ReadOnlyStyledDocument.fromSegment(renderedSegment,
+                        ReadOnlyStyledDocument.fromSegment(segment,
                                 paragraphStyle,
                                 getStyleOfChar(start),
                                 SEGMENT_OPS));
-                start = end;
-            }
+            });
         });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
@@ -61,19 +61,19 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         String text = getText(paragraphIndex);
         MarkdownParser parser = new MarkdownParser(text);
+        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
         parser.getMarkdownSyntax().forEach(syntaxReference -> {
-            int start = paragraphPosition + syntaxReference.start;
-            ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(start);
-            for (Segment renderedSegment : syntaxReference.getMarkdownSegments()) {
-                int end = start + renderedSegment.length();
+            SegmentList segmentList = syntaxReference.getMarkdownSegments();
+            segmentList.forEach((start, segment) -> {
+                start += paragraphPosition;
+                int end = start + segment.length();
                 multiChangeBuilder.replace(start,
                         end,
-                        ReadOnlyStyledDocument.fromSegment(renderedSegment,
+                        ReadOnlyStyledDocument.fromSegment(segment,
                                 paragraphStyle,
-                                TextStyle.EMPTY,
+                                getStyleOfChar(start),
                                 SEGMENT_OPS));
-                start = end;
-            }
+            });
         });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
         styleParagraphMarkdown(paragraphIndex, parser);

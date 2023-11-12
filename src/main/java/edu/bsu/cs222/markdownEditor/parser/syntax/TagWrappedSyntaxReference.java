@@ -2,12 +2,11 @@ package edu.bsu.cs222.markdownEditor.parser.syntax;
 
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 abstract public class TagWrappedSyntaxReference extends SyntaxReference {
@@ -21,14 +20,20 @@ abstract public class TagWrappedSyntaxReference extends SyntaxReference {
 
     public abstract TextStyle getTextStyle();
 
-    public List<Segment> getMarkdownSegments() {
-        return List.of(new TextSegment(tag + text + tag));
+    public SegmentList getMarkdownSegments() {
+        SegmentList map = new SegmentList(start);
+        map.add(new TextSegment(tag));
+        map.skip(text.length());
+        map.add(new TextSegment(tag));
+        return map;
     }
 
-    public List<Segment> getRenderedSegments() {
-        return List.of(new HiddenSyntaxSegment(tag),
-                new TextSegment(text),
-                new HiddenSyntaxSegment(tag));
+    public SegmentList getRenderedSegments() {
+        SegmentList map = new SegmentList(start);
+        map.add(new HiddenSyntaxSegment(tag));
+        map.skip(text.length());
+        map.add(new HiddenSyntaxSegment(tag));
+        return map;
     }
 
     public StyleSpans<TextStyle> getStyleSpans() {

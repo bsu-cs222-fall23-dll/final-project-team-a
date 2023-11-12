@@ -3,7 +3,7 @@ package edu.bsu.cs222.markdownEditor.parser.syntax;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HyperlinkSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
 import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -40,17 +40,23 @@ public class LinkSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public List<Segment> getMarkdownSegments() {
-        return List.of(new TextSegment("[" + text + "]("),
-                new HyperlinkSegment(urlString),
-                new TextSegment(")"));
+    public SegmentList getMarkdownSegments() {
+        SegmentList map = new SegmentList(start);
+        map.add(new TextSegment("["));
+        map.skip(text.length());
+        map.add(new TextSegment("]("));
+        map.add(new HyperlinkSegment(urlString));
+        map.add(new TextSegment(")"));
+        return map;
     }
 
     @Override
-    public List<Segment> getRenderedSegments() {
-        return List.of(new HiddenSyntaxSegment("["),
-                new HyperlinkSegment(text, urlString),
-                new HiddenSyntaxSegment("](" + urlString + ")"));
+    public SegmentList getRenderedSegments() {
+        SegmentList map = new SegmentList(start);
+        map.add(new HiddenSyntaxSegment("["));
+        map.add(new HyperlinkSegment(text));
+        map.add(new HiddenSyntaxSegment("](" + urlString + ")"));
+        return map;
     }
 
     @Override
