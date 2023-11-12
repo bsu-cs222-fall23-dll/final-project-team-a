@@ -9,7 +9,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.regex.Matcher;
 
-public class TagWrappedSyntaxReference extends SyntaxReference {
+class TagWrappedSyntaxReference extends SyntaxReference {
     private final InlineSyntaxType type;
     private final String tag, text;
 
@@ -45,12 +45,12 @@ public class TagWrappedSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public String getText() {
+    String getText() {
         return text;
     }
 
     @Override
-    public int getTextStart() {
+    int getTextStart() {
         return start + tag.length();
     }
 }

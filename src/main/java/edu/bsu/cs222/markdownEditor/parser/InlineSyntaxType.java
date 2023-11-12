@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum InlineSyntaxType {
+enum InlineSyntaxType {
     Italic(TextStyle.EMPTY.add(TextStyle.Property.Italics),
             "(?<![*\\\\])([*])(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
             "(?<![_\\\\])(_)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
@@ -61,7 +61,7 @@ public enum InlineSyntaxType {
 
     abstract SyntaxReference createReference(Matcher match);
 
-    public void forEachReference(StringBuilder stringBuilder, Consumer<SyntaxReference> action) {
+    void forEachReference(StringBuilder stringBuilder, Consumer<SyntaxReference> action) {
         regexps.forEach(regexp -> {
             Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
             DynamicMatcher matcher = new DynamicMatcher(pattern, stringBuilder);

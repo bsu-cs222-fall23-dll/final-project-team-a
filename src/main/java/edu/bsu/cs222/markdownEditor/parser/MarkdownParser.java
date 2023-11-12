@@ -15,18 +15,18 @@ public class MarkdownParser {
         this.stringBuilder = new StringBuilder(text);
     }
 
-    public MarkdownParser createChildParser(InlineSyntaxType type, SyntaxReference reference) {
+    public List<SyntaxReference> getMarkdownSyntax() {
+        List<SyntaxReference> references = new ArrayList<>();
+        findReferences(references);
+        return references;
+    }
+
+    private MarkdownParser createChildParser(InlineSyntaxType type, SyntaxReference reference) {
         MarkdownParser parser = new MarkdownParser(reference.getText());
         parser.start = reference.getTextStart();
         parser.parentSyntaxTypes = new HashSet<>(this.parentSyntaxTypes);
         parser.parentSyntaxTypes.add(type);
         return parser;
-    }
-
-    public List<SyntaxReference> getMarkdownSyntax() {
-        List<SyntaxReference> references = new ArrayList<>();
-        findReferences(references);
-        return references;
     }
 
     private void findReferences(List<SyntaxReference> references) {
@@ -41,7 +41,7 @@ public class MarkdownParser {
         }
     }
 
-    public boolean isChildOfType(InlineSyntaxType type) {
+    private boolean isChildOfType(InlineSyntaxType type) {
         return parentSyntaxTypes.contains(type);
     }
 }

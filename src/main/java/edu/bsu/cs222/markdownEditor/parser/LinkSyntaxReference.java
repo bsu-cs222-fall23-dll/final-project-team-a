@@ -10,7 +10,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.regex.Matcher;
 
-public class LinkSyntaxReference extends SyntaxReference {
+class LinkSyntaxReference extends SyntaxReference {
 
     public final String text;
     public final String urlString;
@@ -21,7 +21,7 @@ public class LinkSyntaxReference extends SyntaxReference {
         this.urlString = matcher.group(2);
     }
 
-    public static TextStyle getTextStyle() {
+    static TextStyle getTextStyle() {
         // TODO: Style hyperlinks
         return TextStyle.EMPTY;
     }
@@ -58,12 +58,12 @@ public class LinkSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public int getTextStart() {
+    int getTextStart() {
         return start + 1;
     }
 
     @Override
-    public String getText() {
+    String getText() {
         return text;
     }
 }

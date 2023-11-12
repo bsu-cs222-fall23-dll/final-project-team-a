@@ -21,11 +21,11 @@ public abstract class SyntaxReference {
 
     public abstract StyleSpans<TextStyle> getStyleSpans();
 
-    public abstract String getText();
+    abstract String getText();
 
-    public abstract int getTextStart();
+    abstract int getTextStart();
 
-    public void offsetStart(int length) {
+    void offsetStart(int length) {
         start += length;
     }
 }
