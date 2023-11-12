@@ -1,6 +1,5 @@
 package edu.bsu.cs222.markdownEditor.parser.syntax;
 
-import edu.bsu.cs222.markdownEditor.parser.DynamicMatcher;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HiddenSyntaxSegment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.HyperlinkSegment;
@@ -9,13 +8,9 @@ import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LinkSyntaxReference extends SyntaxReference {
-    // language=RegExp
-    private static final String regexp = "(?<!\\\\)\\[(.+)(?<!\\\\)]\\((.+)(?<!\\\\)\\)";
 
     public final String text;
     public final String urlString;
@@ -26,14 +21,7 @@ public class LinkSyntaxReference extends SyntaxReference {
         this.urlString = matcher.group(2);
     }
 
-    static public void forEachReference(StringBuilder stringBuilder, Consumer<LinkSyntaxReference> action) {
-        Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
-        DynamicMatcher matcher = new DynamicMatcher(pattern, stringBuilder);
-        matcher.forEachMatch(match -> action.accept(new LinkSyntaxReference(match)));
-    }
-
-    @Override
-    public TextStyle getTextStyle() {
+    public static TextStyle getTextStyle() {
         // TODO: Style hyperlinks
         return TextStyle.EMPTY;
     }
@@ -69,7 +57,13 @@ public class LinkSyntaxReference extends SyntaxReference {
         return styleSpansBuilder.create();
     }
 
-    public int getTextStartIndex() {
+    @Override
+    public int getTextStart() {
         return start + 1;
+    }
+
+    @Override
+    public String getText() {
+        return text;
     }
 }

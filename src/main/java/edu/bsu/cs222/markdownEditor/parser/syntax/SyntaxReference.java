@@ -15,15 +15,15 @@ public abstract class SyntaxReference {
         fullText = matcher.group();
     }
 
-    public abstract TextStyle getTextStyle();
-
     public abstract SegmentList getMarkdownSegments();
 
     public abstract SegmentList getRenderedSegments();
 
     public abstract StyleSpans<TextStyle> getStyleSpans();
 
-    public abstract int getTextStartIndex();
+    public abstract String getText();
+
+    public abstract int getTextStart();
 
     public void offsetStart(int length) {
         start += length;

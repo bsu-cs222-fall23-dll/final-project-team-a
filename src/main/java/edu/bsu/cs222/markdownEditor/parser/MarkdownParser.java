@@ -1,68 +1,50 @@
 package edu.bsu.cs222.markdownEditor.parser;
 
-import edu.bsu.cs222.markdownEditor.parser.syntax.*;
+import edu.bsu.cs222.markdownEditor.parser.syntax.InlineSyntaxType;
+import edu.bsu.cs222.markdownEditor.parser.syntax.SyntaxReference;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MarkdownParser {
 
     private final StringBuilder stringBuilder;
     private int start = 0;
-    private boolean parseItalic = true, parseBold = true, parseCode = true, parseLink = true;
+    private Set<InlineSyntaxType> parentSyntaxTypes = new HashSet<>();
 
     public MarkdownParser(String text) {
         this.stringBuilder = new StringBuilder(text);
     }
 
-    public MarkdownParser createChildParser(String text, int start) {
-        MarkdownParser parser = new MarkdownParser(text);
-        parser.start = start;
-        parser.parseItalic = this.parseItalic;
-        parser.parseBold = this.parseBold;
-        parser.parseCode = this.parseCode;
-        parser.parseLink = this.parseLink;
+    public MarkdownParser createChildParser(InlineSyntaxType type, SyntaxReference reference) {
+        MarkdownParser parser = new MarkdownParser(reference.getText());
+        parser.start = reference.getTextStart();
+        parser.parentSyntaxTypes = new HashSet<>(this.parentSyntaxTypes);
+        parser.parentSyntaxTypes.add(type);
         return parser;
     }
 
     public List<SyntaxReference> getMarkdownSyntax() {
         List<SyntaxReference> references = new ArrayList<>();
-        if (parseItalic) ItalicSyntaxReference.forEachReference(stringBuilder, reference -> {
-            reference.offsetStart(start);
-            references.add(reference);
-            MarkdownParser childParser = createChildParser(reference.getText(), reference.getTextStartIndex());
-            childParser.parseItalic = false;
-            references.addAll(childParser.getMarkdownSyntax());
-        });
-        if (parseBold) BoldSyntaxReference.forEachReference(stringBuilder, reference -> {
-            reference.offsetStart(start);
-            references.add(reference);
-            MarkdownParser childParser = createChildParser(reference.getText(), reference.getTextStartIndex());
-            childParser.parseBold = false;
-            references.addAll(childParser.getMarkdownSyntax());
-        });
-        if (parseItalic && parseBold) ItalicAndBoldSyntaxReference.forEachReference(stringBuilder, reference -> {
-            reference.offsetStart(start);
-            references.add(reference);
-            MarkdownParser childParser = createChildParser(reference.getText(), reference.getTextStartIndex());
-            childParser.parseItalic = false;
-            childParser.parseBold = false;
-            references.addAll(childParser.getMarkdownSyntax());
-        });
-        if (parseCode) CodeSyntaxReference.forEachReference(stringBuilder, reference -> {
-            reference.offsetStart(start);
-            references.add(reference);
-            MarkdownParser childParser = createChildParser(reference.getText(), reference.getTextStartIndex());
-            childParser.parseCode = false;
-            references.addAll(childParser.getMarkdownSyntax());
-        });
-        if (parseLink) LinkSyntaxReference.forEachReference(stringBuilder, reference -> {
-            reference.offsetStart(start);
-            references.add(reference);
-            MarkdownParser childParser = createChildParser(reference.text, reference.getTextStartIndex());
-            childParser.parseLink = false;
-            references.addAll(childParser.getMarkdownSyntax());
-        });
+        findReferences(references);
         return references;
+    }
+
+    private void findReferences(List<SyntaxReference> references) {
+        for (InlineSyntaxType inlineSyntaxType : InlineSyntaxType.values()) {
+            if (isChildOfType(inlineSyntaxType)) continue;
+            inlineSyntaxType.forEachReference(stringBuilder, reference -> {
+                reference.offsetStart(start);
+                references.add(reference);
+                MarkdownParser childParser = createChildParser(inlineSyntaxType, reference);
+                childParser.findReferences(references);
+            });
+        }
+    }
+
+    public boolean isChildOfType(InlineSyntaxType type) {
+        return parentSyntaxTypes.contains(type);
     }
 }

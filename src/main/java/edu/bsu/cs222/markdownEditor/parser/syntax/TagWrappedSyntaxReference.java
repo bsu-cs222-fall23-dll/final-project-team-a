@@ -9,16 +9,16 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.regex.Matcher;
 
-abstract public class TagWrappedSyntaxReference extends SyntaxReference {
+public class TagWrappedSyntaxReference extends SyntaxReference {
+    private final InlineSyntaxType type;
     private final String tag, text;
 
-    TagWrappedSyntaxReference(Matcher matcher) {
+    TagWrappedSyntaxReference(InlineSyntaxType type, Matcher matcher) {
         super(matcher);
+        this.type = type;
         tag = matcher.group(1);
         text = matcher.group(2);
     }
-
-    public abstract TextStyle getTextStyle();
 
     public SegmentList getMarkdownSegments() {
         SegmentList map = new SegmentList(start);
@@ -38,17 +38,19 @@ abstract public class TagWrappedSyntaxReference extends SyntaxReference {
 
     public StyleSpans<TextStyle> getStyleSpans() {
         StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
-        styleSpansBuilder.add(getTextStyle().add(TextStyle.Property.Markdown), tag.length());
-        styleSpansBuilder.add(getTextStyle(), text.length());
-        styleSpansBuilder.add(getTextStyle().add(TextStyle.Property.Markdown), tag.length());
+        styleSpansBuilder.add(type.getTextStyle().add(TextStyle.Property.Markdown), tag.length());
+        styleSpansBuilder.add(type.getTextStyle(), text.length());
+        styleSpansBuilder.add(type.getTextStyle().add(TextStyle.Property.Markdown), tag.length());
         return styleSpansBuilder.create();
     }
 
+    @Override
     public String getText() {
         return text;
     }
 
-    public int getTextStartIndex() {
+    @Override
+    public int getTextStart() {
         return start + tag.length();
     }
 }
