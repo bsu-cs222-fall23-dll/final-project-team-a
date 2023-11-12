@@ -1,6 +1,5 @@
-package edu.bsu.cs222.markdownEditor.parser.syntax;
+package edu.bsu.cs222.markdownEditor.parser;
 
-import edu.bsu.cs222.markdownEditor.parser.DynamicMatcher;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 
 import java.util.List;

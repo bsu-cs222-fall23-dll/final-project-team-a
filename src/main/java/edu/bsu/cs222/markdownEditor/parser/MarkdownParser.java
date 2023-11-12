@@ -1,8 +1,5 @@
 package edu.bsu.cs222.markdownEditor.parser;
 
-import edu.bsu.cs222.markdownEditor.parser.syntax.InlineSyntaxType;
-import edu.bsu.cs222.markdownEditor.parser.syntax.SyntaxReference;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
