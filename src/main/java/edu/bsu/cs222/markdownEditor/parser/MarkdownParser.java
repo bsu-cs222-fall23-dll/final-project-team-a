@@ -7,17 +7,33 @@ import java.util.Set;
 
 public class MarkdownParser {
 
+    private final String text;
     private final StringBuilder stringBuilder;
     private int start = 0;
     private Set<InlineSyntaxType> parentSyntaxTypes = new HashSet<>();
 
     public MarkdownParser(String text) {
+        this.text = text;
         this.stringBuilder = new StringBuilder(text);
     }
 
-    public List<SyntaxReference> getMarkdownSyntax() {
+    public List<SyntaxReference> getReferences() {
+        List<SyntaxReference> references = new ArrayList<>(getParagraphReferences());
+        findInlineReferences(references);
+        return references;
+    }
+
+    public List<ParagraphSyntaxReference> getParagraphReferences() {
+        List<ParagraphSyntaxReference> references = new ArrayList<>();
+        for (ParagraphSyntaxType paragraphSyntaxType : ParagraphSyntaxType.values()) {
+            paragraphSyntaxType.forEachReference(text, references::add);
+        }
+        return references;
+    }
+
+    public List<SyntaxReference> getInlineReferences() {
         List<SyntaxReference> references = new ArrayList<>();
-        findReferences(references);
+        findInlineReferences(references);
         return references;
     }
 
@@ -29,14 +45,16 @@ public class MarkdownParser {
         return parser;
     }
 
-    private void findReferences(List<SyntaxReference> references) {
+    private void findInlineReferences(List<SyntaxReference> references) {
         for (InlineSyntaxType inlineSyntaxType : InlineSyntaxType.values()) {
             if (isChildOfType(inlineSyntaxType)) continue;
             inlineSyntaxType.forEachReference(stringBuilder, reference -> {
                 reference.offsetStart(start);
                 references.add(reference);
-                MarkdownParser childParser = createChildParser(inlineSyntaxType, reference);
-                childParser.findReferences(references);
+                if (reference.hasStylableText()) {
+                    MarkdownParser childParser = createChildParser(inlineSyntaxType, reference);
+                    childParser.findInlineReferences(references);
+                }
             });
         }
     }

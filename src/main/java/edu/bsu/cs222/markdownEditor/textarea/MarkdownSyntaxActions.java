@@ -24,7 +24,20 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
 
     private void styleParagraphMarkdown(int currentParagraph, MarkdownParser parser) {
         clearStyle(currentParagraph);
-        parser.getMarkdownSyntax().forEach(syntaxReference -> {
+        styleParagraphSyntax(currentParagraph, parser);
+        styleInlineSyntax(currentParagraph, parser);
+    }
+
+    private void styleParagraphSyntax(int currentParagraph, MarkdownParser parser) {
+        clearStyle(currentParagraph);
+        parser.getParagraphReferences().forEach(reference -> {
+            setParagraphStyle(currentParagraph, reference.getParagraphStyle());
+            setStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
+        });
+    }
+
+    private void styleInlineSyntax(int currentParagraph, MarkdownParser parser) {
+        parser.getInlineReferences().forEach(syntaxReference -> {
             int start = syntaxReference.start;
             StyleSpans<TextStyle> newStyleSpans = syntaxReference.getStyleSpans();
             StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(start, start + newStyleSpans.length());
@@ -39,7 +52,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         String text = getText(paragraphIndex);
         ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
-        new MarkdownParser(text).getMarkdownSyntax().forEach(syntaxReference -> {
+        new MarkdownParser(text).getReferences().forEach(syntaxReference -> {
             SegmentList segmentList = syntaxReference.getRenderedSegments();
             segmentList.forEach((start, segment) -> {
                 start += paragraphPosition;
@@ -62,7 +75,7 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         String text = getText(paragraphIndex);
         MarkdownParser parser = new MarkdownParser(text);
         ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
-        parser.getMarkdownSyntax().forEach(syntaxReference -> {
+        parser.getReferences().forEach(syntaxReference -> {
             SegmentList segmentList = syntaxReference.getMarkdownSegments();
             segmentList.forEach((start, segment) -> {
                 start += paragraphPosition;

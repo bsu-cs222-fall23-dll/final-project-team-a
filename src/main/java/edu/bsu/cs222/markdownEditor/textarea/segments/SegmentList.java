@@ -12,6 +12,11 @@ public class SegmentList {
         index = start;
     }
 
+    public SegmentList(Segment segment) {
+        index = 0;
+        add(segment);
+    }
+
     public void add(Segment segment) {
         map.put(index, segment);
         skip(segment.length());

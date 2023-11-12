@@ -28,4 +28,9 @@ public abstract class SyntaxReference {
     void offsetStart(int length) {
         start += length;
     }
+
+    boolean hasStylableText() {
+        return getText() != null;
+    }
+
 }
