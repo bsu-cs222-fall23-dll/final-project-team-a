@@ -7,6 +7,7 @@ import org.fxmisc.richtext.MultiChangeBuilder;
 import org.fxmisc.richtext.StyleActions;
 import org.fxmisc.richtext.TextEditingArea;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
+import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.TextOps;
 
 public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, TextStyle>,
@@ -22,11 +23,13 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
 
     private void styleParagraphMarkdown(int currentParagraph, MarkdownParser parser) {
         clearStyle(currentParagraph);
-        parser.getMarkdownSyntax().forEach(syntaxReference ->
-                setStyleSpans(currentParagraph,
-                        syntaxReference.start,
-                        syntaxReference.getStyleSpans())
-        );
+        parser.getMarkdownSyntax().forEach(syntaxReference -> {
+            int start = syntaxReference.start;
+            StyleSpans<TextStyle> newStyleSpans = syntaxReference.getStyleSpans();
+            StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(start, newStyleSpans.length());
+            newStyleSpans = oldStyleSpans.overlay(newStyleSpans, TextStyle::overlay);
+            setStyleSpans(currentParagraph, start, newStyleSpans);
+        });
     }
 
     default void hideParagraphMarkdown(int paragraphIndex) {

@@ -27,6 +27,10 @@ public class TextStyle {
         return copy;
     }
 
+    public TextStyle overlay(TextStyle style) {
+        return addAll(style.properties);
+    }
+
     public List<String> toList() {
         return properties.stream().map(property -> property.className).toList();
     }
