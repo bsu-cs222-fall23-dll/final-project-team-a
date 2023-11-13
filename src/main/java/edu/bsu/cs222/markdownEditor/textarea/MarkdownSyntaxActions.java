@@ -91,7 +91,9 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         parser.getInlineReferences().forEach(syntaxReference -> {
             int start = syntaxReference.start;
             StyleSpans<TextStyle> newStyleSpans = syntaxReference.getStyleSpans();
-            StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(start, start + newStyleSpans.length());
+            StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(currentParagraph,
+                    start,
+                    start + newStyleSpans.length());
             newStyleSpans = oldStyleSpans.overlay(newStyleSpans, TextStyle::overlay);
             setStyleSpans(currentParagraph, start, newStyleSpans);
         });
