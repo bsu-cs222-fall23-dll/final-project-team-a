@@ -15,27 +15,13 @@ public enum ParagraphSyntaxType {
         protected ParagraphSyntaxReference createReference(Matcher match) {
             return new UnorderedListSyntaxReference(match);
         }
+    },
+    OrderedList(ParagraphStyle.OrderedList, "^(\\d+)\\. ") {
+        @Override
+        protected ParagraphSyntaxReference createReference(Matcher match) {
+            return new OrderedListSyntaxReference(match);
+        }
     };
-    //    OrderedList("ol") {
-    //        private final String regex = "^(\\d+\\. ).*";
-    //
-    //        @Override
-    //        public boolean matches(String text) {
-    //            return text.matches(regex);
-    //        }
-    //
-    //        @Override
-    //        public String getMarkdownSyntax(String text) {
-    //            Matcher matcher = Pattern.compile(regex).matcher(text);
-    //            if (!matcher.find()) throw new RuntimeException("Text doesn't match ParagraphStyle");
-    //            return matcher.group(1);
-    //        }
-    //
-    //        @Override
-    //        public String createMarkdownSyntax() {
-    //            return "1. ";
-    //        }
-    //    };
 
     private final ParagraphStyle style;
     private final Pattern pattern;
