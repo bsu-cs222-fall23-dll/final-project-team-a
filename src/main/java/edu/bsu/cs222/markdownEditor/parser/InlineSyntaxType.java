@@ -8,24 +8,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 enum InlineSyntaxType {
-    Italic(TextStyle.EMPTY.add(TextStyle.Property.Italics),
-            "(?<![*\\\\])([*])(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(_)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
+    Link(LinkSyntaxReference.getTextStyle(),
+            "(?<!\\\\)\\[(.+)(?<!\\\\)]\\((.+)(?<!\\\\)\\)") {
         @Override
         SyntaxReference createReference(Matcher match) {
-            return new TagWrappedSyntaxReference(this, match);
+            return new LinkSyntaxReference(match);
         }
     },
-
-    Bold(TextStyle.EMPTY.add(TextStyle.Property.Bold),
-            "(?<![*\\\\])([*]{2})(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(__)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
-        @Override
-        SyntaxReference createReference(Matcher match) {
-            return new TagWrappedSyntaxReference(this, match);
-        }
-    },
-
     ItalicAndBold(TextStyle.EMPTY.add(TextStyle.Property.Italics).add(TextStyle.Property.Bold),
             "(?<![*\\\\])([*]{3})(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
             "(?<![_\\\\])(___)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
@@ -34,20 +23,27 @@ enum InlineSyntaxType {
             return new TagWrappedSyntaxReference(this, match);
         }
     },
-
-    Code(TextStyle.EMPTY.add(TextStyle.Property.Code),
-            "(?<![`\\\\])(`)(?![`\\s])(.+?)(?<![`\\s\\\\])(\\1)") {
+    Bold(TextStyle.EMPTY.add(TextStyle.Property.Bold),
+            "(?<![*\\\\])([*]{2})(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
+            "(?<![_\\\\])(__)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
         @Override
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
         }
     },
-
-    Link(LinkSyntaxReference.getTextStyle(),
-            "(?<!\\\\)\\[(.+)(?<!\\\\)]\\((.+)(?<!\\\\)\\)") {
+    Italic(TextStyle.EMPTY.add(TextStyle.Property.Italics),
+            "(?<![*\\\\])([*])(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
+            "(?<![_\\\\])(_)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
         @Override
         SyntaxReference createReference(Matcher match) {
-            return new LinkSyntaxReference(match);
+            return new TagWrappedSyntaxReference(this, match);
+        }
+    },
+    Code(TextStyle.EMPTY.add(TextStyle.Property.Code),
+            "(?<![`\\\\])(`)(?![`\\s])(.+?)(?<![`\\s\\\\])(\\1)") {
+        @Override
+        SyntaxReference createReference(Matcher match) {
+            return new TagWrappedSyntaxReference(this, match);
         }
     };
 
