@@ -16,31 +16,31 @@ enum InlineSyntaxType {
         }
     },
     ItalicAndBold(TextStyle.EMPTY.add(TextStyle.Property.Italics).add(TextStyle.Property.Bold),
-            "(?<![*\\\\])([*]{3})(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(___)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
+            "(?<![*\\\\])([*]{3})(?![*])\\b(.+?)\\b(?<![*\\s\\\\])\\1",
+            "(?<![_\\\\])(___)(?!_)\\b(.+?)\\b(?<![_\\s\\\\])\\1") {
         @Override
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
         }
     },
     Bold(TextStyle.EMPTY.add(TextStyle.Property.Bold),
-            "(?<![*\\\\])([*]{2})(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(__)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
+            "(?<![*\\\\])([*]{2})(?![*])\\b(.+?)\\b(?<![*\\s\\\\])\\1",
+            "(?<![_\\\\])(__)(?!_)\\b(.+?)\\b(?<![_\\s\\\\])\\1") {
         @Override
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
         }
     },
     Italic(TextStyle.EMPTY.add(TextStyle.Property.Italics),
-            "(?<![*\\\\])([*])(?![*\\s])(.+?)(?<![*\\s\\\\])(\\1)",
-            "(?<![_\\\\])(_)(?![_\\s])(.+?)(?<![_\\s\\\\])(\\1)") {
+            "(?<![*\\\\])([*])(?![*])\\b(.+?)\\b(?<![*\\s\\\\])\\1",
+            "(?<![_\\\\])(_)(?!_)\\b(.+?)\\b(?<![_\\s\\\\])\\1") {
         @Override
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
         }
     },
     Code(TextStyle.EMPTY.add(TextStyle.Property.Code),
-            "(?<![`\\\\])(`)(?![`\\s])(.+?)(?<![`\\s\\\\])(\\1)") {
+            "(?<![`\\\\])(`)\\b(.+?)\\b(?<![`\\\\])\\1") {
         @Override
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
