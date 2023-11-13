@@ -36,7 +36,7 @@ class TagWrappedSyntaxReference extends SyntaxReference {
         return map;
     }
 
-    public StyleSpans<TextStyle> getStyleSpans() {
+    public StyleSpans<TextStyle> getMarkdownStyleSpans() {
         StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
         styleSpansBuilder.add(type.getTextStyle().add(TextStyle.Property.Markdown), tag.length());
         styleSpansBuilder.add(type.getTextStyle(), text.length());

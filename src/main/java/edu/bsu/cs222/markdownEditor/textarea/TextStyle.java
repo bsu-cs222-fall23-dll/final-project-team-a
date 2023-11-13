@@ -46,7 +46,11 @@ public class TextStyle {
     }
 
     public enum Property {
-        Italics("i", "*"), Bold("b", "**"), Code("inline-code", "`"), Markdown("md");
+        Italics("i", "*"),
+        Bold("b", "**"),
+        Code("inline-code", "`"),
+        Link("link"),
+        Markdown("md");
 
         public final String defaultTagSyntax;
         private final String className;

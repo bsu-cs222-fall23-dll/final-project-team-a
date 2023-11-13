@@ -30,6 +30,9 @@
     -rtfx-border-stroke-color: darkgray;
     -rtfx-background-color: whitesmoke;
 }
+.link {
+    -fx-fill: "#0250BB";
+}
 .md {
     -fx-fill: "#808080";
 }
