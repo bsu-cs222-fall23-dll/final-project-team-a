@@ -7,28 +7,43 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum ParagraphSyntaxType {
-    Heading1(ParagraphStyle.Heading1, "^# "),
-    Heading2(ParagraphStyle.Heading2, "^## "),
-    Heading3(ParagraphStyle.Heading3, "^### "),
-    UnorderedList(ParagraphStyle.UnorderedList, "^- ") {
+    Heading1("#"),
+    Heading2("##"),
+    Heading3("###"),
+    UnorderedList("-") {
         @Override
         protected ParagraphSyntaxReference createReference(Matcher match) {
             return new UnorderedListSyntaxReference(match);
         }
     },
-    OrderedList(ParagraphStyle.OrderedList, "^(\\d+)\\. ") {
+    OrderedList("1.", "^(\\d+)\\.") {
         @Override
         protected ParagraphSyntaxReference createReference(Matcher match) {
             return new OrderedListSyntaxReference(match);
         }
     };
 
-    private final ParagraphStyle style;
+    private final String defaultSyntax, regexp;
     private final Pattern pattern;
 
-    ParagraphSyntaxType(ParagraphStyle style, String regexp) {
-        this.style = style;
-        this.pattern = Pattern.compile(regexp, Pattern.MULTILINE);
+    ParagraphSyntaxType(String defaultSyntax) {
+        this(defaultSyntax, "^" + defaultSyntax);
+    }
+
+    ParagraphSyntaxType(String defaultSyntax, String regexp) {
+        this.defaultSyntax = defaultSyntax + " ";
+        this.regexp = regexp + " ";
+        this.pattern = Pattern.compile(this.regexp, Pattern.MULTILINE);
+    }
+
+    public boolean matches(String text) {
+        return text.matches(regexp + ".+");
+    }
+
+    public int getSyntaxLength(String text) {
+        Matcher matcher = pattern.matcher(text);
+        if (!matcher.find()) throw new RuntimeException("Text doesn't match regexp");
+        return matcher.group().length();
     }
 
     void forEachReference(String text, Consumer<ParagraphSyntaxReference> action) {
@@ -36,7 +51,21 @@ public enum ParagraphSyntaxType {
         while (matcher.find()) action.accept(createReference(matcher));
     }
 
+    public ParagraphSyntaxReference createReference() {
+        return createReference(defaultSyntax);
+    }
+
+    public ParagraphSyntaxReference createReference(String syntax) {
+        Matcher matcher = pattern.matcher(syntax);
+        if (!matcher.find()) throw new RuntimeException("Text doesn't match regexp");
+        return createReference(matcher);
+    }
+
+    public ParagraphStyle getStyle() {
+        return ParagraphStyle.valueOf(this.name());
+    }
+
     protected ParagraphSyntaxReference createReference(Matcher match) {
-        return new ParagraphSyntaxReference(match, this.style);
+        return new ParagraphSyntaxReference(match, getStyle());
     }
 }

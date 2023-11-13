@@ -26,6 +26,10 @@ public class SegmentList {
         index += length;
     }
 
+    public Segment get(int index) {
+        return map.get(index);
+    }
+
     public void forEach(BiConsumer<Integer, Segment> action) {
         map.forEach(action);
     }

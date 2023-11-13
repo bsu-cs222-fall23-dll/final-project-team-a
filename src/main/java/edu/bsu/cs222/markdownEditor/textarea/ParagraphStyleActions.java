@@ -1,20 +1,12 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
+import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxType;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.EditActions;
 import org.fxmisc.richtext.StyleActions;
 
 public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, TextStyle>,
         EditActions<ParagraphStyle, Segment, TextStyle> {
-
-    default void checkParagraphStyleAgainstSyntax(int paragraphIndex) {
-        ParagraphStyle currentStyle = getParagraphStyle(paragraphIndex);
-        String text = getParagraphText(paragraphIndex);
-        ParagraphStyle styleAccordingToSyntax = ParagraphStyle.findType(text);
-        if (currentStyle != styleAccordingToSyntax)
-            setParagraphStyle(paragraphIndex, styleAccordingToSyntax);
-    }
 
     default ParagraphStyle getParagraphStyle(int index) {
         return getParagraph(index).getParagraphStyle();
@@ -24,32 +16,28 @@ public interface ParagraphStyleActions extends StyleActions<ParagraphStyle, Text
         return getParagraph(index).getText();
     }
 
-    default void setCurrentParagraphStyleWithSyntax(ParagraphStyle style) {
+    default void setCurrentParagraphSyntax(ParagraphSyntaxType type) {
         int paragraphIndex = getCurrentParagraph();
-        setParagraphStyleWithSyntax(paragraphIndex, style);
+        removeParagraphStyleSyntax(paragraphIndex);
+        setParagraphStyle(paragraphIndex, type.getStyle());
+        addParagraphSyntax(paragraphIndex, type);
     }
 
-    default void setParagraphStyleWithSyntax(int paragraphIndex, ParagraphStyle paragraphStyle) {
-        ParagraphStyle currentStyle = getParagraphStyle(paragraphIndex);
-        removeParagraphStyleSyntax(paragraphIndex, currentStyle);
-        setParagraphStyle(paragraphIndex, paragraphStyle);
-        addParagraphStyleSyntax(paragraphIndex, paragraphStyle);
-    }
-
-    private void removeParagraphStyleSyntax(int paragraphIndex, ParagraphStyle style) {
+    private void removeParagraphStyleSyntax(int paragraphIndex) {
+        ParagraphStyle style = getParagraphStyle(paragraphIndex);
         if (style == ParagraphStyle.Paragraph) return;
+        ParagraphSyntaxType syntaxType = style.getSyntaxType();
         String text = getParagraphText(paragraphIndex);
-        if (style.matches(text)) {
-            int end = style.getMarkdownSyntax(text).length();
+        assert syntaxType != null;
+        if (syntaxType.matches(text)) {
+            int end = syntaxType.getSyntaxLength(text);
             deleteText(paragraphIndex, 0, paragraphIndex, end);
         }
     }
 
-    private void addParagraphStyleSyntax(int paragraphIndex, ParagraphStyle style) {
-        if (style == ParagraphStyle.Paragraph) return;
-        TextSegment segment = new TextSegment(style.createMarkdownSyntax());
-        TextStyle markdownStyle = TextStyle.EMPTY.add(TextStyle.Property.Markdown);
-        replace(paragraphIndex, 0, paragraphIndex, 0, segment, markdownStyle);
+    private void addParagraphSyntax(int paragraphIndex, ParagraphSyntaxType type) {
+        Segment segment = type.createReference().getMarkdownSegments().get(0);
+        replace(paragraphIndex, 0, paragraphIndex, 0, segment, null);
     }
 
 }
