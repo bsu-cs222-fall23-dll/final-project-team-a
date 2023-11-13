@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class TextStyle {
     public static final TextStyle EMPTY = new TextStyle(new HashSet<>());
+    public static final TextStyle MARKDOWN = EMPTY.add(Property.Markdown);
 
     private final Set<Property> properties;
 
@@ -26,8 +27,8 @@ public class TextStyle {
         return copy;
     }
 
-    public boolean contains(Property property) {
-        return properties.contains(property);
+    public TextStyle overlay(TextStyle style) {
+        return addAll(style.properties);
     }
 
     public List<String> toList() {
@@ -36,6 +37,12 @@ public class TextStyle {
 
     private TextStyle createCopy() {
         return new TextStyle(new HashSet<>(properties));
+    }
+
+    @Override
+    public String toString() {
+        String propsString = String.join(", ", properties.stream().map(property -> property.className).toList());
+        return String.format("%s[properties = %s]", this.getClass().getName(), propsString);
     }
 
     public enum Property {

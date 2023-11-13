@@ -1,61 +1,100 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegmentOps;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegmentOps;
+import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
+import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxReference;
+import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
+import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
 import org.fxmisc.richtext.MultiChangeBuilder;
 import org.fxmisc.richtext.StyleActions;
 import org.fxmisc.richtext.TextEditingArea;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
+import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.TextOps;
-import org.reactfx.util.Either;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, TextStyle>,
-        TextEditingArea<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> {
+        TextEditingArea<ParagraphStyle, Segment, TextStyle> {
 
-    TextOps<TextSegment, TextStyle> TEXT_SEGMENT_OPS = new TextSegmentOps<>();
-    TextOps<RenderedMarkdownSegment, TextStyle> RENDERED_MARKDOWN_SEGMENT_OPS = new RenderedMarkdownSegmentOps<>();
-    TextOps<Either<TextSegment, RenderedMarkdownSegment>, TextStyle> EITHER_OPS = TEXT_SEGMENT_OPS._or(
-            RENDERED_MARKDOWN_SEGMENT_OPS,
-            (s1, s2) -> Optional.empty());
+    TextOps<Segment, TextStyle> SEGMENT_OPS = new SegmentOps<>();
+
+    default void styleParagraphMarkdown(int currentParagraph) {
+        String text = getText(currentParagraph);
+        MarkdownParser parser = new MarkdownParser(text);
+        styleParagraphMarkdown(currentParagraph, parser);
+    }
 
     default void hideParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
-        StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
-                .filter(reference -> reference.style.contains(TextStyle.Property.Markdown))
-                .forEach(reference -> {
-                    ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(reference.start);
-                    multiChangeBuilder.replace(reference.start,
-                            reference.end,
-                            ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
-                                    paragraphStyle,
-                                    reference.style,
-                                    EITHER_OPS));
-                });
+        String text = getText(paragraphIndex);
+        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
+        new MarkdownParser(text).getReferences().forEach(syntaxReference -> {
+            SegmentList segmentList = syntaxReference.getRenderedSegments();
+            segmentList.forEach((start, segment) -> {
+                start += paragraphPosition;
+                int end = start + segment.length();
+                multiChangeBuilder.replace(start,
+                        end,
+                        ReadOnlyStyledDocument.fromSegment(segment,
+                                paragraphStyle,
+                                getStyleOfChar(start),
+                                SEGMENT_OPS));
+            });
+        });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
     default void showParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
-        MultiChangeBuilder<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> multiChangeBuilder = this.createMultiChange();
+        MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
-        StyledSegmentReference.createReferences(paragraphPosition, getParagraph(paragraphIndex).getStyledSegments())
-                .filter(reference -> reference.segment.isRight())
-                .forEach(reference -> {
-                    ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(reference.start);
-                    multiChangeBuilder.replace(reference.start,
-                            reference.end,
-                            ReadOnlyStyledDocument.fromSegment(reference.swapSegmentType(),
-                                    paragraphStyle,
-                                    reference.style,
-                                    EITHER_OPS));
-                });
+        String text = getText(paragraphIndex);
+        MarkdownParser parser = new MarkdownParser(text);
+        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
+        parser.getReferences().forEach(syntaxReference -> {
+            SegmentList segmentList = syntaxReference.getMarkdownSegments();
+            segmentList.forEach((start, segment) -> {
+                start += paragraphPosition;
+                int end = start + segment.length();
+                multiChangeBuilder.replace(start,
+                        end,
+                        ReadOnlyStyledDocument.fromSegment(segment,
+                                paragraphStyle,
+                                getStyleOfChar(start),
+                                SEGMENT_OPS));
+            });
+        });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
+        styleParagraphMarkdown(paragraphIndex, parser);
+    }
+
+    private void styleParagraphMarkdown(int currentParagraph, MarkdownParser parser) {
+        clearStyle(currentParagraph);
+        styleParagraphSyntax(currentParagraph, parser);
+        styleInlineSyntax(currentParagraph, parser);
+    }
+
+    private void styleParagraphSyntax(int currentParagraph, MarkdownParser parser) {
+        clearStyle(currentParagraph);
+        List<ParagraphSyntaxReference> references = parser.getParagraphReferences();
+        if (references.isEmpty()) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
+        else references.forEach(reference -> {
+            setParagraphStyle(currentParagraph, reference.getParagraphStyle());
+            setStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
+        });
+    }
+
+    private void styleInlineSyntax(int currentParagraph, MarkdownParser parser) {
+        parser.getInlineReferences().forEach(syntaxReference -> {
+            int start = syntaxReference.start;
+            StyleSpans<TextStyle> newStyleSpans = syntaxReference.getStyleSpans();
+            StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(start, start + newStyleSpans.length());
+            newStyleSpans = oldStyleSpans.overlay(newStyleSpans, TextStyle::overlay);
+            setStyleSpans(currentParagraph, start, newStyleSpans);
+        });
     }
 
     /**

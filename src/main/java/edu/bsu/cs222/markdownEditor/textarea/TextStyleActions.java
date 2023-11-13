@@ -1,19 +1,17 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
-import edu.bsu.cs222.markdownEditor.textarea.segments.RenderedMarkdownSegment;
-import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
+import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import javafx.scene.control.IndexRange;
 import org.fxmisc.richtext.EditActions;
 import org.fxmisc.richtext.NavigationActions;
 import org.fxmisc.richtext.StyleActions;
 import org.fxmisc.richtext.model.StyleSpans;
-import org.reactfx.util.Either;
 
 import java.util.Collection;
 
 public interface TextStyleActions extends StyleActions<ParagraphStyle, TextStyle>,
-        NavigationActions<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle>,
-        EditActions<ParagraphStyle, Either<TextSegment, RenderedMarkdownSegment>, TextStyle> {
+        NavigationActions<ParagraphStyle, Segment, TextStyle>,
+        EditActions<ParagraphStyle, Segment, TextStyle> {
 
     default void addStyleProperty(int paragraph, int from, int to, TextStyle.Property properties) {
         StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.add(properties));

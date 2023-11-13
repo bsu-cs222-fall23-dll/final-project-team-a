@@ -1,7 +1,7 @@
 package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxType;
 import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
-import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
@@ -51,23 +51,22 @@ public class MenuBarController {
 
     @FXML
     private void header1Button() {
-        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading1);
+        textArea.setCurrentParagraphSyntax(ParagraphSyntaxType.Heading1);
     }
 
     @FXML
     private void header2Button() {
-        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading2);
+        textArea.setCurrentParagraphSyntax(ParagraphSyntaxType.Heading2);
     }
 
     @FXML
     private void header3Button() {
-        textArea.setCurrentParagraphStyleWithSyntax(ParagraphStyle.Heading3);
+        textArea.setCurrentParagraphSyntax(ParagraphSyntaxType.Heading3);
     }
 
     @FXML
     private void boldButton() {
         textArea.styleSelectedText(TextStyle.Property.Bold);
-
     }
 
     @FXML

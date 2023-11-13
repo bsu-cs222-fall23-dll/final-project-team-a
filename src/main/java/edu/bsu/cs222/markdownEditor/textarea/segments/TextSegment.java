@@ -1,36 +1,29 @@
 package edu.bsu.cs222.markdownEditor.textarea.segments;
 
+import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
+import javafx.geometry.VPos;
 import org.fxmisc.richtext.TextExt;
 
-public class TextSegment {
-
-    private final String text;
-
-    public TextSegment() {
-        this("");
-    }
+public class TextSegment extends Segment {
 
     public TextSegment(String text) {
-        this.text = text;
-    }
-
-    public int length() {
-        return text.length();
-    }
-
-    public char charAt(int index) {
-        return text.charAt(index);
-    }
-
-    public String getText() {
-        return text;
+        super(text);
     }
 
     public TextSegment subSequence(int start, int end) {
         return new TextSegment(text.substring(start, end));
     }
 
-    public TextExt configureNode(TextExt textNode) {
+    @Override
+    Segment create(String text) {
+        return new TextSegment(text);
+    }
+
+    @Override
+    public TextExt configureNode(TextStyle style) {
+        TextExt textNode = new TextExt();
+        textNode.setTextOrigin(VPos.TOP);
+        textNode.getStyleClass().addAll(style.toList());
         textNode.setText(text);
         return textNode;
     }
