@@ -8,6 +8,7 @@ import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 
 class LinkSyntaxReference extends SyntaxReference {
@@ -22,16 +23,13 @@ class LinkSyntaxReference extends SyntaxReference {
     }
 
     static TextStyle getTextStyle() {
-        // TODO: Style hyperlinks
-        return TextStyle.EMPTY;
+        return TextStyle.EMPTY.add(TextStyle.Property.Link);
     }
 
     @Override
     public SegmentList getMarkdownSegments() {
         SegmentList map = new SegmentList(start);
-        map.add(new TextSegment("["));
-        map.skip(text.length());
-        map.add(new TextSegment("]("));
+        map.add(new TextSegment("[" + text + "]("));
         map.add(new HyperlinkSegment(urlString));
         map.add(new TextSegment(")"));
         return map;
@@ -47,14 +45,25 @@ class LinkSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public StyleSpans<TextStyle> getStyleSpans() {
+    public StyleSpans<TextStyle> getMarkdownStyleSpans() {
         StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
         styleSpansBuilder.add(TextStyle.MARKDOWN, 1); // [
-        styleSpansBuilder.add(getTextStyle(), text.length()); // text
+        styleSpansBuilder.add(TextStyle.EMPTY, text.length()); // text
         styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 2); // ](
         styleSpansBuilder.add(getTextStyle(), urlString.length()); // link
         styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 1); // )
         return styleSpansBuilder.create();
+    }
+
+    @Override
+    public Optional<StyleSpans<TextStyle>> getRenderedStyleSpans() {
+        StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
+        styleSpansBuilder.add(TextStyle.MARKDOWN, 1); // [
+        styleSpansBuilder.add(getTextStyle(), text.length()); // text
+        styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 2); // ](
+        styleSpansBuilder.add(TextStyle.EMPTY, urlString.length()); // link
+        styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 1); // )
+        return Optional.ofNullable(styleSpansBuilder.create());
     }
 
     @Override

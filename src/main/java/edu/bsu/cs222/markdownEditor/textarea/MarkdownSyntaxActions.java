@@ -22,7 +22,8 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         String text = getText(paragraphIndex);
         ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
-        new MarkdownParser(text).getReferences().forEach(syntaxReference -> {
+        List<SyntaxReference> references = new MarkdownParser(text).getReferences();
+        references.forEach(syntaxReference -> {
             SegmentList segmentList = syntaxReference.getRenderedSegments();
             segmentList.forEach((start, segment) -> {
                 start += paragraphPosition;
@@ -36,6 +37,7 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
             });
         });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
+        styleRenderedParagraph(paragraphIndex, references);
     }
 
     default void showParagraphMarkdown(int paragraphIndex) {
@@ -60,30 +62,57 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
             });
         });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
-        styleParagraph(paragraphIndex, references);
+        styleMarkdownParagraph(paragraphIndex, references);
     }
 
-    private void styleParagraph(int currentParagraph, List<SyntaxReference> references) {
+    private void styleMarkdownParagraph(int currentParagraph, List<SyntaxReference> references) {
         clearStyle(currentParagraph);
         boolean isParagraph = true;
         for (SyntaxReference reference : references) {
             if (reference instanceof ParagraphSyntaxReference paragraphSyntaxReference) {
-                styleParagraphSyntax(currentParagraph, paragraphSyntaxReference);
+                styleParagraphMarkdownSyntax(currentParagraph, paragraphSyntaxReference);
                 isParagraph = false;
             } else {
-                styleInlineSyntax(currentParagraph, reference);
+                styleInlineMarkdownSyntax(currentParagraph, reference);
             }
         }
         if (isParagraph) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
     }
 
-    private void styleParagraphSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
+    private void styleParagraphMarkdownSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
         setParagraphStyle(currentParagraph, reference.getParagraphStyle());
-        setStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
+        setStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
     }
 
-    private void styleInlineSyntax(int currentParagraph, SyntaxReference reference) {
-        overlayStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
+    private void styleInlineMarkdownSyntax(int currentParagraph, SyntaxReference reference) {
+        overlayStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
+    }
+
+    private void styleRenderedParagraph(int currentParagraph, List<SyntaxReference> references) {
+        clearStyle(currentParagraph);
+        boolean isParagraph = true;
+        for (SyntaxReference reference : references) {
+            if (reference instanceof ParagraphSyntaxReference paragraphSyntaxReference) {
+                styleParagraphRenderedSyntax(currentParagraph, paragraphSyntaxReference);
+                isParagraph = false;
+            } else {
+                styleInlineRenderedSyntax(currentParagraph, reference);
+            }
+        }
+        if (isParagraph) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
+    }
+
+    private void styleParagraphRenderedSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
+        reference.getRenderedStyleSpans().ifPresent(styleSpans -> {
+            setParagraphStyle(currentParagraph, reference.getParagraphStyle());
+            setStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
+        });
+    }
+
+    private void styleInlineRenderedSyntax(int currentParagraph, SyntaxReference reference) {
+        reference.getRenderedStyleSpans().ifPresent(styleSpans ->
+                overlayStyleSpans(currentParagraph, reference.start, styleSpans)
+        );
     }
 
     /**

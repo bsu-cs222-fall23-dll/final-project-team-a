@@ -31,7 +31,7 @@ public class ParagraphSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public StyleSpans<TextStyle> getStyleSpans() {
+    public StyleSpans<TextStyle> getMarkdownStyleSpans() {
         StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
         styleSpansBuilder.add(TextStyle.MARKDOWN, syntax.length());
         return styleSpansBuilder.create();
