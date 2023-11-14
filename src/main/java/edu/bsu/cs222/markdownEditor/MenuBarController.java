@@ -65,6 +65,16 @@ public class MenuBarController {
     }
 
     @FXML
+    private void numberedListButton() {
+        textArea.setCurrentParagraphSyntax(ParagraphSyntaxType.OrderedList);
+    }
+
+    @FXML
+    private void bulletPointsButton() {
+        textArea.setCurrentParagraphSyntax(ParagraphSyntaxType.UnorderedList);
+    }
+
+    @FXML
     private void boldButton() {
         textArea.styleSelectedText(TextStyle.Property.Bold);
     }

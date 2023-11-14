@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
-<MenuBar xmlns:fx="http://javafx.com/fxml/1" prefHeight="28.0" prefWidth="53.0" useSystemMenuBar="true"
+<MenuBar xmlns:fx="http://javafx.com/fxml/1" useSystemMenuBar="true"
          xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="edu.bsu.cs222.markdownEditor.MenuBarController">
     <Menu mnemonicParsing="false" text="File">
         <MenuItem mnemonicParsing="false" onAction="#newFile" text="New">
@@ -41,6 +41,16 @@
         <MenuItem mnemonicParsing="false" onAction="#header3Button" text="Header 3">
             <accelerator>
                 <KeyCodeCombination alt="DOWN" code="DIGIT3" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#numberedListButton" text="Numbered List">
+            <accelerator>
+                <KeyCodeCombination alt="DOWN" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#bulletPointsButton" text="Bullet Points">
+            <accelerator>
+                <KeyCodeCombination alt="DOWN" code="B" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
     </Menu>
