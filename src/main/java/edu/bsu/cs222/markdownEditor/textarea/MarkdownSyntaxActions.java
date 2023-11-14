@@ -2,28 +2,19 @@ package edu.bsu.cs222.markdownEditor.textarea;
 
 import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
 import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxReference;
+import edu.bsu.cs222.markdownEditor.parser.SyntaxReference;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentOps;
 import org.fxmisc.richtext.MultiChangeBuilder;
-import org.fxmisc.richtext.StyleActions;
-import org.fxmisc.richtext.TextEditingArea;
 import org.fxmisc.richtext.model.ReadOnlyStyledDocument;
-import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.TextOps;
 
 import java.util.List;
 
-public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, TextStyle>,
-        TextEditingArea<ParagraphStyle, Segment, TextStyle> {
+public interface MarkdownSyntaxActions extends TextStyleActions {
 
     TextOps<Segment, TextStyle> SEGMENT_OPS = new SegmentOps<>();
-
-    default void styleParagraphMarkdown(int currentParagraph) {
-        String text = getText(currentParagraph);
-        MarkdownParser parser = new MarkdownParser(text);
-        styleParagraphMarkdown(currentParagraph, parser);
-    }
 
     default void hideParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
@@ -54,7 +45,8 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
         String text = getText(paragraphIndex);
         MarkdownParser parser = new MarkdownParser(text);
         ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
-        parser.getReferences().forEach(syntaxReference -> {
+        List<SyntaxReference> references = parser.getReferences();
+        references.forEach(syntaxReference -> {
             SegmentList segmentList = syntaxReference.getMarkdownSegments();
             segmentList.forEach((start, segment) -> {
                 start += paragraphPosition;
@@ -68,33 +60,30 @@ public interface MarkdownSyntaxActions extends StyleActions<ParagraphStyle, Text
             });
         });
         if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
-        styleParagraphMarkdown(paragraphIndex, parser);
+        styleParagraph(paragraphIndex, references);
     }
 
-    private void styleParagraphMarkdown(int currentParagraph, MarkdownParser parser) {
+    private void styleParagraph(int currentParagraph, List<SyntaxReference> references) {
         clearStyle(currentParagraph);
-        styleParagraphSyntax(currentParagraph, parser);
-        styleInlineSyntax(currentParagraph, parser);
+        boolean isParagraph = true;
+        for (SyntaxReference reference : references) {
+            if (reference instanceof ParagraphSyntaxReference paragraphSyntaxReference) {
+                styleParagraphSyntax(currentParagraph, paragraphSyntaxReference);
+                isParagraph = false;
+            } else {
+                styleInlineSyntax(currentParagraph, reference);
+            }
+        }
+        if (isParagraph) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
     }
 
-    private void styleParagraphSyntax(int currentParagraph, MarkdownParser parser) {
-        clearStyle(currentParagraph);
-        List<ParagraphSyntaxReference> references = parser.getParagraphReferences();
-        if (references.isEmpty()) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
-        else references.forEach(reference -> {
-            setParagraphStyle(currentParagraph, reference.getParagraphStyle());
-            setStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
-        });
+    private void styleParagraphSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
+        setParagraphStyle(currentParagraph, reference.getParagraphStyle());
+        setStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
     }
 
-    private void styleInlineSyntax(int currentParagraph, MarkdownParser parser) {
-        parser.getInlineReferences().forEach(syntaxReference -> {
-            int start = syntaxReference.start;
-            StyleSpans<TextStyle> newStyleSpans = syntaxReference.getStyleSpans();
-            StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(start, start + newStyleSpans.length());
-            newStyleSpans = oldStyleSpans.overlay(newStyleSpans, TextStyle::overlay);
-            setStyleSpans(currentParagraph, start, newStyleSpans);
-        });
+    private void styleInlineSyntax(int currentParagraph, SyntaxReference reference) {
+        overlayStyleSpans(currentParagraph, reference.start, reference.getStyleSpans());
     }
 
     /**

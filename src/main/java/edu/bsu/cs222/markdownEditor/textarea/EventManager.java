@@ -17,8 +17,7 @@ class EventManager {
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
         int currentParagraph = textArea.getCurrentParagraph();
-        textArea.styleParagraphMarkdown(currentParagraph);
-//        textArea.checkParagraphStyleAgainstSyntax(currentParagraph);
+        textArea.showParagraphMarkdown(currentParagraph);
     }
 
     private void handleCurrentParagraphChange(ObservableValue<? extends Integer> observableValue,
