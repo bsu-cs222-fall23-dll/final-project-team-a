@@ -33,5 +33,9 @@ public class MarkdownTextArea
     public void setText(String content) {
         deleteText(0, getLength());
         insertText(0, content);
+        showParagraphMarkdown(0);
+        for (int i = 1; i < getParagraphs().size(); i++) {
+            hideParagraphMarkdown(i);
+        }
     }
 }
