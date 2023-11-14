@@ -37,4 +37,10 @@ public interface TextStyleActions extends StyleActions<ParagraphStyle, TextStyle
             insertText(paragraph, selectionRangeEnd, style.defaultTagSyntax);
         }
     }
+
+    default void overlayStyleSpans(int paragraphIndex, int start, StyleSpans<TextStyle> styleSpans) {
+        StyleSpans<TextStyle> oldStyleSpans = getStyleSpans(paragraphIndex, start, start + styleSpans.length());
+        StyleSpans<TextStyle> newStyleSpans = oldStyleSpans.overlay(styleSpans, TextStyle::overlay);
+        setStyleSpans(paragraphIndex, start, newStyleSpans);
+    }
 }

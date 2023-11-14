@@ -23,17 +23,11 @@ public class MarkdownParser {
         return references;
     }
 
-    public List<ParagraphSyntaxReference> getParagraphReferences() {
+    private List<ParagraphSyntaxReference> getParagraphReferences() {
         List<ParagraphSyntaxReference> references = new ArrayList<>();
         for (ParagraphSyntaxType paragraphSyntaxType : ParagraphSyntaxType.values()) {
             paragraphSyntaxType.forEachReference(text, references::add);
         }
-        return references;
-    }
-
-    public List<SyntaxReference> getInlineReferences() {
-        List<SyntaxReference> references = new ArrayList<>();
-        findInlineReferences(references);
         return references;
     }
 
