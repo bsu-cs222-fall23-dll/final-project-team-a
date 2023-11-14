@@ -7,21 +7,9 @@ import org.fxmisc.richtext.NavigationActions;
 import org.fxmisc.richtext.StyleActions;
 import org.fxmisc.richtext.model.StyleSpans;
 
-import java.util.Collection;
-
 public interface TextStyleActions extends StyleActions<ParagraphStyle, TextStyle>,
         NavigationActions<ParagraphStyle, Segment, TextStyle>,
         EditActions<ParagraphStyle, Segment, TextStyle> {
-
-    default void addStyleProperty(int paragraph, int from, int to, TextStyle.Property properties) {
-        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.add(properties));
-        setStyleSpans(paragraph, from, newSpans);
-    }
-
-    default void addStyleProperties(int paragraph, int from, int to, Collection<TextStyle.Property> properties) {
-        StyleSpans<TextStyle> newSpans = getStyleSpans(paragraph, from, to).mapStyles(span -> span.addAll(properties));
-        setStyleSpans(paragraph, from, newSpans);
-    }
 
     default void styleSelectedText(TextStyle.Property style) {
         int paragraph = getCurrentParagraph();
