@@ -24,6 +24,11 @@ public class BulletPointSegment extends TextSegment {
     }
 
     @Override
+    BulletPointSegment create(String text) {
+        return new BulletPointSegment(text, isRendered);
+    }
+
+    @Override
     public TextExt configureNode(TextStyle style) {
         TextExt textNode = super.configureNode(style);
         if (isRendered) textNode.setText("• ");

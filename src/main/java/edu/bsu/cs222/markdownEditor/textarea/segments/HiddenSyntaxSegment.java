@@ -14,6 +14,11 @@ public class HiddenSyntaxSegment extends TextSegment {
         return new HiddenSyntaxSegment(text.substring(start, end));
     }
 
+    @Override
+    HiddenSyntaxSegment create(String text) {
+        return new HiddenSyntaxSegment(text);
+    }
+
     public TextExt configureNode(TextStyle style) {
         TextExt textNode = super.configureNode(style);
         textNode.setVisible(false);
