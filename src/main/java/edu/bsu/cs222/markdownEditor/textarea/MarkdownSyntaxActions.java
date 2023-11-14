@@ -20,8 +20,8 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
         if (lastParagraphEmpty(paragraphIndex)) return;
         MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
         int paragraphPosition = getParagraphPosition(paragraphIndex);
+        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphPosition);
         String text = getText(paragraphIndex);
-        ParagraphStyle paragraphStyle = getParagraphStyleForInsertionAt(paragraphIndex);
         List<SyntaxReference> references = new MarkdownParser(text).getReferences();
         references.forEach(syntaxReference -> {
             SegmentList segmentList = syntaxReference.getRenderedSegments();
@@ -81,7 +81,7 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
 
     private void styleParagraphMarkdownSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
         setParagraphStyle(currentParagraph, reference.getParagraphStyle());
-        setStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
+        styleInlineMarkdownSyntax(currentParagraph, reference);
     }
 
     private void styleInlineMarkdownSyntax(int currentParagraph, SyntaxReference reference) {
@@ -103,10 +103,8 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
     }
 
     private void styleParagraphRenderedSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
-        reference.getRenderedStyleSpans().ifPresent(styleSpans -> {
-            setParagraphStyle(currentParagraph, reference.getParagraphStyle());
-            setStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
-        });
+        setParagraphStyle(currentParagraph, reference.getParagraphStyle());
+        styleInlineRenderedSyntax(currentParagraph, reference);
     }
 
     private void styleInlineRenderedSyntax(int currentParagraph, SyntaxReference reference) {
