@@ -20,7 +20,15 @@ public class HyperlinkSegment extends TextSegment {
         this.urlString = urlString;
     }
 
+    public HyperlinkSegment subSequence(int start, int end) {
+        return new HyperlinkSegment(text.substring(start, end));
+    }
+
     @Override
+    HyperlinkSegment create(String text) {
+        return new HyperlinkSegment(text);
+    }
+
     public TextExt configureNode(TextStyle style) {
         TextExt textNode = super.configureNode(style);
         textNode.setOnMouseClicked(event -> {
@@ -33,10 +41,6 @@ public class HyperlinkSegment extends TextSegment {
             }
         });
         return textNode;
-    }
-
-    public HyperlinkSegment subSequence(int start, int end) {
-        return new HyperlinkSegment(text.substring(start, end));
     }
 
 }
