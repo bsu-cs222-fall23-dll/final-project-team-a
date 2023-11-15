@@ -51,6 +51,12 @@ public enum ParagraphSyntaxType {
         while (matcher.find()) action.accept(createReference(matcher));
     }
 
+    ParagraphSyntaxReference getReference(String text) {
+        Matcher matcher = pattern.matcher(text);
+        if (!matcher.find()) return null;
+        return createReference(matcher);
+    }
+
     public ParagraphSyntaxReference createReference() {
         return createReference(defaultSyntax);
     }
