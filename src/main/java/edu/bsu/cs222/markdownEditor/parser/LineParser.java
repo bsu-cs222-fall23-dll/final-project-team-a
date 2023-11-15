@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class LineParser {
+public class LineParser {
 
     private final String text;
     private int start = 0;
@@ -15,7 +15,7 @@ class LineParser {
     private ParagraphStyle paragraphStyle = ParagraphStyle.Paragraph;
     private final List<SyntaxReference> syntaxReferences = new ArrayList<>();
 
-    LineParser(String text) {
+    public LineParser(String text) {
         this.text = text;
         getParagraphReference(text);
         getInlineReferences(syntaxReferences);

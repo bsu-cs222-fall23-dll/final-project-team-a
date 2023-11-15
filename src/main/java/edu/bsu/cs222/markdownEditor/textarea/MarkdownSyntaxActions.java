@@ -1,5 +1,6 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
+import edu.bsu.cs222.markdownEditor.parser.LineParser;
 import edu.bsu.cs222.markdownEditor.parser.MarkdownParser;
 import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxReference;
 import edu.bsu.cs222.markdownEditor.parser.SyntaxReference;
@@ -15,6 +16,32 @@ import java.util.List;
 public interface MarkdownSyntaxActions extends TextStyleActions {
 
     TextOps<Segment, TextStyle> SEGMENT_OPS = new SegmentOps<>();
+
+    default void renderParagraph(int paragraphIndex) {
+        int paragraphPosition = getParagraphPosition(paragraphIndex);
+        String text = getText(paragraphIndex);
+        LineParser parser = new LineParser(text);
+        replaceWithSyntaxReferences(paragraphPosition, parser.getSyntaxReferences());
+    }
+
+    private void replaceWithSyntaxReferences(int paragraphPosition, List<SyntaxReference> references) {
+        System.out.println(references);
+        MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
+        references.forEach(reference -> {
+            SegmentList segmentList = reference.getRenderedSegments();
+            segmentList.forEach((start, segment) -> {
+                start += paragraphPosition;
+                int end = start + segment.length();
+                multiChangeBuilder.replace(start,
+                        end,
+                        ReadOnlyStyledDocument.fromSegment(segment,
+                                getParagraphStyleForInsertionAt(paragraphPosition),
+                                getStyleOfChar(start),
+                                SEGMENT_OPS));
+            });
+        });
+        if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
+    }
 
     default void hideParagraphMarkdown(int paragraphIndex) {
         if (lastParagraphEmpty(paragraphIndex)) return;
