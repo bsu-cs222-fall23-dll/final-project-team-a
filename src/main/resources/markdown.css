@@ -7,36 +7,63 @@
     -fx-font-family: 'Source Code Pro', monospace;
 }
 
-.p, b, i {
-    -fx-font-size: 18px;
+.markdown-editor {
+    -fx-padding: 2px;
+    -fx-border-width: 0;
 }
+
+.paragraph-text {
+    -fx-font-size: 16px;
+    -fx-line-spacing: 24px;
+    -fx-padding: 4px 0 8px 0;
+}
+
+/*** Paragraph Syntax ***/
+
+/* rem == 18 */
+
+h1, h2, h3 {
+    -fx-line-spacing: 1.42;
+    -fx-padding: 8px 0 12px 0;
+}
+
 .h1 {
-    -fx-font-size: 40px;
+    -fx-font-size: 32px;
 }
+
 .h2 {
-    -fx-font-size: 30px;
+    -fx-font-size: 24px;
 }
+
 .h3 {
     -fx-font-size: 20px;
 }
+
+/* blockquote {
+    border-left: 8px solid #fafafa;
+    padding: 1rem;
+} */
+
+/*** Inline Syntax ***/
+
+.md {
+    -fx-fill: "#808080";
+}
+
 .b {
     -fx-font-weight: bold;
 }
+
 .i {
     -fx-font-style: italic;
 }
+
 .inline-code {
     -rtfx-border-stroke-width: 1px;
     -rtfx-border-stroke-color: darkgray;
     -rtfx-background-color: whitesmoke;
 }
+
 .link {
-    -fx-fill: "#0250BB";
-}
-.md {
-    -fx-fill: "#808080";
-}
-.code-area {
-    -fx-padding: 2px;
-    -fx-border-width: 0;
+    -fx-fill: "#3498db";
 }
