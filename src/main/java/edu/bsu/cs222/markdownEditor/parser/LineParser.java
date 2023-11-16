@@ -13,12 +13,12 @@ public class LineParser {
     private int start = 0;
     private Set<InlineSyntaxType> parentSyntaxTypes = new HashSet<>();
     private ParagraphStyle paragraphStyle = ParagraphStyle.Paragraph;
-    private final List<SyntaxReference> syntaxReferences = new ArrayList<>();
+    private final List<SyntaxReference> markdownReferences = new ArrayList<>();
 
     public LineParser(String text) {
         this.text = text;
         getParagraphReference(text);
-        getInlineReferences(syntaxReferences);
+        getInlineReferences(markdownReferences);
     }
 
     public ParagraphStyle getParagraphStyle() {
@@ -26,7 +26,7 @@ public class LineParser {
     }
 
     public List<SyntaxReference> getSyntaxReferences() {
-        return syntaxReferences;
+        return markdownReferences;
     }
 
     private void getParagraphReference(String text) {
@@ -34,7 +34,7 @@ public class LineParser {
             ParagraphSyntaxReference reference = paragraphSyntaxType.getReference(text);
             if (reference != null) {
                 paragraphStyle = reference.getParagraphStyle();
-                syntaxReferences.add(reference);
+                markdownReferences.add(reference);
             }
         }
     }

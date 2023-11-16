@@ -35,7 +35,7 @@ public class MarkdownTextArea
         insertText(0, content);
         showParagraphMarkdown(0);
         for (int i = 1; i < getParagraphs().size(); i++) {
-            hideParagraphMarkdown(i);
+            showParagraphRender(i);
         }
     }
 }
