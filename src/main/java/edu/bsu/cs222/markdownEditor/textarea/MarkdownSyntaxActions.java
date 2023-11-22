@@ -21,43 +21,46 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
     default void showParagraphRender(int paragraphIndex) {
         String text = getText(paragraphIndex);
         LineParser parser = new LineParser(text);
-        replaceWithSyntaxReferences(paragraphIndex,
-                parser.getSyntaxReferences(),
-                SyntaxReference::getRenderedSegments,
-                SyntaxReference::getRenderedStyleSpans);
+        List<SyntaxReference> references = parser.getSyntaxReferences();
+        replaceWithSyntaxReferences(paragraphIndex, references, SyntaxReference::getRenderedSegments);
+        styleSyntaxReferences(paragraphIndex, references, SyntaxReference::getRenderedStyleSpans);
     }
 
     default void showParagraphMarkdown(int paragraphIndex) {
         String text = getText(paragraphIndex);
         LineParser parser = new LineParser(text);
-        replaceWithSyntaxReferences(paragraphIndex,
-                parser.getSyntaxReferences(),
-                SyntaxReference::getMarkdownSegments,
-                SyntaxReference::getMarkdownStyleSpans);
+        List<SyntaxReference> references = parser.getSyntaxReferences();
+        replaceWithSyntaxReferences(paragraphIndex, references, SyntaxReference::getMarkdownSegments);
+        styleSyntaxReferences(paragraphIndex, references, SyntaxReference::getMarkdownStyleSpans);
     }
 
     private void replaceWithSyntaxReferences(int paragraphIndex,
             List<SyntaxReference> references,
-            Function<SyntaxReference, SegmentList> getSegments,
-            Function<SyntaxReference, StyleSpans<TextStyle>> getStyleSpans) {
+            Function<SyntaxReference, SegmentList> getSegments) {
         int paragraphPosition = getParagraphPosition(paragraphIndex);
         MultiChangeBuilder<ParagraphStyle, Segment, TextStyle> multiChangeBuilder = this.createMultiChange();
+        references.forEach(reference ->
+                getSegments.apply(reference).forEach((start, segment) -> {
+                    start += paragraphPosition;
+                    int end = start + segment.length();
+                    multiChangeBuilder.replace(start,
+                            end,
+                            ReadOnlyStyledDocument.fromSegment(segment,
+                                    getParagraphStyleForInsertionAt(paragraphPosition),
+                                    getStyleOfChar(start),
+                                    SEGMENT_OPS));
+                })
+        );
+        if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
+    }
+
+    private void styleSyntaxReferences(int paragraphIndex,
+            List<SyntaxReference> references,
+            Function<SyntaxReference, StyleSpans<TextStyle>> getStyleSpans) {
         references.forEach(reference -> {
-            getSegments.apply(reference).forEach((start, segment) -> {
-                start += paragraphPosition;
-                int end = start + segment.length();
-                multiChangeBuilder.replace(start,
-                        end,
-                        ReadOnlyStyledDocument.fromSegment(segment,
-                                getParagraphStyleForInsertionAt(paragraphPosition),
-                                getStyleOfChar(start),
-                                SEGMENT_OPS));
-            });
             StyleSpans<TextStyle> styleSpans = getStyleSpans.apply(reference);
-            System.out.println(styleSpans);
             overlayStyleSpans(paragraphIndex, reference.start, styleSpans);
         });
-        if (multiChangeBuilder.hasChanges()) multiChangeBuilder.commit();
     }
 
     private void styleMarkdownParagraph(int currentParagraph, List<SyntaxReference> references) {
