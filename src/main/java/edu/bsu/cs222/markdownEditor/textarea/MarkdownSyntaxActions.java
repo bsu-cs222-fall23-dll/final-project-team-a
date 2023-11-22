@@ -1,7 +1,6 @@
 package edu.bsu.cs222.markdownEditor.textarea;
 
 import edu.bsu.cs222.markdownEditor.parser.LineParser;
-import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxReference;
 import edu.bsu.cs222.markdownEditor.parser.SyntaxReference;
 import edu.bsu.cs222.markdownEditor.textarea.segments.Segment;
 import edu.bsu.cs222.markdownEditor.textarea.segments.SegmentList;
@@ -61,36 +60,6 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
             StyleSpans<TextStyle> styleSpans = getStyleSpans.apply(reference);
             overlayStyleSpans(paragraphIndex, reference.start, styleSpans);
         });
-    }
-
-    private void styleMarkdownParagraph(int currentParagraph, List<SyntaxReference> references) {
-        clearStyle(currentParagraph);
-        boolean isParagraph = true;
-        for (SyntaxReference reference : references) {
-            if (reference instanceof ParagraphSyntaxReference paragraphSyntaxReference) {
-                styleParagraphMarkdownSyntax(currentParagraph, paragraphSyntaxReference);
-                isParagraph = false;
-            } else {
-                styleInlineMarkdownSyntax(currentParagraph, reference);
-            }
-        }
-        if (isParagraph) setParagraphStyle(currentParagraph, ParagraphStyle.Paragraph);
-    }
-
-    private void styleParagraphMarkdownSyntax(int currentParagraph, ParagraphSyntaxReference reference) {
-        setParagraphStyle(currentParagraph, reference.getParagraphStyle());
-        styleInlineMarkdownSyntax(currentParagraph, reference);
-    }
-
-    private void styleInlineMarkdownSyntax(int currentParagraph, SyntaxReference reference) {
-        overlayStyleSpans(currentParagraph, reference.start, reference.getMarkdownStyleSpans());
-    }
-
-    /**
-     * Edge-Case Bug: The last paragraph doesn't exisiting when empty.
-     */
-    private boolean lastParagraphEmpty(int paragraphIndex) {
-        return paragraphIndex >= getParagraphs().size();
     }
 
     private int getParagraphPosition(int paragraphIndex) {

@@ -8,11 +8,9 @@ import java.util.regex.Matcher;
 
 public abstract class SyntaxReference {
     public int start;
-    public final String fullText;
 
     SyntaxReference(Matcher matcher) {
         start = matcher.start();
-        fullText = matcher.group();
     }
 
     public abstract SegmentList getMarkdownSegments();
