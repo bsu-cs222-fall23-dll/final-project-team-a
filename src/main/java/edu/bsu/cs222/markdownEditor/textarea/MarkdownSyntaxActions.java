@@ -56,6 +56,7 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
     private void styleSyntaxReferences(int paragraphIndex,
             List<SyntaxReference> references,
             Function<SyntaxReference, StyleSpans<TextStyle>> getStyleSpans) {
+        clearStyle(paragraphIndex);
         references.forEach(reference -> {
             StyleSpans<TextStyle> styleSpans = getStyleSpans.apply(reference);
             overlayStyleSpans(paragraphIndex, reference.start, styleSpans);
