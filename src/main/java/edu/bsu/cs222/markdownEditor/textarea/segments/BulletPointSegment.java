@@ -31,7 +31,8 @@ public class BulletPointSegment extends TextSegment {
     @Override
     public TextExt configureNode(TextStyle style) {
         TextExt textNode = super.configureNode(style);
-        if (isRendered) textNode.setText("• ");
+        if (isRendered) //noinspection UnnecessaryUnicodeEscape
+            textNode.setText("\u2022 ");
         return textNode;
     }
 }
