@@ -2,7 +2,6 @@ package edu.bsu.cs222.markdownEditor.parser;
 
 import edu.bsu.cs222.markdownEditor.textarea.ParagraphStyle;
 
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,9 +45,10 @@ public enum ParagraphSyntaxType {
         return matcher.group().length();
     }
 
-    void forEachReference(String text, Consumer<ParagraphSyntaxReference> action) {
+    ParagraphSyntaxReference getReference(String text) {
         Matcher matcher = pattern.matcher(text);
-        while (matcher.find()) action.accept(createReference(matcher));
+        if (!matcher.find()) return null;
+        return createReference(matcher);
     }
 
     public ParagraphSyntaxReference createReference() {

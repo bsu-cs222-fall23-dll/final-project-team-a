@@ -8,7 +8,6 @@ import edu.bsu.cs222.markdownEditor.textarea.segments.TextSegment;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 
 class LinkSyntaxReference extends SyntaxReference {
@@ -56,14 +55,14 @@ class LinkSyntaxReference extends SyntaxReference {
     }
 
     @Override
-    public Optional<StyleSpans<TextStyle>> getRenderedStyleSpans() {
+    public StyleSpans<TextStyle> getRenderedStyleSpans() {
         StyleSpansBuilder<TextStyle> styleSpansBuilder = new StyleSpansBuilder<>();
         styleSpansBuilder.add(TextStyle.MARKDOWN, 1); // [
         styleSpansBuilder.add(getTextStyle(), text.length()); // text
         styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 2); // ](
         styleSpansBuilder.add(TextStyle.EMPTY, urlString.length()); // link
         styleSpansBuilder.add(TextStyle.MARKDOWN.add(TextStyle.Property.Markdown), 1); // )
-        return Optional.ofNullable(styleSpansBuilder.create());
+        return styleSpansBuilder.create();
     }
 
     @Override
