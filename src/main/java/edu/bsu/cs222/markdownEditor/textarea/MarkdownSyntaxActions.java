@@ -20,6 +20,7 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
     default void showParagraphRender(int paragraphIndex) {
         String text = getText(paragraphIndex);
         LineParser parser = new LineParser(text);
+        setParagraphStyle(paragraphIndex, parser.getParagraphStyle());
         List<SyntaxReference> references = parser.getSyntaxReferences();
         replaceWithSyntaxReferences(paragraphIndex, references, SyntaxReference::getRenderedSegments);
         styleSyntaxReferences(paragraphIndex, references, SyntaxReference::getRenderedStyleSpans);
@@ -28,6 +29,7 @@ public interface MarkdownSyntaxActions extends TextStyleActions {
     default void showParagraphMarkdown(int paragraphIndex) {
         String text = getText(paragraphIndex);
         LineParser parser = new LineParser(text);
+        setParagraphStyle(paragraphIndex, parser.getParagraphStyle());
         List<SyntaxReference> references = parser.getSyntaxReferences();
         replaceWithSyntaxReferences(paragraphIndex, references, SyntaxReference::getMarkdownSegments);
         styleSyntaxReferences(paragraphIndex, references, SyntaxReference::getMarkdownStyleSpans);
