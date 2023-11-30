@@ -10,8 +10,9 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import java.util.regex.Matcher;
 
 class TagWrappedSyntaxReference extends SyntaxReference {
-    private final InlineSyntaxType type;
-    private final String tag, text;
+    final InlineSyntaxType type;
+    final String tag;
+    private final String text;
 
     TagWrappedSyntaxReference(InlineSyntaxType type, Matcher matcher) {
         super(matcher);
@@ -52,5 +53,14 @@ class TagWrappedSyntaxReference extends SyntaxReference {
     @Override
     int getTextStart() {
         return start + tag.length();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof TagWrappedSyntaxReference syntaxReference)
+            return this.type.equals(syntaxReference.type) &&
+                    this.text.equals(syntaxReference.text) &&
+                    this.tag.equals(syntaxReference.tag);
+        else return super.equals(obj);
     }
 }
