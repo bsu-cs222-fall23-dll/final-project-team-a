@@ -64,6 +64,14 @@ h1, h2, h3 {
     -rtfx-background-color: whitesmoke;
 }
 
+.s {
+    -fx-strikethrough: true;
+}
+
+.mark {
+    -rtfx-background-color: "#fbf719";
+}
+
 .link {
     -fx-fill: "#3498db";
 }
