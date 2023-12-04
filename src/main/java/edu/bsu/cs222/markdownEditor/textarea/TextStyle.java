@@ -8,6 +8,8 @@ import java.util.Set;
 public class TextStyle {
     public static final TextStyle EMPTY = new TextStyle(new HashSet<>());
     public static final TextStyle MARKDOWN = EMPTY.add(Property.Markdown);
+    public static final TextStyle STRIKETHROUGH = EMPTY.add(Property.Strikethrough);
+    public static final TextStyle HIGHLIGHT = EMPTY.add(Property.Highlight);
 
     private final Set<Property> properties;
 
@@ -49,6 +51,8 @@ public class TextStyle {
         Italics("i", "*"),
         Bold("b", "**"),
         Code("inline-code", "`"),
+        Strikethrough("s", "~~"),
+        Highlight("mark", "=="),
         Link("link"),
         Markdown("md");
 
