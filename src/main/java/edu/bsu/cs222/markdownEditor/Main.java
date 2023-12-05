@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getResourceUrl("/app.fxml"));
         VBox vBox = fxmlLoader.load();
         Scene scene = new Scene(vBox, 1120, 680);
+        Font.loadFont(getResourceUrl("/fonts/SourceCodePro.ttf").toExternalForm(), 10);
         scene.getStylesheets().add(getResourceUrl("/markdown.css").toExternalForm());
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);
