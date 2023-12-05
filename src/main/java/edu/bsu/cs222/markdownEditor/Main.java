@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.Objects;
 
 public class Main extends Application {
-    public static FileManager fileManager = new FileManager(null);
 
     public static void main(String[] args) {
         launch();

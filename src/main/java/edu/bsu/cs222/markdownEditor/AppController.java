@@ -12,6 +12,8 @@ import java.net.URL;
 public class AppController {
     private Scene scene;
 
+    private final FileManager fileManager = new FileManager(null);
+
     private final MarkdownTextArea textArea = new MarkdownTextArea();
     @FXML
     private VBox appContainer;
@@ -22,6 +24,7 @@ public class AppController {
     private void initialize() {
         appContainer.getChildren().add(textArea);
         VBox.setVgrow(textArea, Priority.ALWAYS);
+        menuBarController.setFileManager(fileManager);
         menuBarController.setTextArea(textArea);
     }
 

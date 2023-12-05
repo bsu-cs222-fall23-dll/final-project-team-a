@@ -11,7 +11,12 @@ import java.io.File;
 public class MenuBarController {
 
     private final FileChooser fileChooser = new FileChooser();
+    private FileManager fileManager;
     private MarkdownTextArea textArea;
+
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
 
     public void setTextArea(MarkdownTextArea texArea) {
         this.textArea = texArea;
@@ -30,14 +35,14 @@ public class MenuBarController {
     @FXML
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
-        String content = Main.fileManager.open(file);
+        String content = fileManager.open(file);
         textArea.setText(content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            Main.fileManager.save(textArea.getText());
+            fileManager.save(textArea.getText());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -46,7 +51,7 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        Main.fileManager.saveAs(textArea.getText(), file);
+        fileManager.saveAs(textArea.getText(), file);
     }
 
     @FXML
