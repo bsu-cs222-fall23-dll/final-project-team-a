@@ -15,8 +15,8 @@ public interface TextStyleActions extends StyleActions<ParagraphStyle, TextStyle
         int paragraph = getCurrentParagraph();
         String selectedText = getSelectedText();
         if (selectedText.isEmpty()) {
-            int caretPosition = getCaretColumn();
-            insertText(paragraph, caretPosition, style.defaultTagSyntax + style.defaultTagSyntax);
+            int caretPosition = getCaretPosition();
+            insertText(caretPosition, style.defaultTagSyntax + style.defaultTagSyntax);
             moveTo(caretPosition + style.defaultTagSyntax.length());
         } else {
             IndexRange selectionRange = getParagraphSelection(getCurrentParagraph());

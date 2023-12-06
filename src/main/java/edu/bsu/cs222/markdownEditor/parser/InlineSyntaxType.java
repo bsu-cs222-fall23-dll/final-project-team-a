@@ -45,6 +45,18 @@ enum InlineSyntaxType {
         SyntaxReference createReference(Matcher match) {
             return new TagWrappedSyntaxReference(this, match);
         }
+    },
+    Strikethrough(TextStyle.STRIKETHROUGH, "(?<![`\\\\])(~~)\\b(.+?)\\b(?<![`\\\\])\\1") {
+        @Override
+        SyntaxReference createReference(Matcher match) {
+            return new TagWrappedSyntaxReference(this, match);
+        }
+    },
+    Highlight(TextStyle.HIGHLIGHT, "(?<![`\\\\])(==)\\b(.+?)\\b(?<![`\\\\])\\1") {
+        @Override
+        SyntaxReference createReference(Matcher match) {
+            return new TagWrappedSyntaxReference(this, match);
+        }
     };
 
     private final TextStyle textStyle;

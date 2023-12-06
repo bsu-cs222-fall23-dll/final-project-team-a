@@ -1,8 +1,3 @@
-@font-face {
-    font-family: 'SourceCodePro';
-    src: url('fonts/SourceCodePro.ttf');
-}
-
 .root {
     -fx-font-family: 'Source Code Pro', monospace;
 }
@@ -62,6 +57,14 @@ h1, h2, h3 {
     -rtfx-border-stroke-width: 1px;
     -rtfx-border-stroke-color: darkgray;
     -rtfx-background-color: whitesmoke;
+}
+
+.s {
+    -fx-strikethrough: true;
+}
+
+.mark {
+    -rtfx-background-color: "#fbf719";
 }
 
 .link {
