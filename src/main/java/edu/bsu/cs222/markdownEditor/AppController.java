@@ -6,11 +6,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.net.URL;
 
 public class AppController {
     private Scene scene;
+    private Window window;
 
     private final FileManager fileManager = new FileManager(null);
 
@@ -30,6 +34,7 @@ public class AppController {
 
     public void setScene(Scene scene) {
         this.scene = scene;
+        this.window = scene.getWindow();
     }
 
     public void loadFont(URL fontUrl) {
@@ -38,5 +43,13 @@ public class AppController {
 
     public void loadCss(URL cssUrl) {
         scene.getStylesheets().add(cssUrl.toExternalForm());
+    }
+
+    public void createModal(Scene scene) {
+        Stage modal = new Stage();
+        modal.setScene(scene);
+        modal.initOwner(window);
+        modal.initModality(Modality.APPLICATION_MODAL);
+        modal.showAndWait();
     }
 }
