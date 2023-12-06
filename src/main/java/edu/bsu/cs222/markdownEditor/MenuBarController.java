@@ -5,7 +5,7 @@ import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -64,10 +64,10 @@ public class MenuBarController {
 
     @FXML
     private void openPreferences() {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.getResourceUrl("/app.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.getResourceUrl("/preferences.fxml"));
         try {
-            VBox vBox = fxmlLoader.load();
-            appController.createModal(vBox, 980, 720);
+            Scene preferencesScene = fxmlLoader.load();
+            appController.createModal(preferencesScene);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
