@@ -3,7 +3,7 @@ package edu.bsu.cs222.markdownEditor;
 import java.util.prefs.Preferences;
 
 enum UserPreferences {
-    FontSize("16px"), FontFamily("Source Code Pro");
+    FontFamily("Source Code Pro");
 
     static private final Preferences preferences = Preferences.userNodeForPackage(Main.class);
     private final String defaultValue;
