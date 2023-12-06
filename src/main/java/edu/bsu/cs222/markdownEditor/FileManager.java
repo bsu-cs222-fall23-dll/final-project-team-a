@@ -1,5 +1,8 @@
 package edu.bsu.cs222.markdownEditor;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,12 +10,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileManager {
+    private final AppController appController;
     protected Path activeFilePath;
     private boolean isSaved = false;
 
-    public FileManager(Path activeFilePath) {
-        this.activeFilePath = activeFilePath;
+    public FileManager(Path activeFilePath){
+        this(activeFilePath, null);
     }
+
+
+    FileManager(Path activeFilePath, AppController appController) {
+        this.activeFilePath = activeFilePath;
+        this.appController = appController;
+    }
+
 
     public void setUnsaved() {
         isSaved = false;
@@ -50,10 +61,19 @@ public class FileManager {
 
     public void newFile() {
         if (!isSaved) {
-          // TODO: Show warning
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/warning-modal.fxml"));
+                Scene warningModal = fxmlLoader.load();
+                WarningModalController controller = fxmlLoader.getController();
+                controller.initialize(appController);
+                appController.createModal(warningModal);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             this.activeFilePath = null;
             setUnsaved();
+            appController.clearText();
         }
     }
 }

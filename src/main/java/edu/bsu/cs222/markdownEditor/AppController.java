@@ -16,14 +16,14 @@ public class AppController {
     private Scene scene;
     private Window window;
 
-    private final FileManager fileManager = new FileManager(null);
+    final FileManager fileManager = new FileManager(null, this);
     private final EventManager eventManager;
 
-    private final MarkdownTextArea textArea = new MarkdownTextArea();
+    final MarkdownTextArea textArea = new MarkdownTextArea();
     @FXML
     private VBox appContainer;
     @FXML
-    private MenuBarController menuBarController;
+    MenuBarController menuBarController;
 
     public AppController() {
         eventManager = new EventManager(textArea, fileManager);
@@ -49,6 +49,10 @@ public class AppController {
 
     public void loadCss(URL cssUrl) {
         scene.getStylesheets().add(cssUrl.toExternalForm());
+    }
+
+    public void clearText(){
+        textArea.clear();
     }
 
     public void createModal(Scene scene) {

@@ -14,9 +14,11 @@ public class MenuBarController {
     private FileManager fileManager;
     private MarkdownTextArea textArea;
 
+
     public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;
     }
+
 
     public void setTextArea(MarkdownTextArea texArea) {
         this.textArea = texArea;
@@ -32,6 +34,8 @@ public class MenuBarController {
     private void newFile() {
         fileManager.newFile();
     }
+
+
 
     @FXML
     private void openFile() {
@@ -50,7 +54,7 @@ public class MenuBarController {
     }
 
     @FXML
-    private void saveFileAs() {
+    void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
         fileManager.saveAs(textArea.getText(), file);
     }

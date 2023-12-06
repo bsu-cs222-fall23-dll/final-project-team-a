@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Scene xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.bsu.cs222.markdownEditor.WarningModalController">
+    <VBox prefWidth="327.0" spacing="12.0">
+        <HBox>
+            <Label prefHeight="17.0" prefWidth="53.0" text="Warning:" />
+            <Label prefHeight="17.0" prefWidth="182.0" text="You have not saved your project" />
+        </HBox>
+        <HBox alignment="CENTER">
+            <Button fx:id="closeButton" mnemonicParsing="false" text="Proceed without saving" onAction="#closeButton"/>
+         <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="saveAndCloseButton" mnemonicParsing="false" text="Save" onAction="#SaveAndClose" />
+        </HBox>
+      <padding>
+         <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+      </padding>
+    </VBox>
+</Scene>
