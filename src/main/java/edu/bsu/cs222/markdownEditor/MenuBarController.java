@@ -4,15 +4,23 @@ import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxType;
 import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MenuBarController {
 
+    private AppController appController;
     private final FileChooser fileChooser = new FileChooser();
     private FileManager fileManager;
     private MarkdownTextArea textArea;
+
+    public void setAppController(AppController appController) {
+        this.appController = appController;
+    }
 
     public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;
@@ -52,6 +60,17 @@ public class MenuBarController {
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
         fileManager.saveAs(textArea.getText(), file);
+    }
+
+    @FXML
+    private void openPreferences() {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.getResourceUrl("/app.fxml"));
+        try {
+            VBox vBox = fxmlLoader.load();
+            appController.createModal(vBox, 980, 720);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

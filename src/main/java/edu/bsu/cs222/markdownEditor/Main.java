@@ -30,8 +30,8 @@ public class Main extends Application {
         appController.loadCss(getResourceUrl("/markdown.css"));
     }
 
-    private URL getResourceUrl(String name) {
-        URL url = getClass().getResource(name);
+    public static URL getResourceUrl(String name) {
+        URL url = Main.class.getResource(name);
         return Objects.requireNonNull(url);
     }
 

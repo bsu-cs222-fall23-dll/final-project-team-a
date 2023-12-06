@@ -28,6 +28,7 @@ public class AppController {
     private void initialize() {
         appContainer.getChildren().add(textArea);
         VBox.setVgrow(textArea, Priority.ALWAYS);
+        menuBarController.setAppController(this);
         menuBarController.setFileManager(fileManager);
         menuBarController.setTextArea(textArea);
     }
