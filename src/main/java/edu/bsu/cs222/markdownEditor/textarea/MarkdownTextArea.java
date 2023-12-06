@@ -17,7 +17,6 @@ public class MarkdownTextArea
                 SEGMENT_OPS,
                 MarkdownTextArea::nodeFactory);
         getStyleClass().add("markdown-editor");
-        new EventManager(this).initialize();
     }
 
     private static void applyParagraphStyle(TextFlow textFlow, ParagraphStyle paragraphStyle) {

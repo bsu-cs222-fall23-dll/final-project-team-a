@@ -17,6 +17,7 @@ public class AppController {
     private Window window;
 
     private final FileManager fileManager = new FileManager(null);
+    private final EventManager eventManager;
 
     private final MarkdownTextArea textArea = new MarkdownTextArea();
     @FXML
@@ -24,8 +25,13 @@ public class AppController {
     @FXML
     private MenuBarController menuBarController;
 
+    public AppController() {
+        eventManager = new EventManager(textArea, fileManager);
+    }
+
     @FXML
     private void initialize() {
+        eventManager.initialize();
         appContainer.getChildren().add(textArea);
         VBox.setVgrow(textArea, Priority.ALWAYS);
         menuBarController.setFileManager(fileManager);
