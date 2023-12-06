@@ -30,6 +30,7 @@ public class MenuBarController {
 
     @FXML
     private void newFile() {
+        fileManager.newFile();
     }
 
     @FXML

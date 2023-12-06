@@ -8,15 +8,21 @@ import java.nio.file.Path;
 
 public class FileManager {
     protected Path activeFilePath;
+    private boolean isSaved = false;
 
     public FileManager(Path activeFilePath) {
         this.activeFilePath = activeFilePath;
+    }
+
+    public void setUnsaved() {
+        isSaved = false;
     }
 
     public void save(String content) throws NoFileOpenException {
         if (activeFilePath == null) throw new NoFileOpenException();
         try {
             Files.writeString(activeFilePath, content, StandardCharsets.UTF_8);
+            isSaved = true;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,9 +40,20 @@ public class FileManager {
     public String open(File file) {
         activeFilePath = file.toPath();
         try {
-            return Files.readString(activeFilePath, StandardCharsets.UTF_8);
+            String text = Files.readString(activeFilePath, StandardCharsets.UTF_8);
+            isSaved = true;
+            return text;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void newFile() {
+        if (!isSaved) {
+          // TODO: Show warning
+        } else {
+            this.activeFilePath = null;
+            setUnsaved();
         }
     }
 }

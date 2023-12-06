@@ -19,6 +19,7 @@ class EventManager {
     }
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+        fileManager.setUnsaved();
         int currentParagraph = textArea.getCurrentParagraph();
         textArea.showParagraphMarkdown(currentParagraph);
     }
