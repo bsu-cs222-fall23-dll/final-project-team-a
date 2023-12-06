@@ -74,4 +74,8 @@ class LinkSyntaxReference extends SyntaxReference {
     String getText() {
         return text;
     }
+
+    protected String getUrlString() {
+        return urlString;
+    }
 }

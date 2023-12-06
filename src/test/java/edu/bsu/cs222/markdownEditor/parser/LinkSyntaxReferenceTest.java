@@ -8,27 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LinkSyntaxReferenceTest {
 
-    private final TagWrappedSyntaxReference syntaxReference;
+    private final LinkSyntaxReference syntaxReference;
 
     LinkSyntaxReferenceTest() {
         String markdown = "Hello [google](https://www.google.com) world!";
         LineParser parser = new LineParser(markdown);
         List<SyntaxReference> syntaxReferences = parser.getSyntaxReferences();
-        if (syntaxReferences.get(0) instanceof TagWrappedSyntaxReference tagWrappedSyntaxReference) {
-            syntaxReference = tagWrappedSyntaxReference;
+        if (syntaxReferences.get(0) instanceof LinkSyntaxReference linkSyntaxReference) {
+            syntaxReference = linkSyntaxReference;
         } else {
             throw new AssertionError("SyntaxReference is the wrong type");
         }
-    }
-
-    @Test
-    public void typeTest() {
-        assertEquals(InlineSyntaxType.Link, syntaxReference.type);
-    }
-
-    @Test
-    public void testTag() {
-        assertEquals("[]()", syntaxReference.tag);
     }
 
     @Test
@@ -36,6 +26,10 @@ public class LinkSyntaxReferenceTest {
         assertEquals("google", syntaxReference.getText());
     }
 
+    @Test
+    public void testUrlString() {
+        assertEquals("https://www.google.com", syntaxReference.getUrlString());
+    }
     @Test
     public void testStartPosition() {
         assertEquals(6, syntaxReference.start);
