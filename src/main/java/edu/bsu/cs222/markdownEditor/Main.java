@@ -26,8 +26,6 @@ public class Main extends Application {
         stage.show();
         AppController appController = fxmlLoader.getController();
         appController.setScene(scene);
-        appController.loadFont(getResourceUrl("/fonts/SourceCodePro.ttf"));
-        appController.loadCss(getResourceUrl("/markdown.css"));
     }
 
     public static URL getResourceUrl(String name) {

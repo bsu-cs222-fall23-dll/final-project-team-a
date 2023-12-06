@@ -13,8 +13,10 @@ import javafx.stage.Window;
 import java.net.URL;
 
 public class AppController {
-    private Scene scene;
+
+    private Scene appScene;
     private Window window;
+    private final URL systemCss = Main.getResourceUrl("/style.css");
 
     private final FileManager fileManager = new FileManager(null);
 
@@ -23,6 +25,26 @@ public class AppController {
     private VBox appContainer;
     @FXML
     private MenuBarController menuBarController;
+
+    public void setScene(Scene scene) {
+        this.appScene = scene;
+        this.window = scene.getWindow();
+        setSystemStyle();
+        setEditorStyle();
+    }
+
+    public void loadCss(URL cssUrl) {
+        appScene.getStylesheets().add(cssUrl.toExternalForm());
+    }
+
+    public void createModal(Scene scene) {
+        scene.getStylesheets().add(systemCss.toExternalForm());
+        Stage modal = new Stage();
+        modal.setScene(scene);
+        modal.initOwner(window);
+        modal.initModality(Modality.APPLICATION_MODAL);
+        modal.showAndWait();
+    }
 
     @FXML
     private void initialize() {
@@ -33,24 +55,13 @@ public class AppController {
         menuBarController.setTextArea(textArea);
     }
 
-    public void setScene(Scene scene) {
-        this.scene = scene;
-        this.window = scene.getWindow();
-    }
-
-    public void loadFont(URL fontUrl) {
+    private void setSystemStyle() {
+        URL fontUrl = Main.getResourceUrl("/fonts/SourceCodePro.ttf");
         Font.loadFont(fontUrl.toExternalForm(), 10);
+        loadCss(systemCss);
     }
 
-    public void loadCss(URL cssUrl) {
-        scene.getStylesheets().add(cssUrl.toExternalForm());
-    }
-
-    public void createModal(Scene scene) {
-        Stage modal = new Stage();
-        modal.setScene(scene);
-        modal.initOwner(window);
-        modal.initModality(Modality.APPLICATION_MODAL);
-        modal.showAndWait();
+    private void setEditorStyle() {
+        loadCss(Main.getResourceUrl("/markdown.css"));
     }
 }
