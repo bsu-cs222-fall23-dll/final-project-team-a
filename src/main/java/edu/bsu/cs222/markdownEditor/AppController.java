@@ -33,6 +33,10 @@ public class AppController {
         setEditorStyle();
     }
 
+    public void setFontFamily(String family) {
+        textArea.setStyle("-fx-font-family: '" + family + "'");
+    }
+
     public void loadCss(URL cssUrl) {
         appScene.getStylesheets().add(cssUrl.toExternalForm());
     }
@@ -63,5 +67,6 @@ public class AppController {
 
     private void setEditorStyle() {
         loadCss(Main.getResourceUrl("/markdown.css"));
+        setFontFamily(UserPreferences.FontFamily.getValue());
     }
 }

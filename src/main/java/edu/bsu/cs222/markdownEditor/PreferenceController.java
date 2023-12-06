@@ -9,11 +9,17 @@ import javafx.scene.text.Font;
 
 public class PreferenceController {
 
+    private AppController appController;
+
     @FXML private Slider fontSizeSlider;
     @FXML private Label fontSizeLabel;
     @FXML private ComboBox<String> fontComboBox;
 
     private int currentFontSize;
+
+    public void setAppController(AppController appController) {
+        this.appController = appController;
+    }
 
     @FXML
     private void initialize() {
@@ -56,5 +62,6 @@ public class PreferenceController {
 
     private void handleFontFamilyChange(ObservableValue<? extends String> o, String oldValue, String newValue) {
         UserPreferences.FontFamily.setValue(newValue);
+        appController.setFontFamily(newValue);
     }
 }

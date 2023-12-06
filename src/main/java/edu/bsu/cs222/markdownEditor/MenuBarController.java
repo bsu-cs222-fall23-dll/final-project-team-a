@@ -67,6 +67,8 @@ public class MenuBarController {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.getResourceUrl("/preferences.fxml"));
         try {
             Scene preferencesScene = fxmlLoader.load();
+            PreferenceController preferenceController = fxmlLoader.getController();
+            preferenceController.setAppController(appController);
             appController.createModal(preferencesScene);
         } catch (IOException e) {
             throw new RuntimeException(e);
