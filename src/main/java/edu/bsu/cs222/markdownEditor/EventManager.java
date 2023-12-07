@@ -1,13 +1,16 @@
-package edu.bsu.cs222.markdownEditor.textarea;
+package edu.bsu.cs222.markdownEditor;
 
+import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import javafx.beans.value.ObservableValue;
 
 class EventManager {
 
     private final MarkdownTextArea textArea;
+    private final FileManager fileManager;
 
-    EventManager(MarkdownTextArea textArea) {
+    EventManager(MarkdownTextArea textArea, FileManager fileManager) {
         this.textArea = textArea;
+        this.fileManager = fileManager;
     }
 
     public void initialize() {
@@ -16,6 +19,7 @@ class EventManager {
     }
 
     private void handleTextChange(ObservableValue<? extends String> observableValue, String oldValue, String newValue) {
+        fileManager.setUnsaved();
         int currentParagraph = textArea.getCurrentParagraph();
         textArea.showParagraphMarkdown(currentParagraph);
     }

@@ -38,6 +38,7 @@ public class MenuBarController {
 
     @FXML
     private void newFile() {
+        fileManager.newFile();
     }
 
     @FXML
@@ -57,7 +58,7 @@ public class MenuBarController {
     }
 
     @FXML
-    private void saveFileAs() {
+    void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
         fileManager.saveAs(textArea.getText(), file);
     }

@@ -17,13 +17,18 @@ public class AppController {
     private Window window;
     private final URL systemCss = Main.getResourceUrl("/style.css");
 
-    private final FileManager fileManager = new FileManager(null);
+    final FileManager fileManager = new FileManager(null, this);
+    private final EventManager eventManager;
 
-    private final MarkdownTextArea textArea = new MarkdownTextArea();
+    final MarkdownTextArea textArea = new MarkdownTextArea();
     @FXML
     private VBox appContainer;
     @FXML
-    private MenuBarController menuBarController;
+    MenuBarController menuBarController;
+
+    public AppController() {
+        eventManager = new EventManager(textArea, fileManager);
+    }
 
     public void setScene(Scene scene) {
         this.window = scene.getWindow();
@@ -40,6 +45,10 @@ public class AppController {
         textArea.getStylesheets().add(cssUrl.toExternalForm());
     }
 
+    public void clearText(){
+        textArea.clear();
+    }
+
     public void createModal(Scene scene) {
         scene.getStylesheets().add(systemCss.toExternalForm());
         Stage modal = new Stage();
@@ -51,6 +60,7 @@ public class AppController {
 
     @FXML
     private void initialize() {
+        eventManager.initialize();
         appContainer.getChildren().add(textArea);
         VBox.setVgrow(textArea, Priority.ALWAYS);
         menuBarController.setAppController(this);
