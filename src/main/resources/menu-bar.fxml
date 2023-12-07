@@ -26,6 +26,11 @@
                 <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#openPreferences" text="Preferences">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
     </Menu>
     <Menu mnemonicParsing="false" text="Headers">
         <MenuItem mnemonicParsing="false" onAction="#header1Button" text="Header 1">

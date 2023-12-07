@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.net.URL;
 import java.util.Objects;
 
 public class Main extends Application {
-    public static FileManager fileManager = new FileManager(null);
 
     public static void main(String[] args) {
         launch();
@@ -23,15 +21,15 @@ public class Main extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getResourceUrl("/app.fxml"));
         VBox vBox = fxmlLoader.load();
         Scene scene = new Scene(vBox, 1120, 680);
-        Font.loadFont(getResourceUrl("/fonts/SourceCodePro.ttf").toExternalForm(), 10);
-        scene.getStylesheets().add(getResourceUrl("/markdown.css").toExternalForm());
         stage.setTitle("Markdown Editor");
         stage.setScene(scene);
         stage.show();
+        AppController appController = fxmlLoader.getController();
+        appController.setScene(scene);
     }
 
-    private URL getResourceUrl(String name) {
-        URL url = getClass().getResource(name);
+    public static URL getResourceUrl(String name) {
+        URL url = Main.class.getResource(name);
         return Objects.requireNonNull(url);
     }
 

@@ -1,0 +1,22 @@
+.root {
+    -fx-font-size: 16px;
+}
+
+.markdown-editor {
+    -fx-padding: 2px;
+    -fx-border-width: 0;
+}
+
+.system-h1 {
+    -fx-font-size: 36px;
+    -fx-padding: 0 0 8px 0;
+}
+
+.system-h4 {
+    -fx-padding: 6px 0 0 0;
+    -fx-font-weight: bold;
+}
+
+.system-form-label {
+    -fx-fill: "#666666";
+}

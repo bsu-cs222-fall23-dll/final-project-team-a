@@ -4,14 +4,27 @@ import edu.bsu.cs222.markdownEditor.parser.ParagraphSyntaxType;
 import edu.bsu.cs222.markdownEditor.textarea.MarkdownTextArea;
 import edu.bsu.cs222.markdownEditor.textarea.TextStyle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MenuBarController {
 
+    private AppController appController;
     private final FileChooser fileChooser = new FileChooser();
+    private FileManager fileManager;
     private MarkdownTextArea textArea;
+
+    public void setAppController(AppController appController) {
+        this.appController = appController;
+    }
+
+    public void setFileManager(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
 
     public void setTextArea(MarkdownTextArea texArea) {
         this.textArea = texArea;
@@ -30,14 +43,14 @@ public class MenuBarController {
     @FXML
     private void openFile() {
         File file = fileChooser.showOpenDialog(null);
-        String content = Main.fileManager.open(file);
+        String content = fileManager.open(file);
         textArea.setText(content);
     }
 
     @FXML
     private void saveFile() {
         try {
-            Main.fileManager.save(textArea.getText());
+            fileManager.save(textArea.getText());
         } catch (NoFileOpenException e) {
             saveFileAs();
         }
@@ -46,7 +59,20 @@ public class MenuBarController {
     @FXML
     private void saveFileAs() {
         File file = fileChooser.showSaveDialog(null);
-        Main.fileManager.saveAs(textArea.getText(), file);
+        fileManager.saveAs(textArea.getText(), file);
+    }
+
+    @FXML
+    private void openPreferences() {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.getResourceUrl("/preferences.fxml"));
+        try {
+            Scene preferencesScene = fxmlLoader.load();
+            PreferenceController preferenceController = fxmlLoader.getController();
+            preferenceController.setAppController(appController);
+            appController.createModal(preferencesScene);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
