@@ -14,7 +14,6 @@ import java.net.URL;
 
 public class AppController {
 
-    private Scene appScene;
     private Window window;
     private final URL systemCss = Main.getResourceUrl("/style.css");
 
@@ -27,7 +26,6 @@ public class AppController {
     private MenuBarController menuBarController;
 
     public void setScene(Scene scene) {
-        this.appScene = scene;
         this.window = scene.getWindow();
         setSystemStyle();
         setEditorStyle();
@@ -37,8 +35,9 @@ public class AppController {
         textArea.setStyle("-fx-font-family: '" + family + "'");
     }
 
-    public void loadCss(URL cssUrl) {
-        appScene.getStylesheets().add(cssUrl.toExternalForm());
+    public void setEditorCss(URL cssUrl) {
+        textArea.getStylesheets().clear();
+        textArea.getStylesheets().add(cssUrl.toExternalForm());
     }
 
     public void createModal(Scene scene) {
@@ -62,11 +61,11 @@ public class AppController {
     private void setSystemStyle() {
         URL fontUrl = Main.getResourceUrl("/fonts/SourceCodePro.ttf");
         Font.loadFont(fontUrl.toExternalForm(), 10);
-        loadCss(systemCss);
+        setEditorCss(systemCss);
     }
 
     private void setEditorStyle() {
-        loadCss(Main.getResourceUrl("/markdown.css"));
+        setEditorCss(Main.getResourceUrl("/styles/default.css"));
         setFontFamily(UserPreferences.FontFamily.getValue());
     }
 }
