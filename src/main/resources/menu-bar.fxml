@@ -75,5 +75,15 @@
                 <KeyCodeCombination alt="UP" code="BACK_QUOTE" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
             </accelerator>
         </MenuItem>
+        <MenuItem  mnemonicParsing="false" onAction="#highlightButton" text="Highlight">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="H" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem mnemonicParsing="false" onAction="#strikethroughButton" text="StrikeThrough">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
     </Menu>
 </MenuBar>
