@@ -111,4 +111,9 @@ public class MenuBarController {
         textArea.styleSelectedText(TextStyle.Property.Code);
     }
 
+    @FXML
+    private void highlightButton(){
+        textArea.styleSelectedText(TextStyle.Property.Highlight);
+    }
+
 }
