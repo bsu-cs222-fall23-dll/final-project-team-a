@@ -115,5 +115,9 @@ public class MenuBarController {
     private void highlightButton(){
         textArea.styleSelectedText(TextStyle.Property.Highlight);
     }
+    @FXML
+    private void strikethroughButton(){
+        textArea.styleSelectedText(TextStyle.Property.Strikethrough);
+    }
 
 }
